@@ -69,3 +69,16 @@ describe("renderOgImage", () => {
     expect(png.readUInt32BE(20)).toBe(630);
   });
 });
+
+describe("favicon", () => {
+  it("uses only colors from tokens.css", async () => {
+    const tokens = parseColorTokens(
+      await readFile(new URL("../src/styles/tokens.css", import.meta.url), "utf8"),
+    );
+    const palette = new Set(Object.values(tokens).flatMap(({ light, dark }) => [light, dark]));
+    const svg = await readFile(new URL("../public/favicon.svg", import.meta.url), "utf8");
+    const colors = svg.match(/#[0-9a-f]{6}\b/gi) ?? [];
+    expect(colors.length).toBeGreaterThan(0);
+    for (const color of colors) expect(palette).toContain(color.toLowerCase());
+  });
+});

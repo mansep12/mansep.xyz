@@ -24,3 +24,12 @@ export const themeColors = {
   light: "#f4f1e8",
   dark: "#0f1a16",
 } as const;
+
+/**
+ * Content for a `<meta name="theme-color" media="...">` under a choice: the
+ * forced theme's color, or under "system" the color its media query names.
+ */
+export function themeColorFor(choice: ThemeChoice, media: string): string {
+  if (choice !== "system") return themeColors[choice];
+  return media.includes("dark") ? themeColors.dark : themeColors.light;
+}

@@ -9,6 +9,7 @@ import {
   parseThemeChoice,
   THEME_STORAGE_KEY,
   type ThemeChoice,
+  themeColorFor,
 } from "../lib/theme";
 
 const root = document.documentElement;
@@ -29,6 +30,10 @@ function apply(choice: ThemeChoice): void {
     root.removeAttribute("data-theme");
   } else {
     root.dataset.theme = choice;
+  }
+  // Browser UI color: follow the forced theme, or the system again.
+  for (const meta of document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]')) {
+    meta.content = themeColorFor(choice, meta.media);
   }
 }
 

@@ -98,10 +98,11 @@ const structuredData =
     <style is:inline>
       @layer reset, tokens, base, components, utilities;
     </style>
-    <ThemeScript />
     <meta name="color-scheme" content="light dark" />
+    {/* Before ThemeScript, which repoints them when a theme is forced. */}
     <meta name="theme-color" content={themeColors.light} media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content={themeColors.dark} media="(prefers-color-scheme: dark)" />
+    <ThemeScript />
     {/* Preload only the body text face: Plex Sans, latin, upright. */}
     <Font cssVariable="--font-plex-sans" preload={[{ subset: "latin", style: "normal" }]} />
     <Font cssVariable="--font-plex-mono" />
@@ -112,6 +113,7 @@ const structuredData =
     {canonical && <link rel="canonical" href={canonical} />}
     {hreflangLinks.map(({ hreflang, href }) => <link rel="alternate" hreflang={hreflang} href={href} />)}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={site.name} />
