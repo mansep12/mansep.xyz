@@ -6,7 +6,8 @@ backend, applied cryptography and security.
 The site is bilingual: Spanish at the root (`/`) and English under `/en/`.
 It is a static Astro site served by Cloudflare Workers with static assets.
 
-> Status: under construction. Only the home pages exist for now.
+> Status: v0.1 in progress. Home, projects, research, about, CV, privacy,
+> colophon and 404 pages exist; full project write-ups are on the way.
 
 ## Stack
 
@@ -62,10 +63,11 @@ bun run dev
 ├── public/                   # Static files served as-is
 ├── tests/                    # Vitest unit tests
 └── src/
-    ├── content.config.ts     # Collections: projects, research, resume
+    ├── content.config.ts     # Collections: projects, research, pages, resume
     ├── content/
     │   ├── projects/{es,en}/ # <slug>.md per locale
-    │   └── research/{es,en}/
+    │   ├── research/{es,en}/
+    │   └── pages/{es,en}/    # about, privacy, colophon prose
     ├── data/
     │   ├── site.ts           # Name, tagline, email, links
     │   ├── resume.{es,en}.json
@@ -73,8 +75,8 @@ bun run dev
     ├── i18n/
     │   ├── locales.ts        # Locales and their metadata
     │   ├── routes.ts         # es/en route map and URL helpers
-    │   └── ui.ts             # UI strings
-    ├── components/           # Header, footer, theme toggle, ...
+    │   └── ui.ts             # UI strings and one-line page copy
+    ├── components/           # Site chrome, plus one folder per page (home/, cv/, ...)
     ├── layouts/BaseLayout.astro
     ├── lib/                  # Content helpers, build info, theme, email
     ├── scripts/              # Client-side TypeScript
@@ -110,7 +112,13 @@ Paths have no trailing slash (except the home pages). With
 `proyectos.html`, which Cloudflare serves at `/proyectos` without a redirect.
 Create `proyectos.astro`, not `proyectos/index.astro`.
 
-UI strings live in `src/i18n/ui.ts`; page prose lives in content files.
+UI strings and one-line page copy (headings, labels, the availability line)
+live in `src/i18n/ui.ts`, where the types require every key in every locale.
+Paragraphs live in content files.
+
+A page outside the route map (only `src/pages/404.astro`) omits `routeKey`:
+it gets no canonical URL, no `hreflang` and no language switch. Cloudflare
+serves it for any unknown path (`not_found_handling: "404-page"`).
 
 ## Content model
 
@@ -119,14 +127,19 @@ UI strings live in `src/i18n/ui.ts`; page prose lives in content files.
   (`src/lib/content/schemas.ts`) requires a repo or demo link, a role and a
   one-line outcome, so an unverifiable project fails the build.
 - **Research**: `src/content/research/<lang>/<slug>.md` (thesis, capsule or
-  course).
+  course). Bodies use `###` headings: each entry title is an `h2` on the page.
+- **Pages**: `src/content/pages/<lang>/<slug>.md` for long prose (about,
+  privacy, colophon), with a title and a description.
 - **CV**: `src/data/resume.{es,en}.json`, in the
   [JSON Resume](https://jsonresume.org/schema) shape with an `{ id, text }`
   object per highlight. Highlight ids are stable and identical in both
   locales. The schema rejects a phone number and a street address.
+  `src/components/cv/CvDocument.astro` renders any resume object, on screen
+  and as A4 in print, so a tailored CV reuses it.
 
 Read content through `src/lib/content`: `getProjects(lang)`,
-`getResearch(lang)`, `getResume(lang)`, `findCounterpart(collection, entry)`.
+`getResearch(lang)`, `getPage(lang, slug)`, `getResume(lang)`,
+`findCounterpart(collection, entry)`.
 
 Single-line frontmatter fields reject en and em dashes.
 
