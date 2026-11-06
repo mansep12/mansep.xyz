@@ -1,9 +1,10 @@
 import cloudflare from "@astrojs/cloudflare";
 import { defineConfig } from "astro/config";
+import { site } from "./src/data/site";
 
 // https://docs.astro.build/en/reference/configuration-reference/
 export default defineConfig({
-  site: "https://mansep.xyz",
+  site: site.url,
   // Every page is prerendered by default; the adapter only matters for
   // future on-demand routes (e.g. src/pages/api/ from cycle 2).
   adapter: cloudflare({
