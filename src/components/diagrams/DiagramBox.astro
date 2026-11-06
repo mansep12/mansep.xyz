@@ -1,0 +1,39 @@
+---
+/**
+ * One labeled box: a bold title and centered detail lines. `source` draws a
+ * dashed border for things outside the system (data sources, networks).
+ */
+import { boxHeight, FIRST_LINE_GAP, LINE_HEIGHT, TITLE_OFFSET } from "./layout";
+
+interface Props {
+  x: number;
+  y: number;
+  w: number;
+  title: string;
+  lines?: readonly string[];
+  /** Defaults to the height that fits the lines. */
+  h?: number;
+  accent?: boolean;
+  source?: boolean;
+}
+
+const { x, y, w, title, lines = [], h = boxHeight(lines.length), accent, source } = Astro.props;
+const cx = x + w / 2;
+---
+
+<g class:list={["d-node", { accent, source }]}>
+  <rect class="d-box" x={x} y={y} width={w} height={h} rx="4" stroke="currentColor"></rect>
+  <text class="d-title" x={cx} y={y + TITLE_OFFSET} text-anchor="middle">{title}</text>
+  {
+    lines.map((line, index) => (
+      <text
+        class="d-line"
+        x={cx}
+        y={y + TITLE_OFFSET + FIRST_LINE_GAP + index * LINE_HEIGHT}
+        text-anchor="middle"
+      >
+        {line}
+      </text>
+    ))
+  }
+</g>

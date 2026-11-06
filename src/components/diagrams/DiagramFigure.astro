@@ -1,0 +1,169 @@
+---
+/**
+ * Frame shared by the architecture diagrams: an inline SVG with <title> and
+ * <desc>, arrowheads, theme-aware styles and a visible caption that works as
+ * the short text alternative. Strokes use currentColor; emphasis uses
+ * --color-accent (and --color-highlight for a known weakness).
+ */
+
+interface Props {
+  /** Unique per page; prefixes the ids of the title, desc and arrowheads. */
+  id: string;
+  height: number;
+  width?: number;
+  title: string;
+  /** Full description for assistive technology. */
+  desc: string;
+  /** Visible short text alternative. */
+  caption: string;
+  /** Explains what an accent border means, when the diagram uses it. */
+  legend?: string;
+}
+
+const { id, height, width = 360, title, desc, caption, legend } = Astro.props;
+const arrowheads = [
+  { suffix: "", variant: "default" },
+  { suffix: "-accent", variant: "accent" },
+  { suffix: "-warn", variant: "warn" },
+] as const;
+---
+
+<figure class="diagram">
+  <svg
+    class="d-svg"
+    viewBox={`0 0 ${width} ${height}`}
+    width={width}
+    height={height}
+    role="img"
+    aria-labelledby={`${id}-title ${id}-desc`}
+  >
+    <title id={`${id}-title`}>{title}</title>
+    <desc id={`${id}-desc`}>{desc}</desc>
+    <defs>
+      {
+        arrowheads.map(({ suffix, variant }) => (
+          <marker
+            id={`${id}-arrow${suffix}`}
+            class:list={["d-head", variant]}
+            viewBox="0 0 10 10"
+            refX="9"
+            refY="5"
+            markerWidth="7"
+            markerHeight="7"
+            orient="auto-start-reverse"
+          >
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor" />
+          </marker>
+        ))
+      }
+    </defs>
+    <slot />
+  </svg>
+  <figcaption>
+    {caption}
+    {
+      legend && (
+        <span class="legend">
+          <span class="swatch" aria-hidden="true" />
+          {legend}
+        </span>
+      )
+    }
+  </figcaption>
+</figure>
+
+<style>
+  @layer components {
+    .diagram {
+      display: grid;
+      gap: var(--space-xs);
+    }
+
+    .d-svg {
+      inline-size: 100%;
+      max-inline-size: 28rem;
+      block-size: auto;
+      color: var(--color-text);
+      font-family: var(--font-sans);
+    }
+
+    .diagram :global(.d-box) {
+      fill: var(--color-surface);
+      stroke-width: 1.25;
+    }
+
+    .diagram :global(.d-node.source .d-box) {
+      fill: none;
+      stroke-dasharray: 5 4;
+    }
+
+    .diagram :global(.d-node.accent .d-box) {
+      stroke: var(--color-accent);
+      stroke-width: 2.5;
+    }
+
+    .diagram :global(.d-title) {
+      fill: currentColor;
+      font-size: 14px;
+      font-weight: var(--font-weight-bold);
+    }
+
+    .diagram :global(.d-line),
+    .diagram :global(.d-label) {
+      fill: var(--color-muted);
+      font-size: 12px;
+    }
+
+    .diagram :global(.d-arrow) {
+      stroke-width: 1.5;
+    }
+
+    .diagram :global(.d-arrow.dashed) {
+      stroke-dasharray: 5 4;
+    }
+
+    .diagram :global(.d-arrow.accent) {
+      stroke: var(--color-accent);
+    }
+
+    .diagram :global(.d-arrow.warn) {
+      stroke: var(--color-highlight);
+    }
+
+    .diagram :global(.d-label.accent) {
+      fill: var(--color-accent);
+    }
+
+    .diagram :global(.d-label.warn) {
+      fill: var(--color-highlight);
+    }
+
+    .d-head.accent {
+      color: var(--color-accent);
+    }
+
+    .d-head.warn {
+      color: var(--color-highlight);
+    }
+
+    figcaption {
+      display: grid;
+      gap: var(--space-3xs);
+      color: var(--color-muted);
+      font-size: var(--step--1);
+    }
+
+    .legend {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2xs);
+    }
+
+    .swatch {
+      inline-size: 1.5em;
+      block-size: 0.9em;
+      border: 2.5px solid var(--color-accent);
+      border-radius: 2px;
+    }
+  }
+</style>

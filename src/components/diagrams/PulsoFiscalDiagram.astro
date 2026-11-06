@@ -1,0 +1,135 @@
+---
+/**
+ * Pulso Fiscal: the publication pipeline (from etl/README.md,
+ * docs/runbook-operativo.md and supabase/migrations in the repo).
+ */
+import type { Lang } from "../../i18n/locales";
+import DiagramArrow from "./DiagramArrow.astro";
+import DiagramBox from "./DiagramBox.astro";
+import DiagramFigure from "./DiagramFigure.astro";
+import { boxHeight } from "./layout";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+
+interface Step {
+  title: string;
+  lines: string[];
+  accent?: boolean;
+  source?: boolean;
+}
+
+const text = {
+  es: {
+    title: "Pipeline de Pulso Fiscal",
+    desc: "El scraper en Python descarga la API JSON de Transparencia Activa del Senado y guarda cada respuesta cruda con su URL fuente, su fecha de captura y su hash SHA-256, más un manifiesto de descarga. El normalizador genera el CSV limpio, el ranking mensual y un reporte de calidad; si el quality gate falla, el run no se publica ni se carga. Los archivos procesados y el manifiesto público se suben a Cloudflare R2. El loader exige que ese manifiesto público sea alcanzable y coincida con el run local antes de cargar Supabase, donde las tablas base están cerradas con RLS y solo hay vistas y funciones del último run correcto. La web en Next.js lee solo esas vistas y funciones.",
+    caption:
+      "Del Senado a la web: cada paso conserva la trazabilidad y el loader no carga un run sin manifiesto público.",
+    steps: [
+      { title: "Senado de Chile", lines: ["API JSON de Transparencia Activa"], source: true },
+      {
+        title: "Scraper (Python)",
+        lines: ["JSON crudo con URL fuente, fecha", "de captura y SHA-256 por respuesta"],
+      },
+      {
+        title: "Normalizador y quality gate",
+        lines: ["CSV limpio, ranking y reporte de calidad", "si el gate falla, el run se detiene"],
+        accent: true,
+      },
+      { title: "Cloudflare R2", lines: ["crudo, procesado y manifiesto público"] },
+      {
+        title: "Supabase (PostgreSQL)",
+        lines: ["tablas base cerradas con RLS", "vistas y funciones del último run ok"],
+      },
+      { title: "Web Next.js", lines: ["ranking, ficha por senador,", "metodología y fuentes"] },
+    ] satisfies Step[],
+    arrows: [
+      "descarga",
+      "download_manifest.json",
+      "sube procesado y manifiesto",
+      "loader: exige el manifiesto público",
+      "lee solo vistas y funciones",
+    ],
+  },
+  en: {
+    title: "Pulso Fiscal pipeline",
+    desc: "The Python scraper downloads the JSON API behind the Senate's Transparencia Activa page and keeps each raw response with its source URL, capture date and SHA-256 hash, plus a download manifest. The normalizer produces the clean CSV, the monthly ranking and a quality report; if the quality gate fails, the run is neither published nor loaded. Processed files and the public manifest go to Cloudflare R2. The loader requires that public manifest to be reachable and to match the local run before it loads Supabase, where the base tables are locked with RLS and only views and functions over the latest good run are public. The Next.js site reads only those views and functions.",
+    caption:
+      "From the Senate to the site: every step keeps provenance, and the loader refuses a run without a public manifest.",
+    steps: [
+      { title: "Chilean Senate", lines: ["Transparencia Activa JSON API"], source: true },
+      {
+        title: "Scraper (Python)",
+        lines: ["raw JSON with source URL, capture", "date and SHA-256 per response"],
+      },
+      {
+        title: "Normalizer and quality gate",
+        lines: ["clean CSV, ranking and quality report", "if the gate fails, the run stops"],
+        accent: true,
+      },
+      { title: "Cloudflare R2", lines: ["raw, processed and public manifest"] },
+      {
+        title: "Supabase (PostgreSQL)",
+        lines: ["base tables locked with RLS", "views and functions on the latest ok run"],
+      },
+      { title: "Next.js site", lines: ["ranking, per-senator page,", "methodology and sources"] },
+    ] satisfies Step[],
+    arrows: [
+      "download",
+      "download_manifest.json",
+      "uploads processed files and manifest",
+      "loader: requires the public manifest",
+      "reads only views and functions",
+    ],
+  },
+}[lang];
+
+const id = "diagram-pulso-fiscal";
+const GAP = 40;
+let y = 10;
+const boxes = text.steps.map((step) => {
+  const box = { ...step, y, h: boxHeight(step.lines.length) };
+  y += box.h + GAP;
+  return box;
+});
+const height = y - GAP + 10;
+const arrows = boxes.slice(1).map((box, index) => {
+  const from = boxes[index].y + boxes[index].h;
+  return { d: `M 48 ${from} V ${box.y}`, label: text.arrows[index], labelY: from + GAP / 2 + 4 };
+});
+---
+
+<DiagramFigure
+  id={id}
+  height={height}
+  title={text.title}
+  desc={text.desc}
+  caption={text.caption}
+>
+  {
+    boxes.map((box) => (
+      <DiagramBox
+        x={10}
+        y={box.y}
+        w={340}
+        title={box.title}
+        lines={box.lines}
+        accent={box.accent}
+        source={box.source}
+      />
+    ))
+  }
+  {
+    arrows.map((arrow, index) => (
+      <DiagramArrow
+        id={id}
+        d={arrow.d}
+        variant={index === 3 ? "accent" : "default"}
+        label={{ x: 58, y: arrow.labelY, text: arrow.label }}
+      />
+    ))
+  }
+</DiagramFigure>

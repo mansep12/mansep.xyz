@@ -1,0 +1,49 @@
+---
+/**
+ * An arrow along an SVG path, with an optional label. `id` is the diagram's
+ * id, used to reference the arrowheads defined by DiagramFigure.
+ */
+import type { DiagramVariant } from "./layout";
+
+interface Label {
+  x: number;
+  y: number;
+  text: string;
+  anchor?: "start" | "middle" | "end";
+  /** Rotate the label 90 degrees, to run along a vertical arrow. */
+  vertical?: boolean;
+}
+
+interface Props {
+  id: string;
+  /** Path data, e.g. "M 160 72 V 122". */
+  d: string;
+  variant?: DiagramVariant;
+  dashed?: boolean;
+  label?: Label;
+}
+
+const { id, d, variant = "default", dashed, label } = Astro.props;
+const marker = variant === "default" ? `${id}-arrow` : `${id}-arrow-${variant}`;
+---
+
+<path
+  class:list={["d-arrow", variant, { dashed }]}
+  d={d}
+  stroke="currentColor"
+  fill="none"
+  marker-end={`url(#${marker})`}
+></path>
+{
+  label && (
+    <text
+      class:list={["d-label", variant]}
+      x={label.x}
+      y={label.y}
+      text-anchor={label.anchor ?? "start"}
+      transform={label.vertical ? `rotate(90 ${label.x} ${label.y})` : undefined}
+    >
+      {label.text}
+    </text>
+  )
+}

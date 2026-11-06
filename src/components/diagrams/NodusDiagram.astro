@@ -1,0 +1,121 @@
+---
+/**
+ * Nodus: what runs where (from docs/arquitectura.md in the Nodus repo).
+ * Signatures go from each browser to the server, and one relayed
+ * transaction settles the whole circle on Stellar testnet.
+ */
+import type { Lang } from "../../i18n/locales";
+import DiagramArrow from "./DiagramArrow.astro";
+import DiagramBox from "./DiagramBox.astro";
+import DiagramFigure from "./DiagramFigure.astro";
+import { boxHeight } from "./layout";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+
+const text = {
+  es: {
+    title: "Arquitectura de Nodus",
+    desc: "El navegador de cada negocio, con React, smart-account-kit y una passkey, habla con el servidor Next.js por las rutas /api y le entrega la firma de su parte; también simula y lee la red por RPC. El servidor, en Vercel, corre las rutas, el indexador y el buscador de círculos, guarda una copia de las deudas, propuestas y firmas en Postgres (Supabase) y, con la última firma, envía todo en un solo envío al relayer OpenZeppelin Channels, que arma una transacción y paga la comisión. En Stellar testnet viven el contrato Nodus, el token de liquidación, la policy allowlist, las smart accounts y el verificador WebAuthn.",
+    caption:
+      "Cada negocio firma su parte en el navegador; el servidor junta las firmas y el relayer envía una sola transacción a Stellar testnet.",
+    browser: { title: "Navegador de cada negocio", lines: ["React · smart-account-kit · passkey"] },
+    server: {
+      title: "Servidor Next.js (Vercel)",
+      lines: ["rutas /api · indexador · buscador", "propuestas y firmas"],
+    },
+    db: { title: "Postgres", lines: ["Supabase", "copia de deudas"] },
+    relayer: { title: "Relayer", lines: ["OpenZeppelin", "Channels"] },
+    chain: {
+      title: "Stellar testnet",
+      lines: [
+        "contrato Nodus · token de liquidación",
+        "policy allowlist · smart accounts",
+        "verificador WebAuthn",
+      ],
+    },
+    signs: "firma de cada parte",
+    once: "un solo envío",
+    tx: "una transacción",
+    reads: "simula y lee (RPC)",
+  },
+  en: {
+    title: "Nodus architecture",
+    desc: "Each business's browser, with React, smart-account-kit and a passkey, talks to the Next.js server through the /api routes and hands over the signature for its part; it also simulates and reads the network over RPC. The server, on Vercel, runs the routes, the indexer and the circle solver, keeps a copy of debts, proposals and signatures in Postgres (Supabase) and, with the last signature, sends everything in one submission to the OpenZeppelin Channels relayer, which builds a transaction and pays the fee. Stellar testnet holds the Nodus contract, the settlement token, the allowlist policy, the smart accounts and the WebAuthn verifier.",
+    caption:
+      "Each business signs its part in the browser; the server collects the signatures and the relayer sends a single transaction to Stellar testnet.",
+    browser: { title: "Each business's browser", lines: ["React · smart-account-kit · passkey"] },
+    server: {
+      title: "Next.js server (Vercel)",
+      lines: ["/api routes · indexer · solver", "proposals and signatures"],
+    },
+    db: { title: "Postgres", lines: ["Supabase", "copy of the debts"] },
+    relayer: { title: "Relayer", lines: ["OpenZeppelin", "Channels"] },
+    chain: {
+      title: "Stellar testnet",
+      lines: [
+        "Nodus contract · settlement token",
+        "allowlist policy · smart accounts",
+        "WebAuthn verifier",
+      ],
+    },
+    signs: "each party's signature",
+    once: "one submission",
+    tx: "one transaction",
+    reads: "simulates and reads (RPC)",
+  },
+}[lang];
+
+const id = "diagram-nodus";
+const browserH = boxHeight(1);
+const serverY = browserH + 10 + 50;
+const serverH = boxHeight(2);
+const rowY = serverY + serverH + 50;
+const rowH = boxHeight(2);
+const chainY = rowY + rowH + 50;
+const chainH = boxHeight(3);
+const height = chainY + chainH + 10;
+---
+
+<DiagramFigure
+  id={id}
+  height={height}
+  title={text.title}
+  desc={text.desc}
+  caption={text.caption}
+>
+  <DiagramBox x={10} y={10} w={340} {...text.browser} />
+  <DiagramBox x={10} y={serverY} w={305} {...text.server} />
+  <DiagramBox x={10} y={rowY} w={145} {...text.db} />
+  <DiagramBox x={170} y={rowY} w={145} {...text.relayer} />
+  <DiagramBox x={10} y={chainY} w={340} {...text.chain} accent />
+
+  <DiagramArrow
+    id={id}
+    d={`M 162 ${10 + browserH} V ${serverY}`}
+    variant="accent"
+    label={{ x: 170, y: serverY - 21, text: text.signs, anchor: "start" }}
+  />
+  <DiagramArrow id={id} d={`M 82 ${serverY + serverH} V ${rowY}`} />
+  <DiagramArrow
+    id={id}
+    d={`M 242 ${serverY + serverH} V ${rowY}`}
+    variant="accent"
+    label={{ x: 234, y: rowY - 21, text: text.once, anchor: "end" }}
+  />
+  <DiagramArrow
+    id={id}
+    d={`M 242 ${rowY + rowH} V ${chainY}`}
+    variant="accent"
+    label={{ x: 234, y: chainY - 21, text: text.tx, anchor: "end" }}
+  />
+  <DiagramArrow
+    id={id}
+    d={`M 334 ${10 + browserH} V ${chainY}`}
+    dashed
+    label={{ x: 342, y: serverY + 4, text: text.reads, vertical: true }}
+  />
+</DiagramFigure>

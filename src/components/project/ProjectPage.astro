@@ -4,12 +4,16 @@
  *
  * Order: header (with the body's intro line as lede), facts box, pitch video
  * (when the project has a YouTube id and a local poster), then the Markdown
- * body split at its `##` headings. The "How to verify this" section is
- * rendered as a box; every case study must have it.
+ * body split at its `##` headings. The project's architecture diagram (see
+ * src/components/diagrams) closes the "Architecture" section, and the "How
+ * to verify this" section is rendered as a box. The build fails if the
+ * verify section is missing, or the architecture section when the project
+ * has a diagram.
  */
 import type { Lang } from "../../i18n/locales";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { entrySlug, type ProjectEntry } from "../../lib/content";
+import { diagramFor } from "../diagrams";
 import ProjectFacts from "./ProjectFacts.astro";
 import ProjectHeader from "./ProjectHeader.astro";
 import { posterFor } from "./posters";
@@ -32,6 +36,10 @@ const s = projectStrings[lang];
 
 const body = splitBody(entry.rendered?.html ?? "");
 const verify = requireSection(body, s.verifyHeading, `Project "${entry.id}"`);
+const Diagram = diagramFor(slug);
+const architecture = Diagram
+  ? requireSection(body, s.architectureHeading, `Project "${entry.id}"`)
+  : undefined;
 const poster = posterFor(slug);
 const video =
   data.links.youtubeId && poster && data.links.video
@@ -66,6 +74,11 @@ const video =
         body.sections.map((section) =>
           section === verify ? (
             <VerifyBlock section={section} />
+          ) : section === architecture && Diagram ? (
+            <section class="flow">
+              <Fragment set:html={section.html} />
+              <Diagram lang={lang} />
+            </section>
           ) : (
             <section class="flow" set:html={section.html} />
           ),
