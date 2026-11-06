@@ -5,7 +5,7 @@ import {
   getBuildInfo,
   resolveBuildCommit,
 } from "../src/lib/build-info";
-import { decodeEmail, encodeEmail, spellOutEmail } from "../src/lib/email";
+import { decodeEmail, emailLinkScript, encodeEmail, spellOutEmail } from "../src/lib/email";
 
 const SHA = "0123456789abcdef0123456789abcdef01234567";
 const OTHER = "fedcba9876543210fedcba9876543210fedcba98";
@@ -61,5 +61,23 @@ describe("email obfuscation", () => {
 
   it("spells out the fallback", () => {
     expect(spellOutEmail(email)).toBe("someone.name [at] example.com");
+  });
+
+  it("replaces the placeholder with a mailto link from the inline script", () => {
+    const link: Record<string, string> = {};
+    let children: unknown[] = [];
+    const placeholder = {
+      dataset: { email: encodeEmail(email) },
+      replaceChildren: (...nodes: unknown[]) => {
+        children = nodes;
+      },
+    };
+    const document = {
+      currentScript: { previousElementSibling: placeholder },
+      createElement: () => link,
+    };
+    new Function("document", "atob", emailLinkScript)(document, atob);
+    expect(children).toEqual([link]);
+    expect(link).toEqual({ href: `mailto:${email}`, textContent: email });
   });
 });

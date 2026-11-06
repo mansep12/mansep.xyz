@@ -5,7 +5,7 @@
  * site address.
  */
 import { site } from "../data/site";
-import { encodeEmail, spellOutEmail } from "../lib/email";
+import { emailLinkScript, encodeEmail, spellOutEmail } from "../lib/email";
 
 interface Props {
   email?: string;
@@ -15,8 +15,7 @@ const { email = site.email } = Astro.props;
 const encoded = encodeEmail(email);
 ---
 
-<span class="email-link" data-email={encoded}><noscript>{spellOutEmail(email)}</noscript></span>
-
-<script>
-  import "../scripts/email-link";
-</script>
+<span class="email-link" data-email={encoded}><noscript>{spellOutEmail(email)}</noscript></span><script
+  is:inline
+  set:html={emailLinkScript}
+/>
