@@ -231,7 +231,7 @@
     },
     {
       "name": "Pulso Urbano",
-      "description": "Simulador de movilidad urbana para Santiago que estima el impacto de distintos escenarios en CO2, PM2.5 y ruido. Hecho en Indies Hack 2026.",
+      "description": "Simulador de movilidad urbana para Santiago que estima el impacto de distintos escenarios en CO2 y PM2.5. Hecho en Indies Hack 2026.",
       "url": "https://github.com/fjararibet/pulsourbano",
       "startDate": "2026-05",
       "endDate": "2026-05",
@@ -247,11 +247,11 @@
       "highlights": [
         {
           "id": "pulso-urbano.hackathon.01",
-          "text": "En Indies Hack (mayo de 2026), en 54 horas y en un equipo de 4, construimos Pulso Urbano, un simulador que muestra escenarios de movilidad en Santiago y estima su impacto en CO2, PM2.5 y ruido a partir de datos abiertos reales."
+          "text": "En Indies Hack (mayo de 2026), en 54 horas y en un equipo de 4, construimos Pulso Urbano, un simulador que muestra escenarios de movilidad en Santiago y estima su impacto en CO2 y PM2.5 a partir de datos abiertos reales."
         },
         {
           "id": "pulso-urbano.fullstack.01",
-          "text": "En Pulso Urbano contribuí al frontend, al mapa interactivo con MapLibre GL, a la integración de datos (Encuesta Origen Destino 2012 de SECTRA, GTFS de DTPM) y al backend en Cloudflare Workers con D1 y Drizzle ORM."
+          "text": "En Pulso Urbano contribuí al frontend, al mapa interactivo con MapLibre GL y a la integración de datos (GTFS de DTPM, ciclovías del OCUC, comunas y ruido), con las comunas leídas desde Cloudflare D1."
         }
       ]
     },
@@ -265,7 +265,7 @@
       "highlights": [
         {
           "id": "password-manager.crypto.01",
-          "text": "En el gestor de contraseñas cifré todo en el navegador con la Web Crypto API: una clave AES derivada de la contraseña maestra con PBKDF2 protege las contraseñas guardadas y la clave privada RSA-OAEP de cada usuario, que sirve para compartir contraseñas entre usuarios."
+          "text": "En el gestor de contraseñas todo se cifra en el navegador con la Web Crypto API: una clave AES derivada de la contraseña maestra con PBKDF2 protege las contraseñas guardadas y la clave privada RSA-OAEP de cada usuario, que sirve para compartir contraseñas entre usuarios."
         },
         {
           "id": "password-manager.limits.01",

@@ -231,7 +231,7 @@
     },
     {
       "name": "Pulso Urbano",
-      "description": "Urban mobility simulator for Santiago that estimates the impact of different scenarios on CO2, PM2.5 and noise. Built at Indies Hack 2026.",
+      "description": "Urban mobility simulator for Santiago that estimates the impact of different scenarios on CO2 and PM2.5. Built at Indies Hack 2026.",
       "url": "https://github.com/fjararibet/pulsourbano",
       "startDate": "2026-05",
       "endDate": "2026-05",
@@ -247,11 +247,11 @@
       "highlights": [
         {
           "id": "pulso-urbano.hackathon.01",
-          "text": "At Indies Hack (May 2026), in 54 hours and a team of 4, built Pulso Urbano, a simulator that shows mobility scenarios in Santiago and estimates their impact on CO2, PM2.5 and noise from real open data."
+          "text": "At Indies Hack (May 2026), in 54 hours and a team of 4, built Pulso Urbano, a simulator that shows mobility scenarios in Santiago and estimates their impact on CO2 and PM2.5 from real open data."
         },
         {
           "id": "pulso-urbano.fullstack.01",
-          "text": "In Pulso Urbano, contributed to the frontend, the interactive MapLibre GL map, data integration (SECTRA’s 2012 Origin-Destination Survey, DTPM’s GTFS) and the backend on Cloudflare Workers with D1 and Drizzle ORM."
+          "text": "In Pulso Urbano, contributed to the frontend, the interactive MapLibre GL map and data integration (DTPM’s GTFS, OCUC cycle lanes, communes and noise), with communes read from Cloudflare D1."
         }
       ]
     },
@@ -265,7 +265,7 @@
       "highlights": [
         {
           "id": "password-manager.crypto.01",
-          "text": "In the password manager, encrypted everything in the browser with the Web Crypto API: an AES key derived from the master password with PBKDF2 protects saved passwords and each user’s RSA-OAEP private key, which is used to share passwords between users."
+          "text": "In the password manager, everything is encrypted in the browser with the Web Crypto API: an AES key derived from the master password with PBKDF2 protects saved passwords and each user’s RSA-OAEP private key, which is used to share passwords between users."
         },
         {
           "id": "password-manager.limits.01",
