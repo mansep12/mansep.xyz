@@ -1,15 +1,21 @@
 ---
 /**
  * Contact address, assembled in the browser so it is not plain text in the
- * HTML. Without JavaScript it shows a spelled-out version.
+ * HTML. Without JavaScript it shows a spelled-out version. Defaults to the
+ * site address.
  */
 import { site } from "../data/site";
 import { encodeEmail, spellOutEmail } from "../lib/email";
 
-const encoded = encodeEmail(site.email);
+interface Props {
+  email?: string;
+}
+
+const { email = site.email } = Astro.props;
+const encoded = encodeEmail(email);
 ---
 
-<span class="email-link" data-email={encoded}><noscript>{spellOutEmail(site.email)}</noscript></span>
+<span class="email-link" data-email={encoded}><noscript>{spellOutEmail(email)}</noscript></span>
 
 <script>
   import "../scripts/email-link";

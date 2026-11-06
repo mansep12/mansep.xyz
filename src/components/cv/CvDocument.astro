@@ -1,0 +1,424 @@
+---
+/**
+ * A full CV rendered from a resume object (src/data/resume.schema.ts), on
+ * screen as a sheet and in print as A4, black on white. It only reads its
+ * props, so a tailored resume (a subset of highlights, a rewritten summary)
+ * renders with the same markup. Links show their URL as text so they still
+ * work on paper. Never renders a phone number: the schema has none.
+ */
+import type { Resume } from "../../data/resume.schema";
+import { type Lang, localeInfo } from "../../i18n/locales";
+import { useTranslations } from "../../i18n/ui";
+import { formatDate, formatDateRange } from "../../lib/dates";
+import { joinLowercase } from "../../lib/text";
+import { displayUrl } from "../../lib/urls";
+import EmailLink from "../EmailLink.astro";
+
+interface Props {
+  lang: Lang;
+  resume: Resume;
+}
+
+const { lang, resume } = Astro.props;
+const t = useTranslations(lang);
+const { basics } = resume;
+
+const country = basics.location?.countryCode
+  ? new Intl.DisplayNames([lang], { type: "region" }).of(basics.location.countryCode)
+  : undefined;
+const place = [basics.location?.city, country].filter(Boolean).join(", ");
+const interests = resume.interests.map((interest) => interest.name);
+---
+
+<article class="cv" lang={localeInfo[lang].tag}>
+  <header class="cv-header">
+    <h1>{basics.name}</h1>
+    <p class="label" lang="en">{basics.label}</p>
+    <ul role="list" class="contact">
+      <li><EmailLink email={basics.email} /></li>
+      {
+        basics.url && (
+          <li>
+            <a href={basics.url}>{displayUrl(basics.url)}</a>
+          </li>
+        )
+      }
+      {
+        basics.profiles.map((profile) => (
+          <li>
+            <a href={profile.url}>{displayUrl(profile.url)}</a>
+          </li>
+        ))
+      }
+      {place && <li>{place}</li>}
+    </ul>
+  </header>
+
+  {
+    basics.summary && (
+      <section>
+        <h2>{t("cv.summary")}</h2>
+        <p>{basics.summary}</p>
+      </section>
+    )
+  }
+
+  {
+    resume.work.length > 0 && (
+      <section>
+        <h2>{t("cv.work")}</h2>
+        {resume.work.map((job) => (
+          <div class="item">
+            <div class="item-head">
+              <h3>
+                {job.position}, {job.url ? <a href={job.url}>{job.name}</a> : job.name}
+              </h3>
+              <p class="dates">{formatDateRange(job.startDate, job.endDate, lang)}</p>
+            </div>
+            {job.summary && <p class="summary">{job.summary}</p>}
+            {job.highlights.length > 0 && (
+              <ul class="highlights">
+                {job.highlights.map((highlight) => (
+                  <li data-highlight-id={highlight.id}>{highlight.text}</li>
+                ))}
+              </ul>
+            )}
+          </div>
+        ))}
+      </section>
+    )
+  }
+
+  {
+    resume.projects.length > 0 && (
+      <section>
+        <h2>{t("cv.projects")}</h2>
+        {resume.projects.map((project) => (
+          <div class="item">
+            <div class="item-head">
+              <h3>
+                {project.name}
+                {project.url && (
+                  <>
+                    {" "}
+                    <a class="url" href={project.url}>
+                      {displayUrl(project.url)}
+                    </a>
+                  </>
+                )}
+              </h3>
+              <p class="dates">{formatDateRange(project.startDate, project.endDate, lang)}</p>
+            </div>
+            {project.description && <p class="summary">{project.description}</p>}
+            {project.roles.length > 0 && <p class="meta">{project.roles.join(". ")}</p>}
+            {project.highlights.length > 0 && (
+              <ul class="highlights">
+                {project.highlights.map((highlight) => (
+                  <li data-highlight-id={highlight.id}>{highlight.text}</li>
+                ))}
+              </ul>
+            )}
+            {project.keywords.length > 0 && (
+              <p class="keywords">{project.keywords.join(" · ")}</p>
+            )}
+          </div>
+        ))}
+      </section>
+    )
+  }
+
+  {
+    resume.education.length > 0 && (
+      <section>
+        <h2>{t("cv.education")}</h2>
+        {resume.education.map((item) => (
+          <div class="item">
+            <div class="item-head">
+              <h3>
+                {item.studyType ?? item.area}, {item.institution}
+              </h3>
+              <p class="dates">{formatDateRange(item.startDate, item.endDate, lang)}</p>
+            </div>
+            {item.summary && <p class="summary">{item.summary}</p>}
+          </div>
+        ))}
+      </section>
+    )
+  }
+
+  {
+    resume.awards.length > 0 && (
+      <section>
+        <h2>{t("cv.awards")}</h2>
+        {resume.awards.map((award) => (
+          <div class="item">
+            <p>
+              <strong>{award.title}</strong>
+              {award.awarder && `, ${award.awarder}`}
+              {award.date && `, ${formatDate(award.date, lang, "long")}`}
+            </p>
+            {award.summary && <p class="summary">{award.summary}</p>}
+          </div>
+        ))}
+      </section>
+    )
+  }
+
+  {
+    resume.certificates.length > 0 && (
+      <section>
+        <h2>{t("cv.certificates")}</h2>
+        {resume.certificates.map((certificate) => (
+          <div class="item">
+            <p>
+              <strong>{certificate.name}</strong>
+              {certificate.issuer && `, ${certificate.issuer}`}
+              {certificate.date && `, ${formatDate(certificate.date, lang, "long")}`}
+            </p>
+            {certificate.summary && <p class="summary">{certificate.summary}</p>}
+          </div>
+        ))}
+      </section>
+    )
+  }
+
+  {
+    resume.skills.length > 0 && (
+      <section>
+        <h2>{t("cv.skills")}</h2>
+        <dl class="skills">
+          {resume.skills.map((skill) => (
+            <div>
+              <dt>{skill.name}</dt>
+              <dd>{skill.keywords.join(", ")}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+    )
+  }
+
+  {
+    resume.languages.length > 0 && (
+      <section>
+        <h2>{t("cv.languages")}</h2>
+        <ul role="list" class="inline-list">
+          {resume.languages.map((language) => (
+            <li>
+              {language.language}
+              {language.fluency && `: ${language.fluency}`}
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  {
+    interests.length > 0 && (
+      <section>
+        <h2>{t("cv.interests")}</h2>
+        <p class="capitalize">{joinLowercase(interests, lang)}</p>
+      </section>
+    )
+  }
+</article>
+
+<style>
+  @layer components {
+    .cv {
+      display: grid;
+      gap: var(--space-m);
+      max-inline-size: 52rem;
+      padding: var(--space-m) var(--space-s);
+      background-color: var(--color-surface);
+      border: var(--border-width) solid var(--color-border);
+      border-radius: var(--radius);
+      font-size: var(--step--1);
+      line-height: var(--leading-snug);
+    }
+
+    .cv-header {
+      display: grid;
+      gap: var(--space-3xs);
+    }
+
+    h1 {
+      font-size: var(--step-3);
+    }
+
+    .label {
+      font-family: var(--font-mono);
+      color: var(--color-muted);
+    }
+
+    .contact,
+    .inline-list {
+      display: flex;
+      flex-wrap: wrap;
+      column-gap: var(--space-s);
+      row-gap: var(--space-3xs);
+    }
+
+    section {
+      display: grid;
+      gap: var(--space-xs);
+    }
+
+    h2 {
+      padding-block-end: var(--space-3xs);
+      border-block-end: var(--border-width) solid var(--color-border);
+      font-family: var(--font-mono);
+      font-size: var(--step--1);
+      font-weight: var(--font-weight-medium);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+    }
+
+    .item {
+      display: grid;
+      gap: var(--space-3xs);
+    }
+
+    .item-head {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: baseline;
+      column-gap: var(--space-s);
+    }
+
+    h3 {
+      font-size: var(--step-0);
+    }
+
+    .url {
+      font-family: var(--font-mono);
+      font-size: 0.8em;
+      font-weight: var(--font-weight-regular);
+    }
+
+    .dates {
+      font-family: var(--font-mono);
+      font-size: 0.9em;
+      color: var(--color-muted);
+      white-space: nowrap;
+    }
+
+    .meta,
+    .keywords {
+      color: var(--color-muted);
+    }
+
+    .keywords {
+      font-family: var(--font-mono);
+      font-size: 0.9em;
+    }
+
+    .highlights {
+      display: grid;
+      gap: var(--space-3xs);
+      padding-inline-start: 1.1em;
+    }
+
+    .skills {
+      display: grid;
+      gap: var(--space-3xs);
+    }
+
+    .skills div {
+      display: grid;
+    }
+
+    .skills dt {
+      font-weight: var(--font-weight-bold);
+    }
+
+    .skills dd {
+      margin: 0;
+    }
+
+    .capitalize::first-letter {
+      text-transform: uppercase;
+    }
+
+    @media (min-width: 40rem) {
+      .cv {
+        padding: var(--space-l);
+      }
+
+      .skills div {
+        grid-template-columns: 14rem minmax(0, 1fr);
+        column-gap: var(--space-s);
+      }
+    }
+
+    @media print {
+      .cv {
+        max-inline-size: none;
+        padding: 0;
+        border: 0;
+        background: none;
+        font-size: 9.5pt;
+        line-height: 1.35;
+      }
+
+      h1 {
+        font-size: 20pt;
+      }
+
+      h2 {
+        break-after: avoid;
+        font-size: 8.5pt;
+      }
+
+      h3 {
+        font-size: 10pt;
+      }
+
+      /* Block flow in print: Chromium can overlap grid rows split across pages. */
+      .cv,
+      .cv-header,
+      section,
+      .item,
+      .highlights {
+        display: block;
+      }
+
+      .cv > * + * {
+        margin-block-start: 10pt;
+      }
+
+      section > * + *,
+      .cv-header > * + * {
+        margin-block-start: 5pt;
+      }
+
+      .item > * + *,
+      .highlights > li + li {
+        margin-block-start: 2pt;
+      }
+
+      .highlights li,
+      .skills div {
+        break-inside: avoid;
+      }
+
+      .item-head {
+        break-after: avoid;
+      }
+
+      .skills div {
+        grid-template-columns: 12rem minmax(0, 1fr);
+        column-gap: 8pt;
+      }
+
+      /* :global also reaches the email link, which a script inserts. */
+      .cv :global(a) {
+        color: inherit;
+        text-decoration: none;
+      }
+    }
+  }
+</style>

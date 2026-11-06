@@ -133,5 +133,11 @@ const ogImageUrl = ogImage ? absoluteUrl(ogImage) : undefined;
       flex: 1;
       padding-block: var(--space-xl);
     }
+
+    @media print {
+      main {
+        padding: 0;
+      }
+    }
   }
 </style>

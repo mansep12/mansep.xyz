@@ -183,6 +183,31 @@
       scroll-behavior: smooth;
     }
   }
+
+  /* Print: A4, black on white whatever the theme, no site chrome. */
+  @page {
+    size: A4;
+    margin: 14mm 16mm;
+  }
+
+  @media print {
+    :root {
+      color-scheme: light;
+      --color-bg: #fff;
+      --color-surface: #fff;
+      --color-border: #bbb;
+      --color-text: #000;
+      --color-muted: #333;
+      --color-accent: #000;
+      --color-highlight: #000;
+    }
+
+    html,
+    body {
+      background: #fff;
+      color: #000;
+    }
+  }
 }
 
 @layer utilities {
@@ -192,6 +217,21 @@
     max-inline-size: calc(var(--container-wide) + 2 * var(--gutter));
     margin-inline: auto;
     padding-inline: var(--gutter);
+  }
+
+  /* Utilities win over components, so this hides chrome whatever its own display. */
+  @media print {
+    .container {
+      max-inline-size: none;
+      padding-inline: 0;
+    }
+
+    .site-header,
+    .site-footer,
+    .skip-link,
+    [data-print-hidden] {
+      display: none;
+    }
   }
 
   /* Readable line length for running text. */
