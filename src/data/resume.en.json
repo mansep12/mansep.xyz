@@ -25,7 +25,7 @@
   "work": [
     {
       "name": "CLCERT, Universidad de Chile",
-      "position": "Master's thesis researcher",
+      "position": "Master’s thesis researcher",
       "url": "https://clcert.cl",
       "location": "Santiago, Chile",
       "startDate": "2025-03",
@@ -33,7 +33,7 @@
       "highlights": [
         {
           "id": "clcert.thesis.01",
-          "text": "My master's thesis at CLCERT, Universidad de Chile, designs a cryptographic mechanism to publish statistics of a verifiable electronic vote without compromising ballot secrecy, in the context of UParticipa."
+          "text": "My master’s thesis at CLCERT, Universidad de Chile, designs a cryptographic mechanism to publish statistics of a verifiable electronic vote without compromising ballot secrecy, in the context of UParticipa."
         },
         {
           "id": "clcert.thesis.02",
@@ -62,7 +62,7 @@
         },
         {
           "id": "dimacofi.kiosk.04",
-          "text": "Gathered the needs of different schools with DIMACOFI's marketing and sales teams, and met them with a multi-tenant design that separates data and configuration per school."
+          "text": "Gathered the needs of different schools with DIMACOFI’s marketing and sales teams, and met them with a multi-tenant design that separates data and configuration per school."
         },
         {
           "id": "dimacofi.rpa.01",
@@ -96,7 +96,7 @@
       "url": "https://uchile.cl",
       "studyType": "Computer Engineering (Ingeniería Civil en Computación)",
       "startDate": "2020",
-      "summary": "Bachelor's degree in Engineering Sciences, Computer Science major (Licenciatura en Ciencias de la Ingeniería, mención Computación), completed in 2024."
+      "summary": "Bachelor’s degree in Engineering Sciences, Computer Science major (Licenciatura en Ciencias de la Ingeniería, mención Computación), completed in 2024."
     }
   ],
   "awards": [
@@ -204,7 +204,7 @@
       "highlights": [
         {
           "id": "nodus.settlement.01",
-          "text": "Implemented Nodus's Soroban contracts in Rust, which cancel a cycle of debts between businesses in a single atomic transaction that moves only the net balance; on testnet, settled a cycle of 20 businesses with 20 passkey signatures."
+          "text": "Implemented Nodus’s Soroban contracts in Rust, which cancel a cycle of debts between businesses in a single atomic transaction that moves only the net balance; on testnet, settled a cycle of 20 businesses with 20 passkey signatures."
         },
         {
           "id": "nodus.accounts.01",
@@ -225,7 +225,7 @@
         },
         {
           "id": "pulso-fiscal.mvp.01",
-          "text": "Built the MVP of Pulso Fiscal, which turns the Chilean Senate's operational expenses since 2021 into comparable rankings and tables, with versioned Supabase/PostgreSQL migrations and a Next.js frontend. Code under the MIT License, data under CC BY 4.0."
+          "text": "Built the MVP of Pulso Fiscal, which turns the Chilean Senate’s operational expenses since 2021 into comparable rankings and tables, with versioned Supabase/PostgreSQL migrations and a Next.js frontend. Code under the MIT License, data under CC BY 4.0."
         }
       ]
     },
@@ -251,7 +251,7 @@
         },
         {
           "id": "pulso-urbano.fullstack.01",
-          "text": "In Pulso Urbano, contributed to the frontend, the interactive MapLibre GL map, data integration (SECTRA's 2012 Origin-Destination Survey, DTPM's GTFS) and the backend on Cloudflare Workers with D1 and Drizzle ORM."
+          "text": "In Pulso Urbano, contributed to the frontend, the interactive MapLibre GL map, data integration (SECTRA’s 2012 Origin-Destination Survey, DTPM’s GTFS) and the backend on Cloudflare Workers with D1 and Drizzle ORM."
         }
       ]
     },
@@ -265,11 +265,11 @@
       "highlights": [
         {
           "id": "password-manager.crypto.01",
-          "text": "In the password manager, encrypted everything in the browser with the Web Crypto API: an AES key derived from the master password with PBKDF2 protects saved passwords and each user's RSA-OAEP private key, which is used to share passwords between users."
+          "text": "In the password manager, encrypted everything in the browser with the Web Crypto API: an AES key derived from the master password with PBKDF2 protects saved passwords and each user’s RSA-OAEP private key, which is used to share passwords between users."
         },
         {
           "id": "password-manager.limits.01",
-          "text": "Documented the password manager's known limitations: AES-CBC is not authenticated (AES-GCM would be the choice today), 100,000 PBKDF2 iterations is below current OWASP guidance, and the master password also reaches the server at sign-up."
+          "text": "Documented the password manager’s known limitations: AES-CBC is not authenticated (AES-GCM would be the choice today), 100,000 PBKDF2 iterations is below current OWASP guidance, and the master password also reaches the server at sign-up."
         }
       ]
     }

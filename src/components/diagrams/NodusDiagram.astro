@@ -44,10 +44,10 @@ const text = {
   },
   en: {
     title: "Nodus architecture",
-    desc: "Each business's browser, with React, smart-account-kit and a passkey, talks to the Next.js server through the /api routes and hands over the signature for its part; it also simulates and reads the network over RPC. The server, on Vercel, runs the routes, the indexer and the circle solver, keeps a copy of debts, proposals and signatures in Postgres (Supabase) and, with the last signature, sends everything in one submission to the OpenZeppelin Channels relayer, which builds a transaction and pays the fee. Stellar testnet holds the Nodus contract, the settlement token, the allowlist policy, the smart accounts and the WebAuthn verifier.",
+    desc: "Each business’s browser, with React, smart-account-kit and a passkey, talks to the Next.js server through the /api routes and hands over the signature for its part; it also simulates and reads the network over RPC. The server, on Vercel, runs the routes, the indexer and the circle solver, keeps a copy of debts, proposals and signatures in Postgres (Supabase) and, with the last signature, sends everything in one submission to the OpenZeppelin Channels relayer, which builds a transaction and pays the fee. Stellar testnet holds the Nodus contract, the settlement token, the allowlist policy, the smart accounts and the WebAuthn verifier.",
     caption:
       "Each business signs its part in the browser; the server collects the signatures and the relayer sends a single transaction to Stellar testnet.",
-    browser: { title: "Each business's browser", lines: ["React · smart-account-kit · passkey"] },
+    browser: { title: "Each business’s browser", lines: ["React · smart-account-kit · passkey"] },
     server: {
       title: "Next.js server (Vercel)",
       lines: ["/api routes · indexer · solver", "proposals and signatures"],
@@ -62,7 +62,7 @@ const text = {
         "WebAuthn verifier",
       ],
     },
-    signs: "each party's signature",
+    signs: "each party’s signature",
     once: "one submission",
     tx: "one transaction",
     reads: "simulates and reads (RPC)",

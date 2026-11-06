@@ -143,14 +143,14 @@ const en = {
   "contact.email": "Email",
   "contact.location": "Location",
   "contact.availability":
-    "I'm looking for work as a backend, full-stack or security engineer in Santiago, remote or hybrid, preferably on teams that work in English.",
+    "I’m looking for work as a backend, full-stack or security engineer in Santiago, remote or hybrid, preferably on teams that work in English.",
   "projects.title": "Projects",
   "projects.description":
     "Projects by Manuel Sepúlveda: the result, role, stack and a link to the code or demo of each one.",
   "projects.intro":
     "Each project with its result, my role, the stack and a link to the code or demo.",
   "projects.inProgress":
-    "In progress: Salud Hub brings together data from Garmin, Hevy, Zepp Life and food logs, with an AI coach on top that reads them and reaches out first. It runs locally; I'll publish the repo when it's ready.",
+    "In progress: Salud Hub brings together data from Garmin, Hevy, Zepp Life and food logs, with an AI coach on top that reads them and reaches out first. It runs locally; I’ll publish the repo when it’s ready.",
   "projects.empty":
     "The project write-ups are not published here yet. In the meantime, the code is at",
   "projects.year": "Year",
@@ -166,9 +166,9 @@ const en = {
   "status.paused": "paused",
   "research.title": "Research",
   "research.description":
-    "Manuel Sepúlveda's master's thesis at CLCERT, Universidad de Chile, on statistics of verifiable electronic votes, and cybersecurity training.",
+    "Manuel Sepúlveda’s master’s thesis at CLCERT, Universidad de Chile, on statistics of verifiable electronic votes, and cybersecurity training.",
   "research.intro":
-    "My master's thesis at CLCERT, Universidad de Chile, and additional training in cybersecurity.",
+    "My master’s thesis at CLCERT, Universidad de Chile, and additional training in cybersecurity.",
   "research.institution": "Institution",
   "research.advisors": "Advisors",
   "research.status": "Status",
@@ -185,9 +185,9 @@ const en = {
   "about.cvLink": "Full CV",
   "cv.title": "CV",
   "cv.description":
-    "Manuel Sepúlveda's CV: experience, projects, education, awards and skills. It can be saved as a PDF.",
+    "Manuel Sepúlveda’s CV: experience, projects, education, awards and skills. It can be saved as a PDF.",
   "cv.download": "Download PDF",
-  "cv.hint": "It downloads through the browser's print dialog: choose “Save as PDF”.",
+  "cv.hint": "It downloads through the browser’s print dialog: choose “Save as PDF”.",
   "cv.summary": "Summary",
   "cv.work": "Experience",
   "cv.projects": "Projects",
@@ -199,7 +199,7 @@ const en = {
   "cv.interests": "Interests",
   "privacy.contact": "For any question or request about your data, write to me at",
   "colophon.thisBuild": "This version was built from commit",
-  "research.kind.thesis": "Master's thesis",
+  "research.kind.thesis": "Master’s thesis",
   "research.kind.capsule": "Research capsule",
   "research.kind.course": "Training",
 } as const satisfies Record<UiKey, string>;

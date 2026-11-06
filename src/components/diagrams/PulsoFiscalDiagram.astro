@@ -56,7 +56,7 @@ const text = {
   },
   en: {
     title: "Pulso Fiscal pipeline",
-    desc: "The Python scraper downloads the JSON API behind the Senate's Transparencia Activa page and keeps each raw response with its source URL, capture date and SHA-256 hash, plus a download manifest. The normalizer produces the clean CSV, the monthly ranking and a quality report; if the quality gate fails, the run is neither published nor loaded. Processed files and the public manifest go to Cloudflare R2. The loader requires that public manifest to be reachable and to match the local run before it loads Supabase, where the base tables are locked with RLS and only views and functions over the latest good run are public. The Next.js site reads only those views and functions.",
+    desc: "The Python scraper downloads the JSON API behind the Senate’s Transparencia Activa page and keeps each raw response with its source URL, capture date and SHA-256 hash, plus a download manifest. The normalizer produces the clean CSV, the monthly ranking and a quality report; if the quality gate fails, the run is neither published nor loaded. Processed files and the public manifest go to Cloudflare R2. The loader requires that public manifest to be reachable and to match the local run before it loads Supabase, where the base tables are locked with RLS and only views and functions over the latest good run are public. The Next.js site reads only those views and functions.",
     caption:
       "From the Senate to the site: every step keeps provenance, and the loader refuses a run without a public manifest.",
     steps: [
