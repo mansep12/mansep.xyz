@@ -6,6 +6,7 @@ import { site } from "./src/data/site";
 import { defaultLang, locales } from "./src/i18n/locales";
 import ogImages from "./src/integrations/og-images";
 import securityHeaders from "./src/integrations/security-headers";
+import { resolveAnalyticsToken } from "./src/lib/analytics";
 import { resolveBuildCommit } from "./src/lib/build-info";
 import { canonicalPageUrl, sitemapLinks } from "./src/lib/sitemap";
 
@@ -18,6 +19,9 @@ const buildCommit = resolveBuildCommit({
       stdio: ["ignore", "pipe", "ignore"],
     }),
 });
+
+// Cloudflare Web Analytics site token from the build environment, or null.
+const analyticsToken = resolveAnalyticsToken(process.env);
 
 // Canonical URL of every page in the sitemap, collected by `filter`, which
 // sees every page before `serialize` runs.
@@ -88,6 +92,7 @@ export default defineConfig({
   vite: {
     define: {
       __BUILD_COMMIT__: JSON.stringify(buildCommit),
+      __CF_WEB_ANALYTICS_TOKEN__: JSON.stringify(analyticsToken),
     },
     build: {
       // Same reason for scripts (Astro inlines those under this limit) and

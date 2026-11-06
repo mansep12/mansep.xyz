@@ -19,6 +19,7 @@ import { site } from "../data/site";
 import { type Lang, localeInfo, otherLangs } from "../i18n/locales";
 import { absoluteUrl, alternateLinks, alternates, type PageRoute } from "../i18n/routes";
 import { useTranslations } from "../i18n/ui";
+import { BEACON_SRC, beaconConfig, getAnalyticsToken } from "../lib/analytics";
 import {
   documentTitle as formatDocumentTitle,
   OG_IMAGE_HEIGHT,
@@ -78,6 +79,7 @@ const generatedOgImage =
   !ogImage && canonical ? ogImagePath(new URL(canonical).pathname) : undefined;
 const ogImageSource = ogImage ?? generatedOgImage;
 const ogImageUrl = ogImageSource ? absoluteUrl(ogImageSource) : undefined;
+const analyticsToken = getAnalyticsToken();
 const structuredData =
   profile && canonical
     ? profilePageJsonLd({
@@ -154,6 +156,11 @@ const structuredData =
       <slot />
     </main>
     <SiteFooter lang={lang} />
+    {
+      analyticsToken && (
+        <script is:inline defer src={BEACON_SRC} data-cf-beacon={beaconConfig(analyticsToken)} />
+      )
+    }
   </body>
 </html>
 

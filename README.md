@@ -155,6 +155,17 @@ Single-line frontmatter fields reject en and em dashes.
   `WORKERS_CI_COMMIT_SHA` on Workers Builds, else `git rev-parse HEAD`, else
   `dev` (`src/lib/build-info.ts`).
 
+## Environment variables
+
+Set in the Workers Builds settings (Settings, Build, Variables and secrets);
+locally, export them before `bun run build`. They are read in Node when
+`astro.config.ts` loads, because pages are prerendered in workerd.
+
+| Variable | Effect |
+| --- | --- |
+| `PUBLIC_CF_WEB_ANALYTICS_TOKEN` | Site token from Cloudflare Web Analytics (32 hex characters). When set, every page loads the cookieless beacon from `static.cloudflareinsights.com`; when unset, no analytics script is added. A malformed value fails the build. Use the manual JS snippet setup in the dashboard, not automatic injection, or the beacon loads twice. |
+| `WORKERS_CI_COMMIT_SHA` | Set by Workers Builds; the commit shown in the footer. |
+
 ## Licensing
 
 - **Code** is licensed under the [MIT License](./LICENSE).
