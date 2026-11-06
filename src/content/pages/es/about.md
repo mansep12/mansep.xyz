@@ -9,4 +9,4 @@ Mi tesis, en el CLCERT, diseña un mecanismo criptográfico para publicar estad�
 
 Entre 2024 y 2026 trabajé como desarrollador de software en DIMACOFI. Desarrollé desde cero un tótem multi-tenant para colegios, que quedó instalado en un establecimiento, y automaticé con Python y Selenium la actualización de más de 2.000 direcciones usadas para facturación en Oracle EBS.
 
-En octubre de 2026 gané con Nodus el primer lugar del University Track de Find Your Way Hackathon (Tellus y Stellar). Nodus compensa deudas circulares entre pymes en una sola transacción, moviendo solo el saldo neto. En agosto fui uno de los tres estudiantes del CLCERT seleccionados para representar a la Universidad de Chile en la Escuela de Ciberseguridad CiberLAC.
+En octubre de 2026 gané con Nodus el primer lugar del University Track de Find Your Way Hackathon (Tellus y Stellar). Nodus compensa deudas circulares entre pymes en una sola transacción, moviendo solo el saldo neto. En agosto de 2026 fui uno de los tres estudiantes del CLCERT seleccionados para representar a la Universidad de Chile en la Escuela de Ciberseguridad CiberLAC.
