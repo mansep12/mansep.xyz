@@ -66,16 +66,15 @@
     hanging-punctuation: first last;
   }
 
+  /* No background of its own: the page color is the root's (the canvas), so
+     the column hint in BaseLayout.astro can sit behind the content. */
   body {
     min-block-size: 100dvh;
     display: flex;
     flex-direction: column;
-    background-color: var(--color-bg);
     color: var(--color-text);
     font-size: var(--step-0);
-    transition:
-      background-color var(--duration) var(--ease),
-      color var(--duration) var(--ease);
+    transition: color var(--duration) var(--ease);
   }
 
   h1,
