@@ -84,12 +84,13 @@
   h4 {
     font-weight: var(--font-weight-bold);
     line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-heading);
     text-wrap: balance;
   }
 
   h1 {
-    font-size: var(--step-4);
-    letter-spacing: -0.01em;
+    font-size: var(--step-5);
+    letter-spacing: var(--tracking-display);
   }
 
   h2 {
@@ -117,8 +118,8 @@
   a {
     color: var(--color-accent);
     text-decoration-line: underline;
-    text-decoration-thickness: 0.075em;
-    text-underline-offset: 0.2em;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.22em;
     transition:
       color var(--duration) var(--ease),
       text-decoration-color var(--duration) var(--ease);
@@ -126,7 +127,7 @@
 
   a:hover {
     color: var(--color-text);
-    text-decoration-thickness: 0.125em;
+    text-decoration-thickness: 2px;
   }
 
   :focus-visible {
@@ -167,10 +168,11 @@
     font-weight: var(--font-weight-bold);
   }
 
+  /* Emphasis is weight, not color: the signal color stays for links. */
   mark {
     background: none;
-    color: var(--color-highlight);
-    font-weight: var(--font-weight-medium);
+    color: var(--color-text);
+    font-weight: var(--font-weight-bold);
   }
 
   ::selection {

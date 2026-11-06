@@ -1,13 +1,16 @@
 /*
- * Design tokens, provisional direction "Ledger": ink on paper in light mode,
- * deep green (never black) in dark mode, amber only for emphasis.
+ * Design tokens, direction "Swiss grid with one signal": neutral ink on
+ * white in light mode, near-black (never pure black) in dark mode, and a
+ * single signal blue for links, focus and the mark. --color-highlight is the
+ * warning tone (a known weakness in a diagram), never decoration.
  *
  * Components use the semantic --color-* tokens only. Each one resolves per
  * color scheme through light-dark(); the scheme follows the system unless
  * <html data-theme="light|dark"> forces it (see the theme toggle).
  *
  * All text colors pass WCAG AA (4.5:1) on both --color-bg and --color-surface.
- * --color-border is decorative (dividers); never rely on it alone to convey state.
+ * --color-border and --color-grid are decorative (dividers, the column hint);
+ * never rely on them alone to convey state.
  */
 
 /* Layer order (reset, tokens, base, components, utilities) is declared inline
@@ -18,26 +21,29 @@
     color-scheme: light dark;
 
     /* Color */
-    --color-bg: light-dark(#f4f1e8, #0f1a16);
-    --color-surface: light-dark(#fbf9f3, #16241e);
-    --color-border: light-dark(#d9d3c4, #263730);
-    --color-text: light-dark(#16241e, #ece8dc);
-    --color-muted: light-dark(#4e5e55, #a9b8ae);
-    --color-accent: light-dark(#2f6b4a, #6fae86);
-    --color-highlight: light-dark(#8a5a0e, #e3a857);
+    --color-bg: light-dark(#ffffff, #0d0f12);
+    --color-surface: light-dark(#f6f7f9, #15181d);
+    --color-border: light-dark(#e3e5e8, #262a31);
+    --color-text: light-dark(#111318, #e8eaed);
+    --color-muted: light-dark(#5b6069, #9aa0a8);
+    --color-accent: light-dark(#0b57d0, #7aa7ff);
+    --color-highlight: light-dark(#c8411a, #ff7a45);
     --color-focus: var(--color-accent);
-    --color-selection: light-dark(#d5e4d9, #2a4a3a);
+    --color-selection: light-dark(#d3e3fd, #1f3a66);
+    /* The 12-column hint on wide screens: --color-text at 7% opacity. */
+    --color-grid: light-dark(#11131812, #e8eaed12);
 
     /* Typography */
-    /* --font-plex-* come from the Fonts API (astro.config.ts) and already
-       include metric-matched fallbacks; the system stacks cover pages that
-       do not render <Font>. */
-    --font-sans: var(--font-plex-sans, system-ui, sans-serif);
+    /* --font-inter and --font-plex-mono come from the Fonts API
+       (astro.config.ts) and already include metric-matched fallbacks; the
+       system stacks cover pages that do not render <Font>. Inter is for text
+       and UI; Plex Mono marks data (dates, stack, numbering, hashes). */
+    --font-sans: var(--font-inter, system-ui, sans-serif);
     --font-mono: var(--font-plex-mono, ui-monospace, monospace);
     --font-weight-regular: 400;
     --font-weight-medium: 500;
     --font-weight-bold: 600;
-    --leading-tight: 1.2;
+    --leading-tight: 1.15;
     --leading-snug: 1.4;
     --leading-normal: 1.6;
 
@@ -62,11 +68,19 @@
     --space-2xl: clamp(4rem, 3.7955rem + 0.9091vw, 4.5rem);
     --space-3xl: clamp(6rem, 5.6932rem + 1.3636vw, 6.75rem);
 
-    /* Layout */
+    /* Tracking for Inter: tighter as the size grows. */
+    --tracking-display: -0.03em;
+    --tracking-heading: -0.02em;
+
+    /* Layout: from 64rem wide the container is a 12-column grid (media
+       queries cannot read custom properties, so components repeat 64rem);
+       below that, everything is one column. */
     --measure: 68ch;
     --container-wide: 72rem;
     --gutter: var(--space-s);
-    --radius: 0.25rem;
+    --grid-columns: 12;
+    --grid-gap: var(--space-m);
+    --radius: 0;
     --border-width: 1px;
     --focus-ring: 2px solid var(--color-focus);
     --focus-offset: 3px;
