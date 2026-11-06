@@ -6,8 +6,10 @@
 
 import { env } from "cloudflare:workers";
 import type { APIRoute } from "astro";
+import { renderTailoredCv } from "../../components/cv/render-tailored";
 import { loadResumes, type Resume } from "../../data/resume.schema";
 import { CV_BUDGET_INSTANCE } from "../../durable-objects/cv-budget";
+import { cvGeneratorCopy } from "../../i18n/cv-generator";
 import type { Lang } from "../../i18n/locales";
 import { createCvModelClient } from "../../lib/cv-generator/client";
 import { readGeneratorConfig } from "../../lib/cv-generator/env";
@@ -26,6 +28,7 @@ export const ALL: APIRoute = ({ request }) => {
     budget: { consume: (input) => env.CV_BUDGET.getByName(CV_BUDGET_INSTANCE).consume(input) },
     createModels: () =>
       createCvModelClient({ apiKey: config.anthropicApiKey, baseURL: config.anthropicBaseUrl }),
+    render: (lang, tailored) => renderTailoredCv(lang, tailored, cvGeneratorCopy[lang].disclosure),
     clientIp: request.headers.get("cf-connecting-ip") ?? "unknown",
   });
 };

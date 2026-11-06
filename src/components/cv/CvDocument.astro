@@ -5,6 +5,11 @@
  * props, so a tailored resume (a subset of highlights, a rewritten summary)
  * renders with the same markup. Links show their URL as text so they still
  * work on paper. Never renders a phone number: the schema has none.
+ *
+ * The CV generator renders this same component in the Worker (Container
+ * API, src/components/cv/render-tailored.ts) with three extra props: the
+ * order of the work and projects sections, each highlight's source id
+ * (screen only) and a footnote that says how the CV was put together.
  */
 import type { Resume } from "../../data/resume.schema";
 import { type Lang, localeInfo } from "../../i18n/locales";
@@ -14,14 +19,29 @@ import { joinLowercase } from "../../lib/text";
 import { displayUrl } from "../../lib/urls";
 import EmailLink from "../EmailLink.astro";
 
+type ListedSection = "work" | "projects";
+
 interface Props {
   lang: Lang;
   resume: Resume;
+  /** Order of the sections with highlights. */
+  sectionOrder?: readonly ListedSection[];
+  /** Show each highlight's id next to it, on screen only. */
+  showSourceIds?: boolean;
+  /** A closing line, on screen and in print. */
+  footnote?: string | undefined;
 }
 
-const { lang, resume } = Astro.props;
+const {
+  lang,
+  resume,
+  sectionOrder = ["work", "projects"],
+  showSourceIds = false,
+  footnote,
+} = Astro.props;
 const t = useTranslations(lang);
 const { basics } = resume;
+const sourceLabel = lang === "es" ? "Fuente:" : "Source:";
 
 const country = basics.location?.countryCode
   ? new Intl.DisplayNames([lang], { type: "region" }).of(basics.location.countryCode)
@@ -64,66 +84,84 @@ const interests = resume.interests.map((interest) => interest.name);
   }
 
   {
-    resume.work.length > 0 && (
-      <section>
-        <h2>{t("cv.work")}</h2>
-        {resume.work.map((job) => (
-          <div class="item">
-            <div class="item-head">
-              <h3>
-                {job.position}, {job.url ? <a href={job.url}>{job.name}</a> : job.name}
-              </h3>
-              <p class="dates">{formatDateRange(job.startDate, job.endDate, lang)}</p>
-            </div>
-            {job.summary && <p class="summary">{job.summary}</p>}
-            {job.highlights.length > 0 && (
-              <ul class="highlights">
-                {job.highlights.map((highlight) => (
-                  <li data-highlight-id={highlight.id}>{highlight.text}</li>
-                ))}
-              </ul>
-            )}
-          </div>
-        ))}
-      </section>
-    )
-  }
-
-  {
-    resume.projects.length > 0 && (
-      <section>
-        <h2>{t("cv.projects")}</h2>
-        {resume.projects.map((project) => (
-          <div class="item">
-            <div class="item-head">
-              <h3>
-                {project.name}
-                {project.url && (
-                  <>
-                    {" "}
-                    <a class="url" href={project.url}>
-                      {displayUrl(project.url)}
-                    </a>
-                  </>
-                )}
-              </h3>
-              <p class="dates">{formatDateRange(project.startDate, project.endDate, lang)}</p>
-            </div>
-            {project.description && <p class="summary">{project.description}</p>}
-            {project.roles.length > 0 && <p class="meta">{project.roles.join(". ")}</p>}
-            {project.highlights.length > 0 && (
-              <ul class="highlights">
-                {project.highlights.map((highlight) => (
-                  <li data-highlight-id={highlight.id}>{highlight.text}</li>
-                ))}
-              </ul>
-            )}
-            {project.keywords.length > 0 && (
-              <p class="keywords">{project.keywords.join(" · ")}</p>
-            )}
-          </div>
-        ))}
-      </section>
+    sectionOrder.map((key) =>
+      key === "work"
+        ? resume.work.length > 0 && (
+            <section>
+              <h2>{t("cv.work")}</h2>
+              {resume.work.map((job) => (
+                <div class="item">
+                  <div class="item-head">
+                    <h3>
+                      {job.position}, {job.url ? <a href={job.url}>{job.name}</a> : job.name}
+                    </h3>
+                    <p class="dates">{formatDateRange(job.startDate, job.endDate, lang)}</p>
+                  </div>
+                  {job.summary && <p class="summary">{job.summary}</p>}
+                  {job.highlights.length > 0 && (
+                    <ul class="highlights">
+                      {job.highlights.map((highlight) => (
+                        <li data-highlight-id={highlight.id}>
+                          {highlight.text}
+                          {showSourceIds && (
+                            <span class="source-id">
+                              <span class="visually-hidden">{sourceLabel} </span>
+                              {highlight.id}
+                            </span>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              ))}
+            </section>
+          )
+        : resume.projects.length > 0 && (
+            <section>
+              <h2>{t("cv.projects")}</h2>
+              {resume.projects.map((project) => (
+                <div class="item">
+                  <div class="item-head">
+                    <h3>
+                      {project.name}
+                      {project.url && (
+                        <>
+                          {" "}
+                          <a class="url" href={project.url}>
+                            {displayUrl(project.url)}
+                          </a>
+                        </>
+                      )}
+                    </h3>
+                    <p class="dates">
+                      {formatDateRange(project.startDate, project.endDate, lang)}
+                    </p>
+                  </div>
+                  {project.description && <p class="summary">{project.description}</p>}
+                  {project.roles.length > 0 && <p class="meta">{project.roles.join(". ")}</p>}
+                  {project.highlights.length > 0 && (
+                    <ul class="highlights">
+                      {project.highlights.map((highlight) => (
+                        <li data-highlight-id={highlight.id}>
+                          {highlight.text}
+                          {showSourceIds && (
+                            <span class="source-id">
+                              <span class="visually-hidden">{sourceLabel} </span>
+                              {highlight.id}
+                            </span>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                  {project.keywords.length > 0 && (
+                    <p class="keywords">{project.keywords.join(" · ")}</p>
+                  )}
+                </div>
+              ))}
+            </section>
+          ),
     )
   }
 
@@ -220,6 +258,14 @@ const interests = resume.interests.map((interest) => interest.name);
         <h2>{t("cv.interests")}</h2>
         <p class="capitalize">{joinLowercase(interests, lang)}</p>
       </section>
+    )
+  }
+
+  {
+    footnote && (
+      <footer class="footnote">
+        <p>{footnote}</p>
+      </footer>
     )
   }
 </article>
@@ -343,6 +389,21 @@ const interests = resume.interests.map((interest) => interest.name);
       text-transform: uppercase;
     }
 
+    .source-id {
+      margin-inline-start: 0.5em;
+      font-family: var(--font-mono);
+      font-size: var(--step--2);
+      color: var(--color-muted);
+      white-space: nowrap;
+    }
+
+    .footnote {
+      padding-block-start: var(--space-xs);
+      border-block-start: var(--border-width) solid var(--color-border);
+      font-size: var(--step--1);
+      color: var(--color-muted);
+    }
+
     @media (min-width: 40rem) {
       .cv {
         padding: var(--space-l);
@@ -355,6 +416,10 @@ const interests = resume.interests.map((interest) => interest.name);
     }
 
     @media print {
+      .source-id {
+        display: none;
+      }
+
       .cv {
         max-inline-size: none;
         padding: 0;
