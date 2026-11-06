@@ -4,7 +4,7 @@ summary: Plataforma abierta de transparencia que convierte los gastos operaciona
 outcome: "MVP con datos del Senado desde 2021: cada dato guarda la URL de la fuente, la fecha de captura y el hash SHA-256. En pausa desde junio de 2026."
 order: 2
 year: "2026"
-status: mvp
+status: paused
 role: Diseño y desarrollo completo (ETL en Python, base de datos en Supabase, web en Next.js y documentación)
 team:
   size: 1

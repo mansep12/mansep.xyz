@@ -26,7 +26,7 @@ const href = z.union([
   z.string().regex(/^\/[^/]/, "Use an absolute URL or a path from /"),
 ]);
 
-export const projectStatuses = ["done", "mvp", "in-progress"] as const;
+export const projectStatuses = ["done", "mvp", "in-progress", "paused"] as const;
 export type ProjectStatus = (typeof projectStatuses)[number];
 
 export const projectSchema = z

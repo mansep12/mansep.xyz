@@ -63,6 +63,7 @@ const es = {
   "status.done": "terminado",
   "status.mvp": "MVP",
   "status.in-progress": "en curso",
+  "status.paused": "en pausa",
   "research.title": "Investigación",
   "research.description":
     "Tesis de magíster de Manuel Sepúlveda en el CLCERT de la Universidad de Chile, sobre estadísticas de votaciones electrónicas verificables, y formación en ciberseguridad.",
@@ -162,6 +163,7 @@ const en = {
   "status.done": "done",
   "status.mvp": "MVP",
   "status.in-progress": "in progress",
+  "status.paused": "paused",
   "research.title": "Research",
   "research.description":
     "Manuel Sepúlveda's master's thesis at CLCERT, Universidad de Chile, on statistics of verifiable electronic votes, and cybersecurity training.",

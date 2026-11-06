@@ -34,7 +34,7 @@ export interface ProjectStrings {
 }
 
 const es: ProjectStrings = {
-  status: { done: "Terminado", mvp: "MVP", "in-progress": "En curso" },
+  status: { done: "Terminado", mvp: "MVP", "in-progress": "En curso", paused: "En pausa" },
   backToProjects: "Todos los proyectos",
   factsLabel: "Ficha del proyecto",
   team: (size) => `Equipo de ${size}`,
@@ -59,7 +59,7 @@ const es: ProjectStrings = {
 };
 
 const en: ProjectStrings = {
-  status: { done: "Done", mvp: "MVP", "in-progress": "In progress" },
+  status: { done: "Done", mvp: "MVP", "in-progress": "In progress", paused: "Paused" },
   backToProjects: "All projects",
   factsLabel: "Project facts",
   team: (size) => `Team of ${size}`,

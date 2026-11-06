@@ -4,7 +4,7 @@ summary: Open transparency platform that turns the Chilean Senate's operational 
 outcome: "MVP with Senate data since 2021: every datum keeps its source URL, capture date and SHA-256 hash. Paused since June 2026."
 order: 2
 year: "2026"
-status: mvp
+status: paused
 role: Design and development of all of it (Python ETL, Supabase database, Next.js site and docs)
 team:
   size: 1

@@ -7,6 +7,7 @@ export const projectStatusLabels = {
   done: "status.done",
   mvp: "status.mvp",
   "in-progress": "status.in-progress",
+  paused: "status.paused",
 } as const satisfies Record<ProjectStatus, UiKey>;
 
 export const researchKindLabels = {
