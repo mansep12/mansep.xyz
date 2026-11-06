@@ -6,8 +6,8 @@ backend, applied cryptography and security.
 The site is bilingual: Spanish at the root (`/`) and English under `/en/`.
 It is a static Astro site served by Cloudflare Workers with static assets.
 
-> Status: v0.1 in progress. Home, projects, research, about, CV, privacy,
-> colophon and 404 pages exist; full project write-ups are on the way.
+> Status: v0.1 in progress. Home, projects with case studies, research,
+> about, CV, privacy, colophon and 404 pages exist.
 
 ## Stack
 
@@ -50,17 +50,21 @@ bun run dev
 | `bun run lint` | Runs Biome (lint, format check and import sorting) without writing. |
 | `bun run format` | Runs Biome and applies safe fixes and formatting. |
 | `bun run test` | Runs Vitest once. |
+| `bun run check:links` | Checks the last build for broken internal links, fragments, canonical, hreflang, sitemap and image targets (run `build` first). |
 | `bun run cf-typegen` | Regenerates `worker-configuration.d.ts` from `wrangler.jsonc`. |
 
 ## Project structure
 
 ```
 .
-├── astro.config.ts           # Site URL, adapter, fonts, i18n, build commit
+├── astro.config.ts           # Site URL, adapter, integrations, fonts, i18n, build values
 ├── wrangler.jsonc            # Cloudflare Worker config
 ├── vitest.config.ts          # Unit tests (plain Node)
+├── lighthouserc.json         # Lighthouse CI URLs and score budgets
+├── .github/                  # CI workflow and Dependabot
 ├── docs/decisions/           # Architecture Decision Records (MADR)
-├── public/                   # Static files served as-is
+├── public/                   # Static files served as-is (favicon, touch icon)
+├── scripts/                  # Link checker, touch icon generator
 ├── tests/                    # Vitest unit tests
 └── src/
     ├── content.config.ts     # Collections: projects, research, pages, resume
@@ -77,8 +81,9 @@ bun run dev
     │   ├── routes.ts         # es/en route map and URL helpers
     │   └── ui.ts             # UI strings and one-line page copy
     ├── components/           # Site chrome, plus one folder per page (home/, cv/, ...)
+    ├── integrations/         # Build steps in Node: Open Graph images, security headers
     ├── layouts/BaseLayout.astro
-    ├── lib/                  # Content helpers, build info, theme, email
+    ├── lib/                  # Content, SEO, structured data, headers, theme, email, analytics
     ├── scripts/              # Client-side TypeScript
     ├── pages/                # Spanish routes
     │   └── en/               # English routes
@@ -154,6 +159,65 @@ Single-line frontmatter fields reject en and em dashes.
 - The footer shows the commit the site was built from:
   `WORKERS_CI_COMMIT_SHA` on Workers Builds, else `git rev-parse HEAD`, else
   `dev` (`src/lib/build-info.ts`).
+
+## SEO and social previews
+
+- **Head tags**: `BaseLayout` writes the title, description, a
+  self-referencing canonical, `hreflang` alternates with `x-default`, Open
+  Graph and Twitter tags (`summary_large_image`).
+- **Structured data**: home and about pages pass `profile={resume}` to the
+  layout, which emits a schema.org `ProfilePage` whose main entity is the
+  `Person`, built from `site.ts` and the CV data
+  (`src/lib/structured-data.ts`). Skills listed in `knowsAbout` are
+  `site.featuredSkills`, which a test requires to exist in the CV.
+- **Sitemap**: `@astrojs/sitemap` writes `sitemap-index.xml` with alternates
+  taken from the route map (`src/lib/sitemap.ts`); `robots.txt` comes from
+  `src/pages/robots.txt.ts`. Cloudflare may prepend its managed rules to it.
+- **Open Graph images**: `src/integrations/og-images.ts` renders a
+  1200x630 PNG per page and locale after the build, in Node (Satori and
+  resvg, Plex `.woff` files from Fontsource, light palette read from
+  `tokens.css`), to `dist/client/og/<path>.png`. The layout points `og:image`
+  there unless a page passes `ogImage`.
+- **Icons**: `public/favicon.svg` follows the color scheme;
+  `public/apple-touch-icon.png` is generated with
+  `bun scripts/generate-touch-icon.ts` and committed. The `theme-color` meta
+  follows a forced theme too.
+
+## Security headers
+
+`src/integrations/security-headers.ts` appends the headers to
+`dist/client/_headers` after every build (see
+[ADR 0007](./docs/decisions/0007-security-headers-and-csp.md)): a
+Content-Security-Policy with the SHA-256 hash of each inline script and style
+found in the built HTML, HSTS (no preload), `nosniff`, a strict referrer
+policy, a Permissions-Policy and `Cross-Origin-Opener-Policy: same-origin`.
+The allowed third parties (Web Analytics, Turnstile, the YouTube player) are
+listed in `src/lib/security-headers.ts`.
+
+The build fails when a page would break the policy, so:
+
+- no `style="..."` attributes, `on*` handlers or `javascript:` URLs (use
+  classes and `<script>` modules);
+- a new external origin needs an entry in `src/lib/security-headers.ts`;
+- do not set a CSP in `public/_headers`; other rules there are kept.
+
+`_headers` only applies to static files. Routes rendered on demand by the
+Worker (for example `/api/*`) must set their own headers.
+
+## CI
+
+`.github/workflows/ci.yml` runs on pushes to `main` and on pull requests:
+
+1. `bun install --frozen-lockfile`, lint, tests, build and `check:links`
+   (Node 22 and Bun 1.3).
+2. Lighthouse CI on the built `dist/client` (mobile): `/`, `/en/`,
+   `/proyectos`, a project page, `/cv` and `/sobre-mi`, three runs each. The
+   job fails below 0.9 performance or 0.95 accessibility, best practices or
+   SEO. Reports go to temporary public storage; the links are in the job log.
+
+Dependabot (`.github/dependabot.yml`) opens monthly grouped minor and patch
+updates for Bun packages and GitHub Actions. Deploys are done by Workers
+Builds on every push to `main`, not by this workflow.
 
 ## Environment variables
 
