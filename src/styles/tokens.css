@@ -28,8 +28,11 @@
     --color-selection: light-dark(#d5e4d9, #2a4a3a);
 
     /* Typography */
-    --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+    /* --font-plex-* come from the Fonts API (astro.config.ts) and already
+       include metric-matched fallbacks; the system stacks cover pages that
+       do not render <Font>. */
+    --font-sans: var(--font-plex-sans, system-ui, sans-serif);
+    --font-mono: var(--font-plex-mono, ui-monospace, monospace);
     --font-weight-regular: 400;
     --font-weight-medium: 500;
     --font-weight-bold: 600;

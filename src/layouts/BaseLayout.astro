@@ -1,4 +1,5 @@
 ---
+import { Font } from "astro:assets";
 import { type Lang, localeInfo } from "../i18n/locales";
 import { alternateLinks, alternates, type RouteKey } from "../i18n/routes";
 import "../styles/tokens.css";
@@ -20,6 +21,9 @@ const { lang, title, description, route } = Astro.props;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light dark" />
+    {/* Preload only the body text face: Plex Sans, latin, upright. */}
+    <Font cssVariable="--font-plex-sans" preload={[{ subset: "latin", style: "normal" }]} />
+    <Font cssVariable="--font-plex-mono" />
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={alternates(route)[lang]} />

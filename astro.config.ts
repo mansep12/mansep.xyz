@@ -1,5 +1,5 @@
 import cloudflare from "@astrojs/cloudflare";
-import { defineConfig } from "astro/config";
+import { defineConfig, fontProviders } from "astro/config";
 import { site } from "./src/data/site";
 import { defaultLang, locales } from "./src/i18n/locales";
 
@@ -19,6 +19,28 @@ export default defineConfig({
   build: {
     format: "preserve",
   },
+  // Self-hosted IBM Plex: downloaded from Fontsource at build time and served
+  // from /_astro/fonts/. Only latin and latin-ext (Spanish diacritics).
+  fonts: [
+    {
+      provider: fontProviders.fontsource(),
+      name: "IBM Plex Sans",
+      cssVariable: "--font-plex-sans",
+      weights: ["100 700"],
+      styles: ["normal", "italic"],
+      subsets: ["latin", "latin-ext"],
+      fallbacks: ["sans-serif"],
+    },
+    {
+      provider: fontProviders.fontsource(),
+      name: "IBM Plex Mono",
+      cssVariable: "--font-plex-mono",
+      weights: [400, 500],
+      styles: ["normal"],
+      subsets: ["latin", "latin-ext"],
+      fallbacks: ["monospace"],
+    },
+  ],
   i18n: {
     defaultLocale: defaultLang,
     locales: [...locales],
