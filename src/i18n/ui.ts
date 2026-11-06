@@ -43,7 +43,7 @@ const es = {
   "contact.email": "Correo",
   "contact.location": "Ubicación",
   "contact.availability":
-    "Busco trabajo como backend, full-stack o security engineer, en Santiago, remoto o híbrido, de preferencia en equipos que trabajen en inglés.",
+    "Busco trabajo como backend, full-stack o security engineer en Santiago, remoto o híbrido, de preferencia en equipos que trabajen en inglés.",
   "projects.title": "Proyectos",
   "projects.description":
     "Proyectos de Manuel Sepúlveda: resultado, rol, stack y enlaces al código o a la demo de cada uno.",
@@ -143,7 +143,7 @@ const en = {
   "contact.email": "Email",
   "contact.location": "Location",
   "contact.availability":
-    "I'm looking for work as a backend, full-stack or security engineer, in Santiago, remote or hybrid, preferably on teams that work in English.",
+    "I'm looking for work as a backend, full-stack or security engineer in Santiago, remote or hybrid, preferably on teams that work in English.",
   "projects.title": "Projects",
   "projects.description":
     "Projects by Manuel Sepúlveda: the result, role, stack and a link to the code or demo of each one.",
