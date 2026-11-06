@@ -6,10 +6,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 const lang = "es";
 ---
 
-<BaseLayout lang={lang} title={site.name} description={site.tagline} routeKey="home">
-  <div class="flow">
+<BaseLayout lang={lang} routeKey="home" title={site.name} description={site.tagline}>
+  <div class="measure flow">
     <h1>{site.name}</h1>
-    <p>{site.tagline}</p>
-    <p>{t(lang, "home.status")}</p>
+    <p class="lede">{site.tagline}</p>
+    <p class="muted">{t(lang, "home.status")}</p>
   </div>
 </BaseLayout>
