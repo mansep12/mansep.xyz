@@ -19,7 +19,7 @@ const { lang } = Astro.props;
 const text = {
   es: {
     title: "Arquitectura de Pulso Urbano",
-    desc: "Las fuentes abiertas (GTFS del DTPM, ciclovías del OCUC, la Encuesta Origen-Destino 2012, los límites comunales de la Región Metropolitana y el ruido Lden) pasan por scripts de importación y de datos. Una parte queda en dos bases Cloudflare D1, EOD2012 y DTPMGEO, y otra en archivos GeoJSON y JSON estáticos. Una aplicación TanStack Start en Cloudflare Workers sirve esos archivos y expone funciones de servidor que leen D1. En el navegador, el mapa hecho con React y MapLibre GL dibuja las capas de metro, buses RED, ciclovías, comunas y ruido, con un medidor de ruido por comuna, y junto a él el comparador reparte los viajes entre comunas por modo de transporte y estima CO2 y PM2.5. Mi parte, marcada con borde de color, fue el mapa con sus capas y el medidor de ruido.",
+    desc: "Las fuentes abiertas (GTFS del DTPM, ciclovías del OCUC, la Encuesta Origen-Destino 2012, los límites comunales de la Región Metropolitana y el ruido Lden) pasan por scripts de importación y de datos. Una parte queda en dos bases Cloudflare D1, EOD2012 y DTPMGEO, y otra en archivos GeoJSON y JSON estáticos. Una aplicación TanStack Start en Cloudflare Workers sirve esos archivos y expone funciones de servidor que leen D1. En el navegador, el mapa hecho con React y MapLibre GL dibuja las comunas, los viajes entre comunas, las rutas por modo de transporte y el ruido, con un medidor de ruido por comuna, y junto a él el comparador reparte los viajes entre comunas por modo de transporte y estima CO2 y PM2.5. Mi parte, marcada con borde de color, fue el mapa con sus capas y el medidor de ruido.",
     caption:
       "De los datos abiertos al navegador: D1 y archivos estáticos detrás de Cloudflare Workers.",
     legend: "Borde de color: donde está mi trabajo.",
@@ -35,7 +35,7 @@ const text = {
     },
     map: {
       title: "Mapa (MapLibre GL)",
-      lines: ["metro, buses RED,", "ciclovías, comunas", "y ruido por comuna"],
+      lines: ["comunas y viajes", "entre comunas, rutas", "por modo y ruido"],
     },
     compare: {
       title: "Comparador",
@@ -45,7 +45,7 @@ const text = {
   },
   en: {
     title: "Pulso Urbano architecture",
-    desc: "The open sources (DTPM GTFS, OCUC cycle lanes, the 2012 Origin-Destination Survey, the Metropolitan Region commune boundaries and Lden noise) go through import and data scripts. Part of them ends up in two Cloudflare D1 databases, EOD2012 and DTPMGEO, and part in static GeoJSON and JSON files. A TanStack Start app on Cloudflare Workers serves those files and exposes server functions that read D1. In the browser, the map built with React and MapLibre GL draws the metro, RED bus, cycle lane, commune and noise layers, with a noise gauge per commune, and next to it the comparator splits trips between communes by transport mode and estimates CO2 and PM2.5. My part, marked with a colored border, was the map with its layers and the noise gauge.",
+    desc: "The open sources (DTPM GTFS, OCUC cycle lanes, the 2012 Origin-Destination Survey, the Metropolitan Region commune boundaries and Lden noise) go through import and data scripts. Part of them ends up in two Cloudflare D1 databases, EOD2012 and DTPMGEO, and part in static GeoJSON and JSON files. A TanStack Start app on Cloudflare Workers serves those files and exposes server functions that read D1. In the browser, the map built with React and MapLibre GL draws the communes, trips between communes, routes by transport mode and noise, with a noise gauge per commune, and next to it the comparator splits trips between communes by transport mode and estimates CO2 and PM2.5. My part, marked with a colored border, was the map with its layers and the noise gauge.",
     caption: "From open data to the browser: D1 and static files behind Cloudflare Workers.",
     legend: "Colored border: where my work is.",
     sources: {
@@ -60,7 +60,7 @@ const text = {
     },
     map: {
       title: "Map (MapLibre GL)",
-      lines: ["metro, RED buses,", "cycle lanes, communes", "and noise per commune"],
+      lines: ["communes and trips", "between communes,", "routes by mode, noise"],
     },
     compare: {
       title: "Comparator",

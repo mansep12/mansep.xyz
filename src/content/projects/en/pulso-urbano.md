@@ -1,7 +1,7 @@
 ---
 title: Pulso Urbano
-summary: Urban simulator for Santiago that shows mobility scenarios and estimates their impact on CO2, PM2.5 and noise, built on real open data.
-outcome: "Working prototype in 54 hours, team of 4: a Santiago map with metro, RED buses, cycle lanes, communes and noise, plus an impact comparator by transport mode."
+summary: Urban simulator for Santiago that shows mobility scenarios and estimates their impact on CO2 and PM2.5, built on real open data with a noise map per commune.
+outcome: "Working prototype in 54 hours, team of 4: a Santiago map with communes, trips between communes and noise, plus an impact comparator by transport mode."
 order: 3
 year: "2026"
 status: done
@@ -46,7 +46,7 @@ The data to estimate it is open: Santiago's 2012 Origin-Destination Survey (EOD,
 
 ### Static files first, then D1
 
-For the map I wrote `scripts/build-data.ts`, which downloads the current DTPM GTFS and the OCUC cycle lanes and emits static GeoJSON in `public/data/` (metro, buses, cycle lanes, frequencies and travel times), and I added the commune boundaries as another GeoJSON. The map loaded them as files, with no database. The same day the team moved communes, cycle lanes, frequencies and travel times into the `DTPMGEO` D1 database, and I switched the map to read communes from there through the `getComunasGeoJSON` server function. Static files need no server but stay frozen until the script runs again; D1 gives one source at the cost of a query before drawing each layer.
+For the map I wrote `scripts/build-data.ts`, which downloads the current DTPM GTFS and the OCUC cycle lanes and emits static GeoJSON and JSON in `public/data/` (metro, buses, cycle lanes, frequencies and travel times), and I added the commune boundaries as another GeoJSON. The map loaded them as files, with no database. The same day the team moved communes, cycle lanes, frequencies and travel times into the `DTPMGEO` D1 database, and the next day I switched the map to read communes from there through the `getComunasGeoJSON` server function. Static files need no server but stay frozen until the script runs again; D1 gives one source at the cost of a query before drawing each layer.
 
 ### Find the current GTFS, with a fallback URL
 
@@ -54,7 +54,7 @@ DTPM publishes new GTFS versions over time, so a fixed URL goes stale. The scrip
 
 ### Noise per commune, only on selection
 
-The noise layer paints georeferenced environmental noise (Lden) in 5 dB bands from 30 to 85 dB(A), with a gauge for each commune's average, minimum and maximum, precomputed in `noise-stats.json`. The layer only appears once a commune is selected, so someone who selects nothing never sees it.
+The noise layer paints georeferenced environmental noise (Lden) in 5 dB bands from 30 to 85 dB(A), with a gauge for each commune's average and its minimum and maximum, precomputed in `noise-stats.json`. The layer only appears once a commune is selected, so someone who selects nothing never sees it.
 
 ### An explicit simulation that did not make the final version
 
@@ -66,14 +66,14 @@ Open sources go through import and data scripts. Part ends up in two D1 database
 
 ## Result
 
-**In 54 hours the team had a working Santiago map with metro, RED buses, cycle lanes, communes and noise, and a comparator that estimates CO2 and PM2.5 when trips between communes change mode.**
+**In 54 hours the team had a working Santiago map with communes, trips between communes and noise, and a comparator that estimates CO2 and PM2.5 when those trips change mode.**
 
-- My 16 commits cover the map's base and layers, the GTFS data script, loading communes from D1, the noise layer and gauge, a 3D terrain view per commune, metro station details and mobile layout fixes.
+- My 16 commits cover the map's base and layers (the metro, bus and cycle lane layers did not make the final version), the GTFS data script, loading communes from D1, the noise layer and gauge, a 3D terrain view per commune, metro station details and mobile layout fixes.
 - The simulation module has unit tests for the CO2 calculation and the station impact radius.
 
 ## What I would change
 
-- **The noise layer's weight.** `public/data/noise.geojson` is 11.5 MB. I would simplify it per commune or serve it as vector tiles.
+- **The noise layer's weight.** `public/data/noise.geojson` is 11.6 MB. I would simplify it per commune or serve it as vector tiles.
 - **Show uncertainty.** The final comparator uses fixed factors in `src/lib/emissions.ts` (15 km per liter, 2.67 kg of CO2 per liter, 0.005 g of PM2.5 per km). My simulation showed three scenarios; I would bring those ranges to the comparator.
 - **Newer data.** The EOD used is from 2012, and the interface should say so next to every estimate.
 - **Integrate earlier.** My simulation and the comparator compute impact separately and only one reached the final page. In 54 hours I would agree early on which piece owns that calculation.
@@ -84,4 +84,4 @@ Open sources go through import and data scripts. Part ends up in two D1 database
 - **My part:** my commits show up as `mansep12` in the history. My work is mostly in `src/map/` (I created it and the team extended it), `scripts/build-data.ts` and `src/simulation/`.
 - **Run it:** per the README, `npm install` and `npm run dev`. Communes and trips are read from D1, so a local copy needs access to the databases defined in `wrangler.jsonc`.
 - **Tests:** `src/simulation/quick-simulation.test.ts` and `src/simulation/station-impact.test.ts`, with Vitest.
-- **No public demo:** the repository links no deployment.
+- **No linked demo:** the README links no deployment.
