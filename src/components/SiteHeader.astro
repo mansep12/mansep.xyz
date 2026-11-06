@@ -1,13 +1,16 @@
 ---
 /**
- * One-line header: name (home link), main navigation, language switch and
- * theme toggle. Below 48rem the navigation wraps to its own row.
+ * One-line header: mark and name (home link), main navigation, language
+ * switch and theme toggle. Below 48rem the navigation wraps to its own row;
+ * from 64rem the three parts sit on the 12-column grid (name on 1-5, the
+ * navigation from column 6, like the project list on the home page).
  */
 import { site } from "../data/site";
 import type { Lang } from "../i18n/locales";
 import { localizedPath, type PageRoute, type RouteKey } from "../i18n/routes";
 import { type UiKey, useTranslations } from "../i18n/ui";
 import LanguageSwitch from "./LanguageSwitch.astro";
+import MerkleMark from "./MerkleMark.astro";
 import ThemeToggle from "./ThemeToggle.astro";
 
 type Props = PageRoute & {
@@ -46,8 +49,11 @@ function current(item: NavItem): "page" | "true" | undefined {
     <a
       class="site-name"
       href={localizedPath("home", lang)}
-      aria-current={route.routeKey === "home" ? "page" : undefined}>{site.name}</a
+      aria-current={route.routeKey === "home" ? "page" : undefined}
     >
+      <MerkleMark reveal={route.routeKey === "home"} />
+      <span class="name">{site.name}</span>
+    </a>
     <nav class="site-nav" aria-label={t("nav.label")}>
       <ul role="list">
         {
@@ -84,9 +90,13 @@ function current(item: NavItem): "page" | "true" | undefined {
     }
 
     .site-name {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2xs);
       margin-inline-end: auto;
       color: var(--color-text);
       font-weight: var(--font-weight-bold);
+      letter-spacing: var(--tracking-heading);
       text-decoration-line: none;
     }
 
@@ -110,14 +120,18 @@ function current(item: NavItem): "page" | "true" | undefined {
 
     .site-nav a {
       color: var(--color-text);
+      font-size: var(--step--1);
+      font-weight: var(--font-weight-medium);
       text-decoration-line: none;
     }
 
-    .site-name:hover,
+    .site-name:hover .name,
     .site-nav a:hover,
     .site-nav a[aria-current] {
       text-decoration-line: underline;
       text-decoration-color: var(--color-accent);
+      text-decoration-thickness: 2px;
+      text-underline-offset: 0.35em;
     }
 
     @media (min-width: 48rem) {
@@ -129,6 +143,29 @@ function current(item: NavItem): "page" | "true" | undefined {
         order: 0;
         flex-basis: auto;
         margin-inline-start: auto;
+      }
+    }
+
+    @media (min-width: 64rem) {
+      .inner {
+        display: grid;
+        grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
+        column-gap: var(--grid-gap);
+      }
+
+      .site-name {
+        grid-column: 1 / span 5;
+        justify-self: start;
+      }
+
+      .site-nav {
+        grid-column: 6 / span 4;
+        margin-inline-start: 0;
+      }
+
+      .tools {
+        grid-column: 10 / -1;
+        justify-self: end;
       }
     }
   }

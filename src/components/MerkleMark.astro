@@ -1,0 +1,119 @@
+---
+/**
+ * The site mark: a seven-node Merkle tree (four leaves, two inner nodes, a
+ * filled root) in thin signal-colored lines. Decorative; the name next to
+ * it is the link text. With `reveal`, the edges draw once from the leaves up
+ * to the root (600 ms in total), and not at all under reduced motion.
+ */
+
+interface Props {
+  /** Draw the edges once on load (the home page only). */
+  reveal?: boolean;
+}
+
+const { reveal = false } = Astro.props;
+
+interface Point {
+  readonly x: number;
+  readonly y: number;
+}
+
+const root: Point = { x: 14, y: 3 };
+const inner: readonly Point[] = [
+  { x: 7, y: 12 },
+  { x: 21, y: 12 },
+];
+const leaves: readonly Point[] = [3.5, 10.5, 17.5, 24.5].map((x) => ({ x, y: 21 }));
+interface Edge {
+  readonly from: Point;
+  readonly to: Point;
+  /** Inner node to root: drawn after the leaf edges. */
+  readonly upper: boolean;
+}
+
+// Each edge starts at the child, so the reveal draws upward.
+const edges: readonly Edge[] = [
+  ...leaves.map((leaf, index) => ({
+    from: leaf,
+    to: inner[index < 2 ? 0 : 1] ?? root,
+    upper: false,
+  })),
+  ...inner.map((node) => ({ from: node, to: root, upper: true })),
+];
+const NODE = 3.2;
+---
+
+<svg
+  class:list={["merkle", { reveal }]}
+  viewBox="0 0 28 24"
+  width="28"
+  height="24"
+  aria-hidden="true"
+  focusable="false"
+>
+  {
+    edges.map(({ from, to, upper }) => (
+      <path
+        class:list={["edge", { upper }]}
+        d={`M${from.x} ${from.y}L${to.x} ${to.y}`}
+        pathLength="1"
+      />
+    ))
+  }
+  {
+    [...leaves, ...inner, root].map(({ x, y }) => (
+      <rect
+        class:list={["node", { root: x === root.x && y === root.y }]}
+        x={x - NODE / 2}
+        y={y - NODE / 2}
+        width={NODE}
+        height={NODE}
+      />
+    ))
+  }
+</svg>
+
+<style>
+  @layer components {
+    .merkle {
+      flex: none;
+      inline-size: auto;
+      block-size: 1.5em;
+    }
+
+    .edge {
+      fill: none;
+      stroke: var(--color-accent);
+      stroke-width: 1;
+    }
+
+    .node {
+      fill: var(--color-bg);
+      stroke: var(--color-accent);
+      stroke-width: 1;
+    }
+
+    .node.root {
+      fill: var(--color-accent);
+    }
+
+    /* The one moment of motion on the site: leaves first, then the root. */
+    @media (prefers-reduced-motion: no-preference) {
+      .reveal .edge {
+        stroke-dasharray: 1;
+        stroke-dashoffset: 1;
+        animation: merkle-draw 300ms var(--ease) forwards;
+      }
+
+      .reveal .edge.upper {
+        animation-delay: 300ms;
+      }
+    }
+
+    @keyframes merkle-draw {
+      to {
+        stroke-dashoffset: 0;
+      }
+    }
+  }
+</style>
