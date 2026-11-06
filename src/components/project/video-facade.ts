@@ -13,7 +13,7 @@ function play(frame: HTMLElement): void {
   iframe.src = `${EMBED_ORIGIN}/embed/${id}?autoplay=1&rel=0`;
   iframe.title = frame.dataset.videoTitle ?? "";
   iframe.allow =
-    "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+    "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
   iframe.allowFullscreen = true;
   iframe.referrerPolicy = "strict-origin-when-cross-origin";
   frame.replaceChildren(iframe);
