@@ -1,8 +1,9 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "mansep-xyz",
-  // Worker entrypoint provided by the Astro Cloudflare adapter.
-  "main": "@astrojs/cloudflare/entrypoints/server",
+  // Custom entrypoint: the Astro Cloudflare adapter's handler plus the CV
+  // generator's Durable Object class (src/worker.ts).
+  "main": "./src/worker.ts",
   "compatibility_date": "2026-11-06",
   "compatibility_flags": ["nodejs_compat"],
   "assets": {
@@ -16,5 +17,20 @@
   },
   // Serve the site on the apex domain. Cloudflare creates the DNS record and
   // the certificate. A www redirect, if added, lives in the zone settings.
-  "routes": [{ "pattern": "mansep.xyz", "custom_domain": true }]
+  "routes": [{ "pattern": "mansep.xyz", "custom_domain": true }],
+  // CV generator (docs/decisions/0009-cv-generator.md). Non-secret limits
+  // live here. CV_GENERATOR_ENABLED is set in the dashboard and survives
+  // deploys (keep_vars), so it works as a kill switch without a deploy.
+  // Secrets: ANTHROPIC_API_KEY, TURNSTILE_SECRET_KEY (wrangler secret put).
+  "keep_vars": true,
+  "vars": {
+    "CV_DAILY_LIMIT": "40",
+    "CV_PER_IP_DAILY_LIMIT": "3",
+    "TURNSTILE_HOSTNAMES": "mansep.xyz"
+  },
+  // Daily counters for the CV generator: one SQLite-backed Durable Object.
+  "durable_objects": {
+    "bindings": [{ "name": "CV_BUDGET", "class_name": "CvBudget" }]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["CvBudget"] }]
 }
