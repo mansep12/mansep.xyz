@@ -1,13 +1,13 @@
 ---
+import { researchKindLabels } from "../../i18n/labels";
 /**
  * A research entry in short (kind, title, institution, one-line summary,
  * status) with a link to the research page.
  */
 import type { Lang } from "../../i18n/locales";
 import { localizedPath } from "../../i18n/routes";
-import { type UiKey, useTranslations } from "../../i18n/ui";
+import { useTranslations } from "../../i18n/ui";
 import type { ResearchEntry } from "../../lib/content";
-import type { ResearchKind } from "../../lib/content/schemas";
 
 interface Props {
   lang: Lang;
@@ -17,19 +17,13 @@ interface Props {
 const { lang, entry } = Astro.props;
 const t = useTranslations(lang);
 const { title, summary, institution, status, kind } = entry.data;
-
-const kindLabels = {
-  thesis: "research.kind.thesis",
-  capsule: "research.kind.capsule",
-  course: "research.kind.course",
-} as const satisfies Record<ResearchKind, UiKey>;
 ---
 
 <article class="research-card flow">
-  <p class="kind mono">{t(kindLabels[kind])} · {institution}</p>
+  <p class="kind mono">{t(researchKindLabels[kind])} · {institution}</p>
   <h3>{title}</h3>
   <p>{summary}</p>
-  <p class="status mono">{status}</p>
+  <p class="status">{status}</p>
   <p><a href={localizedPath("research", lang)}>{t("home.researchLink")}</a></p>
 </article>
 

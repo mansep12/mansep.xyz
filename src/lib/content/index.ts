@@ -8,6 +8,7 @@ import { type CollectionEntry, getCollection, getEntry } from "astro:content";
 import type { Resume } from "../../data/resume.schema";
 import { type Lang, otherLangs } from "../../i18n/locales";
 import { parseEntryId } from "./entry-id";
+import { researchKinds } from "./schemas";
 
 export { entryId, parseEntryId } from "./entry-id";
 
@@ -54,11 +55,14 @@ export async function getProjects(lang: Lang): Promise<ProjectEntry[]> {
   return projects.sort((a, b) => a.data.order - b.data.order);
 }
 
-/** Research entries in one locale, newest first. */
+/** Research entries in one locale: newest first, then by kind (thesis, capsule, course), then title. */
 export async function getResearch(lang: Lang): Promise<ResearchEntry[]> {
   const research = await getEntriesByLocale("research", lang);
   return research.sort(
-    (a, b) => b.data.year.localeCompare(a.data.year) || a.data.title.localeCompare(b.data.title),
+    (a, b) =>
+      b.data.year.localeCompare(a.data.year) ||
+      researchKinds.indexOf(a.data.kind) - researchKinds.indexOf(b.data.kind) ||
+      a.data.title.localeCompare(b.data.title),
   );
 }
 

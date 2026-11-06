@@ -204,6 +204,39 @@
     margin-block-start: var(--flow-space, 1em);
   }
 
+  /* Rendered Markdown and other running prose. */
+  .prose {
+    max-inline-size: var(--measure);
+  }
+
+  .prose > * + * {
+    margin-block-start: 1em;
+  }
+
+  .prose > :is(h2, h3, h4) {
+    margin-block-start: 1.75em;
+  }
+
+  .prose > :is(h2, h3, h4) + * {
+    margin-block-start: 0.5em;
+  }
+
+  .prose h2 {
+    font-size: var(--step-2);
+  }
+
+  .prose h3 {
+    font-size: var(--step-1);
+  }
+
+  .prose :is(ul, ol) {
+    padding-inline-start: 1.25em;
+  }
+
+  .prose li + li {
+    margin-block-start: 0.35em;
+  }
+
   .mono {
     font-family: var(--font-mono);
     font-size: 0.9em;

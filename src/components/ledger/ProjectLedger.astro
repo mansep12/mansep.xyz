@@ -6,11 +6,11 @@
  * index). With no projects it renders a one-line empty state.
  */
 import { site } from "../../data/site";
+import { projectStatusLabels } from "../../i18n/labels";
 import type { Lang } from "../../i18n/locales";
 import { localizedPath } from "../../i18n/routes";
-import { type UiKey, useTranslations } from "../../i18n/ui";
+import { useTranslations } from "../../i18n/ui";
 import { entrySlug, type ProjectEntry } from "../../lib/content";
-import type { ProjectStatus } from "../../lib/content/schemas";
 import { displayUrl } from "../../lib/urls";
 
 interface Props {
@@ -25,12 +25,6 @@ interface Props {
 const { lang, projects, detailed = false, headingLevel = 3 } = Astro.props;
 const t = useTranslations(lang);
 const Heading = headingLevel === 2 ? "h2" : "h3";
-
-const statusLabels = {
-  done: "status.done",
-  mvp: "status.mvp",
-  "in-progress": "status.in-progress",
-} as const satisfies Record<ProjectStatus, UiKey>;
 ---
 
 {
@@ -93,7 +87,7 @@ const statusLabels = {
               {year}
               <span aria-hidden="true"> · </span>
               <span class="visually-hidden">. {t("projects.status")}: </span>
-              {t(statusLabels[status])}
+              {t(projectStatusLabels[status])}
             </p>
           </li>
         );

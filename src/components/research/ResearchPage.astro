@@ -1,0 +1,165 @@
+---
+/**
+ * Research page for one locale: every research entry with its facts
+ * (institution, advisors, status, year) and its Markdown body. Entry bodies
+ * use `###` headings, since each entry title is an h2.
+ */
+import { render } from "astro:content";
+import { researchKindLabels } from "../../i18n/labels";
+import type { Lang } from "../../i18n/locales";
+import { useTranslations } from "../../i18n/ui";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { entrySlug, getResearch } from "../../lib/content";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const entries = await Promise.all(
+  (await getResearch(lang)).map(async (entry) => ({
+    entry,
+    slug: entrySlug(entry),
+    Content: (await render(entry)).Content,
+  })),
+);
+---
+
+<BaseLayout
+  lang={lang}
+  routeKey="research"
+  title={t("research.title")}
+  description={t("research.description")}
+>
+  <div class="research">
+    <header class="flow measure">
+      <h1>{t("research.title")}</h1>
+      <p class="lede">{t("research.intro")}</p>
+    </header>
+
+    {
+      entries.map(({ entry, slug, Content }) => {
+        const { title, summary, institution, advisors, status, year, kind, links } = entry.data;
+        return (
+          <article class="entry" id={slug} aria-labelledby={`${slug}-title`}>
+            <p class="kind mono">{t(researchKindLabels[kind])}</p>
+            <h2 id={`${slug}-title`}>{title}</h2>
+            <p class="summary">{summary}</p>
+            <dl class="facts">
+              <div>
+                <dt>{t("research.institution")}</dt>
+                <dd>{institution}</dd>
+              </div>
+              {advisors.length > 0 && (
+                <div>
+                  <dt>{t("research.advisors")}</dt>
+                  <dd>{advisors.join(", ")}</dd>
+                </div>
+              )}
+              <div>
+                <dt>{t("research.status")}</dt>
+                <dd>{status}</dd>
+              </div>
+              <div>
+                <dt>{t("research.year")}</dt>
+                <dd class="mono">{year}</dd>
+              </div>
+            </dl>
+            <div class="prose">
+              <Content />
+            </div>
+            {links && (links.repo || links.pdf || links.doi) && (
+              <ul role="list" class="links">
+                {links.repo && (
+                  <li>
+                    <a href={links.repo}>{t("research.repo")}</a>
+                  </li>
+                )}
+                {links.pdf && (
+                  <li>
+                    <a href={links.pdf}>{t("research.pdf")}</a>
+                  </li>
+                )}
+                {links.doi && (
+                  <li>
+                    {t("research.doi")}: <a href={`https://doi.org/${links.doi}`}>{links.doi}</a>
+                  </li>
+                )}
+              </ul>
+            )}
+          </article>
+        );
+      })
+    }
+  </div>
+</BaseLayout>
+
+<style>
+  @layer components {
+    .research {
+      display: grid;
+      gap: var(--space-xl);
+    }
+
+    .entry {
+      display: grid;
+      gap: var(--space-s);
+      padding-block-start: var(--space-l);
+      border-block-start: var(--border-width) solid var(--color-border);
+    }
+
+    .entry > * {
+      max-inline-size: var(--measure);
+    }
+
+    .kind {
+      color: var(--color-muted);
+      font-size: var(--step--1);
+    }
+
+    .entry h2 {
+      font-size: var(--step-3);
+    }
+
+    .summary {
+      font-size: var(--step-1);
+      line-height: var(--leading-snug);
+    }
+
+    .facts {
+      display: grid;
+      gap: var(--space-3xs);
+      padding: var(--space-xs) var(--space-s);
+      background-color: var(--color-surface);
+      border: var(--border-width) solid var(--color-border);
+      border-radius: var(--radius);
+      font-size: var(--step--1);
+    }
+
+    .facts div {
+      display: grid;
+    }
+
+    .facts dt {
+      color: var(--color-muted);
+    }
+
+    .facts dd {
+      margin: 0;
+    }
+
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      column-gap: var(--space-s);
+    }
+
+    @media (min-width: 40rem) {
+      .facts div {
+        grid-template-columns: 9rem minmax(0, 1fr);
+        column-gap: var(--space-s);
+      }
+    }
+  }
+</style>
