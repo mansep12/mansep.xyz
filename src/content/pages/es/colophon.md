@@ -7,7 +7,7 @@ Este sitio es estático: cada página se genera una vez, al compilar, y se sirve
 
 ## Cómo está hecho
 
-- **[Astro](https://astro.build)** genera las páginas. El sitio es contenido, y Astro produce HTML sin JavaScript salvo donde hace falta (el tema, el correo, el botón del CV). Los textos y las fichas de proyecto pasan por esquemas: si a un proyecto le falta un enlace al código o a una demo, la compilación falla.
+- **[Astro](https://astro.build)** genera las páginas. El sitio es contenido, y Astro produce HTML sin JavaScript salvo donde hace falta (el tema, el correo, el botón del CV y el reproductor de video). Los textos y las fichas de proyecto pasan por esquemas: si a un proyecto le falta un enlace al código o a una demo, la compilación falla.
 - **[Cloudflare Workers](https://developers.cloudflare.com/workers/) con static assets** sirve los archivos. El plan gratuito cubre lo que el sitio necesita, el dominio y el DNS están en la misma cuenta, y ya había usado Workers en Pulso Urbano.
 - **CSS propio con tokens**, sin framework. El sitio es chico y el CSS cabe en pocos archivos. Los colores se definen una vez por tema con `light-dark()`; el tema sigue al sistema salvo que elijas otro.
 - **IBM Plex Sans e IBM Plex Mono**, alojadas en el propio sitio en vez de pedirlas a un servicio de fuentes. Son una sola familia, y la mono marca lo que es dato: fechas, stack, estados.
