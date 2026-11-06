@@ -4,6 +4,7 @@ import sitemap from "@astrojs/sitemap";
 import { defineConfig, fontProviders } from "astro/config";
 import { site } from "./src/data/site";
 import { defaultLang, locales } from "./src/i18n/locales";
+import ogImages from "./src/integrations/og-images";
 import { resolveBuildCommit } from "./src/lib/build-info";
 import { canonicalPageUrl, sitemapLinks } from "./src/lib/sitemap";
 
@@ -46,6 +47,8 @@ export default defineConfig({
         return { ...item, url, links: sitemapLinks(url, sitemapUrls) };
       },
     }),
+    // dist/client/og/<path>.png for every page, rendered in Node after the build.
+    ogImages(),
   ],
   // No sessions needed: keeps the adapter from auto-provisioning a KV namespace.
   session: false,

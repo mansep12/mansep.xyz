@@ -19,6 +19,12 @@ import { site } from "../data/site";
 import { type Lang, localeInfo, otherLangs } from "../i18n/locales";
 import { absoluteUrl, alternateLinks, alternates, type PageRoute } from "../i18n/routes";
 import { useTranslations } from "../i18n/ui";
+import {
+  documentTitle as formatDocumentTitle,
+  OG_IMAGE_HEIGHT,
+  OG_IMAGE_WIDTH,
+  ogImagePath,
+} from "../lib/seo";
 import { profilePageJsonLd, serializeJsonLd } from "../lib/structured-data";
 import { themeColors } from "../lib/theme";
 import "../styles/tokens.css";
@@ -30,7 +36,11 @@ type Props = PageRoute & {
   title: string;
   /** Meta and social description, one or two sentences. */
   description: string;
-  /** Social preview image: site-relative path or absolute URL (1200x630). */
+  /**
+   * Social preview image: site-relative path or absolute URL (1200x630).
+   * Defaults to the image generated at build time for the page's canonical
+   * path (src/integrations/og-images.ts); pages outside the route map get none.
+   */
   ogImage?: string;
   /** Keep the page out of search results. */
   noindex?: boolean;
@@ -59,12 +69,15 @@ const {
 } = Astro.props;
 
 const t = useTranslations(lang);
-const documentTitle = route.routeKey === "home" ? site.name : `${title} · ${site.name}`;
+const documentTitle = formatDocumentTitle(title, route.routeKey === "home");
 const canonical = route.routeKey ? alternates(route.routeKey, route.params)[lang] : undefined;
 const hreflangLinks =
   translated && route.routeKey ? alternateLinks(route.routeKey, route.params) : [];
 const hasAlternates = hreflangLinks.length > 0;
-const ogImageUrl = ogImage ? absoluteUrl(ogImage) : undefined;
+const generatedOgImage =
+  !ogImage && canonical ? ogImagePath(new URL(canonical).pathname) : undefined;
+const ogImageSource = ogImage ?? generatedOgImage;
+const ogImageUrl = ogImageSource ? absoluteUrl(ogImageSource) : undefined;
 const structuredData =
   profile && canonical
     ? profilePageJsonLd({
@@ -113,6 +126,15 @@ const structuredData =
         ))
     }
     {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
+    {
+      generatedOgImage && (
+        <>
+          <meta property="og:image:width" content={String(OG_IMAGE_WIDTH)} />
+          <meta property="og:image:height" content={String(OG_IMAGE_HEIGHT)} />
+          <meta property="og:image:alt" content={documentTitle} />
+        </>
+      )
+    }
     <meta name="twitter:card" content={ogImageUrl ? "summary_large_image" : "summary"} />
     <meta name="twitter:title" content={documentTitle} />
     <meta name="twitter:description" content={description} />
