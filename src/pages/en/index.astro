@@ -1,15 +1,5 @@
 ---
-import { site } from "../../data/site";
-import { t } from "../../i18n/ui";
-import BaseLayout from "../../layouts/BaseLayout.astro";
-
-const lang = "en";
+import HomePage from "../../components/home/HomePage.astro";
 ---
 
-<BaseLayout lang={lang} routeKey="home" title={site.name} description={site.tagline}>
-  <div class="measure flow">
-    <h1>{site.name}</h1>
-    <p class="lede">{site.tagline}</p>
-    <p class="muted">{t(lang, "home.status")}</p>
-  </div>
-</BaseLayout>
+<HomePage lang="en" />

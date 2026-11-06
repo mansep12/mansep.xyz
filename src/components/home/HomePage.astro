@@ -1,0 +1,107 @@
+---
+/**
+ * Home page body for one locale: who, what, the project ledger, the thesis,
+ * contact and when the page was last built. Meant to be read in 30 seconds
+ * on a phone.
+ */
+import { site } from "../../data/site";
+import type { Lang } from "../../i18n/locales";
+import { localizedPath } from "../../i18n/routes";
+import { useTranslations } from "../../i18n/ui";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getProjects, getResearch } from "../../lib/content";
+import { formatDate, isoYearMonth } from "../../lib/dates";
+import InProgressNote from "../ledger/InProgressNote.astro";
+import ProjectLedger from "../ledger/ProjectLedger.astro";
+import ContactBlock from "./ContactBlock.astro";
+import ResearchCard from "./ResearchCard.astro";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const projects = await getProjects(lang);
+const thesis = (await getResearch(lang)).find((entry) => entry.data.kind === "thesis");
+const updated = isoYearMonth(new Date(), site.timeZone);
+---
+
+<BaseLayout lang={lang} routeKey="home" title={site.name} description={t("home.description")}>
+  <div class="home">
+    <header class="intro">
+      <h1>{site.name}</h1>
+      <p class="tagline mono" lang="en">{site.tagline}</p>
+      <p class="lede">{t("home.intro")}</p>
+    </header>
+
+    <section aria-labelledby="home-projects">
+      <h2 id="home-projects">{t("home.projects")}</h2>
+      <ProjectLedger lang={lang} projects={projects} />
+      <InProgressNote lang={lang} />
+      {
+        projects.length > 0 && (
+          <p>
+            <a href={localizedPath("projects", lang)}>{t("home.allProjects")}</a>
+          </p>
+        )
+      }
+    </section>
+
+    {
+      thesis && (
+        <section aria-labelledby="home-research">
+          <h2 id="home-research">{t("home.research")}</h2>
+          <ResearchCard lang={lang} entry={thesis} />
+        </section>
+      )
+    }
+
+    <section aria-labelledby="home-contact">
+      <h2 id="home-contact">{t("home.contact")}</h2>
+      <ContactBlock lang={lang} />
+    </section>
+
+    <p class="updated mono">
+      {t("home.updated")} <time datetime={updated}>{formatDate(updated, lang, "long")}</time>
+    </p>
+  </div>
+</BaseLayout>
+
+<style>
+  @layer components {
+    .home {
+      display: grid;
+      gap: var(--space-xl);
+    }
+
+    .intro {
+      display: grid;
+      gap: var(--space-2xs);
+      max-inline-size: var(--measure);
+    }
+
+    .tagline {
+      color: var(--color-muted);
+      font-size: var(--step--1);
+    }
+
+    .lede {
+      margin-block-start: var(--space-2xs);
+    }
+
+    section {
+      display: grid;
+      gap: var(--space-s);
+    }
+
+    h2 {
+      font-size: var(--step-2);
+    }
+
+    .updated {
+      color: var(--color-muted);
+      font-size: var(--step--1);
+    }
+  }
+</style>

@@ -1,0 +1,26 @@
+---
+/**
+ * One line about work that is not listed yet because it has no public
+ * repository (today: Salud Hub). No link until the repo is published.
+ */
+import type { Lang } from "../../i18n/locales";
+import { useTranslations } from "../../i18n/ui";
+
+interface Props {
+  lang: Lang;
+}
+
+const t = useTranslations(Astro.props.lang);
+---
+
+<p class="in-progress">{t("projects.inProgress")}</p>
+
+<style>
+  @layer components {
+    .in-progress {
+      color: var(--color-muted);
+      font-size: var(--step--1);
+      max-inline-size: var(--measure);
+    }
+  }
+</style>

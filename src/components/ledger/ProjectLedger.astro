@@ -1,0 +1,211 @@
+---
+/**
+ * Projects as the rows of a ledger: the title links to the project page,
+ * one line below it, and year and status in mono on the right.
+ * `detailed` adds the summary, role, stack and outbound links (projects
+ * index). With no projects it renders a one-line empty state.
+ */
+import { site } from "../../data/site";
+import type { Lang } from "../../i18n/locales";
+import { localizedPath } from "../../i18n/routes";
+import { type UiKey, useTranslations } from "../../i18n/ui";
+import { entrySlug, type ProjectEntry } from "../../lib/content";
+import type { ProjectStatus } from "../../lib/content/schemas";
+import { displayUrl } from "../../lib/urls";
+
+interface Props {
+  lang: Lang;
+  projects: readonly ProjectEntry[];
+  /** Add summary, role, stack and links to each row. */
+  detailed?: boolean;
+  /** Level of each project title, under the section heading. */
+  headingLevel?: 2 | 3;
+}
+
+const { lang, projects, detailed = false, headingLevel = 3 } = Astro.props;
+const t = useTranslations(lang);
+const Heading = headingLevel === 2 ? "h2" : "h3";
+
+const statusLabels = {
+  done: "status.done",
+  mvp: "status.mvp",
+  "in-progress": "status.in-progress",
+} as const satisfies Record<ProjectStatus, UiKey>;
+---
+
+{
+  projects.length === 0 ? (
+    <p class="empty muted">
+      {t("projects.empty")} <a href={site.links.github}>{displayUrl(site.links.github)}</a>.
+    </p>
+  ) : (
+    <ol role="list" class:list={["ledger", { detailed }]}>
+      {projects.map((project) => {
+        const { title, summary, outcome, year, status, role, stack, links } = project.data;
+        return (
+          <li class="row">
+            <div class="entry">
+              <Heading class="title">
+                <a href={localizedPath("project", lang, { slug: entrySlug(project) })}>{title}</a>
+              </Heading>
+              {detailed && <p class="summary">{summary}</p>}
+              <p class="outcome">{outcome}</p>
+              {detailed && (
+                <dl class="facts">
+                  <div>
+                    <dt>{t("projects.role")}</dt>
+                    <dd>{role}</dd>
+                  </div>
+                  <div>
+                    <dt>{t("projects.stack")}</dt>
+                    <dd>
+                      <ul role="list" class="stack mono">
+                        {stack.map((item) => (
+                          <li>{item}</li>
+                        ))}
+                      </ul>
+                    </dd>
+                  </div>
+                </dl>
+              )}
+              {detailed && (
+                <ul role="list" class="links">
+                  {links.repo && (
+                    <li>
+                      <a href={links.repo}>{t("projects.repo")}</a>
+                    </li>
+                  )}
+                  {links.demo && (
+                    <li>
+                      <a href={links.demo}>{t("projects.demo")}</a>
+                    </li>
+                  )}
+                  {links.video && (
+                    <li>
+                      <a href={links.video}>{t("projects.video")}</a>
+                    </li>
+                  )}
+                </ul>
+              )}
+            </div>
+            <p class="meta mono">
+              <span class="visually-hidden">{t("projects.year")}: </span>
+              {year}
+              <span aria-hidden="true"> · </span>
+              <span class="visually-hidden">. {t("projects.status")}: </span>
+              {t(statusLabels[status])}
+            </p>
+          </li>
+        );
+      })}
+    </ol>
+  )
+}
+
+<style>
+  @layer components {
+    .ledger {
+      border-block-start: var(--border-width) solid var(--color-border);
+    }
+
+    .row {
+      display: grid;
+      gap: var(--space-3xs);
+      padding-block: var(--space-s);
+      border-block-end: var(--border-width) solid var(--color-border);
+    }
+
+    .entry {
+      display: grid;
+      gap: var(--space-3xs);
+    }
+
+    .title {
+      font-size: var(--step-1);
+    }
+
+    .title a {
+      color: var(--color-text);
+      text-decoration-color: var(--color-accent);
+    }
+
+    .title a:hover {
+      color: var(--color-accent);
+    }
+
+    .outcome {
+      color: var(--color-muted);
+    }
+
+    .detailed .outcome {
+      color: var(--color-text);
+    }
+
+    .detailed .summary {
+      color: var(--color-muted);
+    }
+
+    .meta {
+      color: var(--color-muted);
+      font-size: var(--step--1);
+      white-space: nowrap;
+    }
+
+    .facts {
+      display: grid;
+      gap: var(--space-3xs);
+      margin-block-start: var(--space-2xs);
+      font-size: var(--step--1);
+    }
+
+    .facts div {
+      display: flex;
+      flex-wrap: wrap;
+      column-gap: var(--space-2xs);
+    }
+
+    .facts dt {
+      color: var(--color-muted);
+    }
+
+    .facts dt::after {
+      content: ":";
+    }
+
+    .facts dd {
+      margin: 0;
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      column-gap: var(--space-2xs);
+      font-size: 1em;
+    }
+
+    .stack li:not(:last-child)::after {
+      content: " ·";
+      color: var(--color-muted);
+    }
+
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      column-gap: var(--space-s);
+      margin-block-start: var(--space-3xs);
+      font-size: var(--step--1);
+    }
+
+    @media (min-width: 40rem) {
+      .row {
+        grid-template-columns: minmax(0, 1fr) auto;
+        column-gap: var(--space-m);
+        align-items: baseline;
+      }
+
+      .meta {
+        text-align: end;
+      }
+    }
+  }
+</style>

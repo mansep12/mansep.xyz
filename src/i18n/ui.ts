@@ -30,7 +30,37 @@ const es = {
   "footer.privacy": "Privacidad",
   "footer.license": "Código bajo licencia MIT. Contenido con todos los derechos reservados.",
   "footer.builtFrom": "Compilado desde",
-  "home.status": "Este sitio está en construcción.",
+  "home.description":
+    "Software engineer en Santiago: backend, criptografía aplicada y seguridad. Proyectos, investigación, CV y contacto.",
+  "home.intro":
+    "Construyo backends y contratos inteligentes donde importan las firmas, la privacidad y el origen de los datos.",
+  "home.projects": "Proyectos",
+  "home.allProjects": "Todos los proyectos",
+  "home.research": "Investigación",
+  "home.researchLink": "Más sobre la investigación",
+  "home.contact": "Contacto",
+  "home.updated": "Actualizado:",
+  "contact.email": "Correo",
+  "contact.location": "Ubicación",
+  "contact.availability":
+    "Busco trabajo como backend, full-stack o security engineer, en Santiago, remoto o híbrido, de preferencia en equipos que trabajen en inglés.",
+  "projects.inProgress":
+    "En curso: Salud Hub, que junta datos de Garmin, Hevy, Zepp Life y un registro de comidas, con un coach de IA encima que los lee y me escribe primero. Corre en local; publico el repo cuando esté listo.",
+  "projects.empty":
+    "Las fichas de los proyectos todavía no están publicadas aquí. Mientras tanto, el código está en",
+  "projects.year": "Año",
+  "projects.status": "Estado",
+  "projects.role": "Rol",
+  "projects.stack": "Stack",
+  "projects.repo": "Código",
+  "projects.demo": "Demo",
+  "projects.video": "Video",
+  "status.done": "terminado",
+  "status.mvp": "MVP",
+  "status.in-progress": "en curso",
+  "research.kind.thesis": "Tesis de magíster",
+  "research.kind.capsule": "Cápsula de investigación",
+  "research.kind.course": "Formación",
 } as const;
 
 export type UiKey = keyof typeof es;
@@ -59,7 +89,37 @@ const en = {
   "footer.privacy": "Privacy",
   "footer.license": "Code under the MIT License. Content all rights reserved.",
   "footer.builtFrom": "Built from",
-  "home.status": "This site is under construction.",
+  "home.description":
+    "Software engineer in Santiago, Chile: backend, applied cryptography and security. Projects, research, CV and contact.",
+  "home.intro":
+    "I build backends and smart contracts where signatures, privacy and data provenance matter.",
+  "home.projects": "Projects",
+  "home.allProjects": "All projects",
+  "home.research": "Research",
+  "home.researchLink": "More about the research",
+  "home.contact": "Contact",
+  "home.updated": "Updated:",
+  "contact.email": "Email",
+  "contact.location": "Location",
+  "contact.availability":
+    "I'm looking for work as a backend, full-stack or security engineer, in Santiago, remote or hybrid, preferably on teams that work in English.",
+  "projects.inProgress":
+    "In progress: Salud Hub brings together data from Garmin, Hevy, Zepp Life and food logs, with an AI coach on top that reads them and reaches out first. It runs locally; I'll publish the repo when it's ready.",
+  "projects.empty":
+    "The project write-ups are not published here yet. In the meantime, the code is at",
+  "projects.year": "Year",
+  "projects.status": "Status",
+  "projects.role": "Role",
+  "projects.stack": "Stack",
+  "projects.repo": "Code",
+  "projects.demo": "Demo",
+  "projects.video": "Video",
+  "status.done": "done",
+  "status.mvp": "MVP",
+  "status.in-progress": "in progress",
+  "research.kind.thesis": "Master's thesis",
+  "research.kind.capsule": "Research capsule",
+  "research.kind.course": "Training",
 } as const satisfies Record<UiKey, string>;
 
 export const ui: Record<Lang, Record<UiKey, string>> = { es, en };

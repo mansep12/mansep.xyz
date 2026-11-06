@@ -1,0 +1,77 @@
+---
+/**
+ * Every way to reach Manuel, plus location, time zone and what work he is
+ * looking for. The address is assembled in the browser (EmailLink).
+ */
+import { site } from "../../data/site";
+import type { Lang } from "../../i18n/locales";
+import { useTranslations } from "../../i18n/ui";
+import { displayUrl } from "../../lib/urls";
+import EmailLink from "../EmailLink.astro";
+
+interface Props {
+  lang: Lang;
+}
+
+const t = useTranslations(Astro.props.lang);
+---
+
+<div class="contact flow">
+  <dl class="channels">
+    <div>
+      <dt>{t("contact.email")}</dt>
+      <dd><EmailLink /></dd>
+    </div>
+    <div>
+      <dt>LinkedIn</dt>
+      <dd><a href={site.links.linkedin} rel="me">{displayUrl(site.links.linkedin)}</a></dd>
+    </div>
+    <div>
+      <dt>GitHub</dt>
+      <dd><a href={site.links.github} rel="me">{displayUrl(site.links.github)}</a></dd>
+    </div>
+    <div>
+      <dt>{t("contact.location")}</dt>
+      <dd>
+        {site.location} <span aria-hidden="true">·</span>
+        <span class="mono">{site.timeZone}</span>
+      </dd>
+    </div>
+  </dl>
+  <p class="availability">{t("contact.availability")}</p>
+</div>
+
+<style>
+  @layer components {
+    .channels {
+      display: grid;
+      gap: var(--space-2xs);
+    }
+
+    .channels div {
+      display: grid;
+      gap: 0 var(--space-s);
+    }
+
+    dt {
+      color: var(--color-muted);
+      font-size: var(--step--1);
+    }
+
+    dd {
+      margin: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .availability {
+      max-inline-size: var(--measure);
+    }
+
+    @media (min-width: 40rem) {
+      .channels div {
+        grid-template-columns: 8rem minmax(0, 1fr);
+        align-items: baseline;
+      }
+    }
+  }
+</style>
