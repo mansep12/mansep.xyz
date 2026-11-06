@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { highlightIds, loadResumes, parseResumes } from "../src/data/resume.schema";
 import { entryId, entryIdFromPath, parseEntryId } from "../src/lib/content/entry-id";
-import { projectSchema, researchSchema } from "../src/lib/content/schemas";
+import { pageSchema, projectSchema, researchSchema } from "../src/lib/content/schemas";
 
 const project = {
   title: "Nodus",
@@ -70,6 +70,14 @@ describe("researchSchema", () => {
       researchSchema.safeParse({ ...research, links: { doi: "https://doi.org/10.1/x" } }).success,
     ).toBe(false);
     expect(researchSchema.safeParse({ ...research, kind: "blog" }).success).toBe(false);
+  });
+});
+
+describe("pageSchema", () => {
+  it("requires a single-line title and description without dashes", () => {
+    expect(pageSchema.safeParse({ title: "About", description: "Who I am." }).success).toBe(true);
+    expect(pageSchema.safeParse({ title: "About", description: "a \u2014 b" }).success).toBe(false);
+    expect(pageSchema.safeParse({ title: "About" }).success).toBe(false);
   });
 });
 

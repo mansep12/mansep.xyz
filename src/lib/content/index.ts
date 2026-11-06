@@ -7,14 +7,15 @@
 import { type CollectionEntry, getCollection, getEntry } from "astro:content";
 import type { Resume } from "../../data/resume.schema";
 import { type Lang, otherLangs } from "../../i18n/locales";
-import { parseEntryId } from "./entry-id";
+import { entryId, parseEntryId } from "./entry-id";
 import { researchKinds } from "./schemas";
 
 export { entryId, parseEntryId } from "./entry-id";
 
-export type LocalizedCollection = "projects" | "research";
+export type LocalizedCollection = "projects" | "research" | "pages";
 export type ProjectEntry = CollectionEntry<"projects">;
 export type ResearchEntry = CollectionEntry<"research">;
+export type PageEntry = CollectionEntry<"pages">;
 
 /** Locale of an entry, from its `<lang>/` folder. */
 export function entryLang(entry: { id: string }): Lang {
@@ -64,6 +65,15 @@ export async function getResearch(lang: Lang): Promise<ResearchEntry[]> {
       researchKinds.indexOf(a.data.kind) - researchKinds.indexOf(b.data.kind) ||
       a.data.title.localeCompare(b.data.title),
   );
+}
+
+/** A prose page (e.g. "about") in one locale. Throws if the file is missing. */
+export async function getPage(lang: Lang, slug: string): Promise<PageEntry> {
+  const page = await getEntry("pages", entryId(lang, slug));
+  if (!page) {
+    throw new Error(`Missing page src/content/pages/${lang}/${slug}.md`);
+  }
+  return page;
 }
 
 /** Validated CV data for one locale. */

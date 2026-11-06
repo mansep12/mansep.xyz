@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { formatDate, formatDateRange, isoYearMonth } from "../src/lib/dates";
+import { joinLowercase } from "../src/lib/text";
 import { displayUrl } from "../src/lib/urls";
 
 describe("formatDate", () => {
@@ -51,5 +52,14 @@ describe("displayUrl", () => {
   it("drops the scheme, www and trailing slash", () => {
     expect(displayUrl("https://www.linkedin.com/in/someone/")).toBe("linkedin.com/in/someone");
     expect(displayUrl("https://github.com/mansep12")).toBe("github.com/mansep12");
+  });
+});
+
+describe("joinLowercase", () => {
+  it("joins with the locale's conjunction and lowercases each item", () => {
+    expect(joinLowercase(["Cardistry", "Fútbol", "Running"], "es")).toBe(
+      "cardistry, fútbol y running",
+    );
+    expect(joinLowercase(["Cardistry", "Running"], "en")).toBe("cardistry and running");
   });
 });

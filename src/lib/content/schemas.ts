@@ -101,3 +101,13 @@ export const researchSchema = z.object({
 });
 
 export type ResearchData = z.output<typeof researchSchema>;
+
+/** Prose pages (about, privacy, colophon): the body is the page text. */
+export const pageSchema = z.object({
+  /** Page heading and document title. */
+  title: line,
+  /** Meta and social description. */
+  description: line,
+});
+
+export type PageData = z.output<typeof pageSchema>;
