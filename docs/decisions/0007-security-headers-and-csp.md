@@ -86,9 +86,10 @@ fails if a header line exceeds Cloudflare's 2,000-character limit, or if
 - Bad, because a new third party (a font CDN, an embed) needs a code change
   in `src/lib/security-headers.ts`, by design.
 - Neutral, because Cloudflare features that inject inline scripts into HTML
-  (Rocket Loader, Bot Fight Mode JavaScript detections, automatic Web
-  Analytics injection) are off; turning one on requires revisiting the
-  policy.
+  (Rocket Loader, Bot Fight Mode JavaScript detections) are off; turning one
+  on requires revisiting the policy. Web Analytics automatic injection adds
+  an external script from `static.cloudflareinsights.com` that reports to
+  the same origin, which the policy already allows.
 
 ### Confirmation
 

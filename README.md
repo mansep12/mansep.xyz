@@ -227,7 +227,7 @@ locally, export them before `bun run build`. They are read in Node when
 
 | Variable | Effect |
 | --- | --- |
-| `PUBLIC_CF_WEB_ANALYTICS_TOKEN` | Site token from Cloudflare Web Analytics (32 hex characters). When set, every page loads the cookieless beacon from `static.cloudflareinsights.com`; when unset, no analytics script is added. A malformed value fails the build. Use the manual JS snippet setup in the dashboard, not automatic injection, or the beacon loads twice. |
+| `PUBLIC_CF_WEB_ANALYTICS_TOKEN` | Site token from Cloudflare Web Analytics (32 hex characters). When set, every page loads the cookieless beacon from `static.cloudflareinsights.com`; when unset, no analytics script is added. A malformed value fails the build. Use either this variable (manual snippet setup) or the dashboard's automatic injection, not both, or the beacon loads twice. |
 | `WORKERS_CI_COMMIT_SHA` | Set by Workers Builds; the commit shown in the footer. |
 
 ## Licensing
