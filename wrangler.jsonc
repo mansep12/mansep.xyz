@@ -11,5 +11,8 @@
   },
   "observability": {
     "enabled": true
-  }
+  },
+  // Serve the site on the apex domain. Cloudflare creates the DNS record and
+  // the certificate. A www redirect, if added, lives in the zone settings.
+  "routes": [{ "pattern": "mansep.xyz", "custom_domain": true }]
 }
