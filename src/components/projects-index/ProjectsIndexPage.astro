@@ -1,0 +1,45 @@
+---
+/**
+ * Projects index for one locale: every project as a detailed ledger row,
+ * then the work in progress that has no public repo yet.
+ */
+import type { Lang } from "../../i18n/locales";
+import { useTranslations } from "../../i18n/ui";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getProjects } from "../../lib/content";
+import InProgressNote from "../ledger/InProgressNote.astro";
+import ProjectLedger from "../ledger/ProjectLedger.astro";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const projects = await getProjects(lang);
+---
+
+<BaseLayout
+  lang={lang}
+  routeKey="projects"
+  title={t("projects.title")}
+  description={t("projects.description")}
+>
+  <div class="projects">
+    <header class="flow measure">
+      <h1>{t("projects.title")}</h1>
+      <p class="lede">{t("projects.intro")}</p>
+    </header>
+    <ProjectLedger lang={lang} projects={projects} detailed headingLevel={2} />
+    <InProgressNote lang={lang} />
+  </div>
+</BaseLayout>
+
+<style>
+  @layer components {
+    .projects {
+      display: grid;
+      gap: var(--space-l);
+    }
+  }
+</style>

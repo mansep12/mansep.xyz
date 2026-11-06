@@ -44,6 +44,11 @@ const es = {
   "contact.location": "Ubicación",
   "contact.availability":
     "Busco trabajo como backend, full-stack o security engineer, en Santiago, remoto o híbrido, de preferencia en equipos que trabajen en inglés.",
+  "projects.title": "Proyectos",
+  "projects.description":
+    "Proyectos de Manuel Sepúlveda: resultado, rol, stack y enlaces al código o a la demo de cada uno.",
+  "projects.intro":
+    "Cada proyecto con su resultado, mi rol, el stack y un enlace al código o a la demo.",
   "projects.inProgress":
     "En curso: Salud Hub, que junta datos de Garmin, Hevy, Zepp Life y un registro de comidas, con un coach de IA encima que los lee y me escribe primero. Corre en local; publico el repo cuando esté listo.",
   "projects.empty":
@@ -103,6 +108,11 @@ const en = {
   "contact.location": "Location",
   "contact.availability":
     "I'm looking for work as a backend, full-stack or security engineer, in Santiago, remote or hybrid, preferably on teams that work in English.",
+  "projects.title": "Projects",
+  "projects.description":
+    "Projects by Manuel Sepúlveda: the result, role, stack and a link to the code or demo of each one.",
+  "projects.intro":
+    "Each project with its result, my role, the stack and a link to the code or demo.",
   "projects.inProgress":
     "In progress: Salud Hub brings together data from Garmin, Hevy, Zepp Life and food logs, with an AI coach on top that reads them and reaches out first. It runs locally; I'll publish the repo when it's ready.",
   "projects.empty":
