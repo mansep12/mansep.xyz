@@ -1,0 +1,393 @@
+---
+/**
+ * Form that tailors the CV to a job posting (POST /api/cv), and the place
+ * where the tailored CV appears. Rendered only when the build enables the
+ * generator (src/lib/cv-generator/build-config.ts). Hidden until its script
+ * runs, since it needs JavaScript; Turnstile loads on the first focus.
+ *
+ * The form, the result toolbar and the "why" panel are screen only; the
+ * tailored CV itself prints, in place of the full one.
+ */
+import { site } from "../../data/site";
+import { cvGeneratorCopy } from "../../i18n/cv-generator";
+import { type Lang, localeInfo, locales } from "../../i18n/locales";
+import { localizedPath } from "../../i18n/routes";
+import { FOCUS_AREAS, LIMITS } from "../../lib/cv-generator/config";
+
+interface Props {
+  lang: Lang;
+  siteKey: string;
+}
+
+const { lang, siteKey } = Astro.props;
+const c = cvGeneratorCopy[lang];
+const codeUrl = `${site.links.repo}/tree/main/src/lib/cv-generator`;
+const privacyAnchor = lang === "es" ? "#generador-de-cv" : "#cv-generator";
+const format = new Intl.NumberFormat(localeInfo[lang].tag);
+const counter = c.counter
+  .replace("{n}", "0")
+  .replace("{max}", format.format(LIMITS.jobTextMaxChars));
+---
+
+<div class="generator" data-cv-generator data-lang={lang} data-site-key={siteKey} hidden>
+  <details class="panel" data-print-hidden>
+    <summary>{c.title}</summary>
+    <div class="panel-body">
+      <ol class="how" role="list">
+        <li>{c.how1}</li>
+        <li>{c.how2}</li>
+        <li>{c.how3} <a href={codeUrl}>{c.code}</a></li>
+      </ol>
+
+      <form class="form" data-cvgen-form novalidate>
+        <div class="field">
+          <label for="cvgen-job">{c.jobLabel}</label>
+          <p id="cvgen-hint" class="hint">{c.jobHint}</p>
+          <textarea
+            id="cvgen-job"
+            name="jobText"
+            rows="8"
+            maxlength={LIMITS.jobTextMaxChars}
+            required
+            aria-describedby="cvgen-hint cvgen-count"
+            data-cvgen-job></textarea>
+          <p id="cvgen-count" class="count" data-cvgen-count>{counter}</p>
+        </div>
+
+        <div class="options">
+          <div class="field">
+            <label for="cvgen-lang">{c.langLabel}</label>
+            <select id="cvgen-lang" name="lang" data-cvgen-lang>
+              {
+                locales.map((option) => (
+                  <option value={option} selected={option === lang}>
+                    {localeInfo[option].label}
+                  </option>
+                ))
+              }
+            </select>
+          </div>
+
+          <fieldset class="chips">
+            <legend>{c.focusLegend}</legend>
+            {
+              FOCUS_AREAS.map((area) => (
+                <label class="chip">
+                  <input type="checkbox" name="focus" value={area} />
+                  <span>{c[`focus.${area}`]}</span>
+                </label>
+              ))
+            }
+          </fieldset>
+        </div>
+
+        <div class="turnstile" data-cvgen-turnstile></div>
+
+        <p class="privacy">
+          {c.privacy} <a href={`${localizedPath("privacy", lang)}${privacyAnchor}`}>{c.privacyLink}</a>
+        </p>
+
+        <button type="submit" class="button primary" data-cvgen-submit>{c.submit}</button>
+
+        <ol class="stages" role="list" aria-label={c.progressLabel} data-cvgen-stages hidden>
+          <li>{c.stage1}</li>
+          <li>{c.stage2}</li>
+          <li>{c.stage3}</li>
+        </ol>
+        <p class="status" role="status" data-cvgen-status></p>
+        <p class="error" role="alert" data-cvgen-error></p>
+      </form>
+    </div>
+  </details>
+
+  <section class="result" aria-labelledby="cvgen-result-title" data-cvgen-result hidden>
+    <div class="result-bar" data-print-hidden>
+      <p id="cvgen-result-title" class="result-title" tabindex="-1">{c.resultTitle}</p>
+      <div class="actions">
+        <button type="button" class="button primary" data-cvgen-print>{c.print}</button>
+        <button type="button" class="button" data-cvgen-full>{c.full}</button>
+      </div>
+      <p class="remaining" data-cvgen-remaining></p>
+    </div>
+    <div data-cvgen-preview></div>
+    <details class="why" data-print-hidden>
+      <summary>{c.why}</summary>
+      <ol class="why-list" data-cvgen-why></ol>
+    </details>
+  </section>
+</div>
+
+<script>
+  import "../../scripts/cv-generator";
+</script>
+
+<style>
+  @layer components {
+    .generator {
+      display: grid;
+      gap: var(--space-m);
+      max-inline-size: 52rem;
+    }
+
+    .generator[hidden],
+    .result[hidden],
+    .stages[hidden] {
+      display: none;
+    }
+
+    .panel {
+      border: var(--border-width) solid var(--color-border);
+      border-radius: var(--radius);
+      background-color: var(--color-surface);
+    }
+
+    .panel summary {
+      padding: var(--space-xs) var(--space-s);
+      font-weight: var(--font-weight-medium);
+      cursor: pointer;
+    }
+
+    .panel-body {
+      display: grid;
+      gap: var(--space-s);
+      padding: 0 var(--space-s) var(--space-s);
+    }
+
+    .how {
+      display: grid;
+      gap: var(--space-3xs);
+      padding-inline-start: 1.2em;
+      color: var(--color-muted);
+      font-size: var(--step--1);
+      list-style: decimal;
+    }
+
+    .form {
+      display: grid;
+      gap: var(--space-s);
+    }
+
+    .field {
+      display: grid;
+      gap: var(--space-3xs);
+    }
+
+    label,
+    legend {
+      font-weight: var(--font-weight-medium);
+    }
+
+    .hint,
+    .count,
+    .privacy,
+    .remaining {
+      color: var(--color-muted);
+      font-size: var(--step--1);
+    }
+
+    .count {
+      justify-self: end;
+      font-family: var(--font-mono);
+    }
+
+    .count.over {
+      color: var(--color-highlight);
+    }
+
+    textarea,
+    select {
+      inline-size: 100%;
+      padding: var(--space-2xs);
+      border: var(--border-width) solid var(--color-border);
+      border-radius: var(--radius);
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      font: inherit;
+    }
+
+    textarea {
+      min-block-size: 10rem;
+      resize: vertical;
+    }
+
+    select {
+      min-block-size: 2.75rem;
+      max-inline-size: 16rem;
+    }
+
+    .options {
+      display: grid;
+      gap: var(--space-s);
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2xs);
+      margin: 0;
+      padding: 0;
+      border: 0;
+    }
+
+    .chips legend {
+      margin-block-end: var(--space-3xs);
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-3xs);
+      min-block-size: 2.75rem;
+      padding: var(--space-3xs) var(--space-xs);
+      border: var(--border-width) solid var(--color-border);
+      border-radius: 999px;
+      font-weight: var(--font-weight-regular);
+      cursor: pointer;
+    }
+
+    .chip:has(input:checked) {
+      border-color: var(--color-accent);
+      background-color: var(--color-selection);
+    }
+
+    .chip:has(input:focus-visible) {
+      outline: var(--focus-ring);
+      outline-offset: var(--focus-offset);
+    }
+
+    .chip input {
+      accent-color: var(--color-accent);
+    }
+
+    .button {
+      min-block-size: 2.75rem;
+      padding: var(--space-2xs) var(--space-s);
+      border: var(--border-width) solid var(--color-accent);
+      border-radius: var(--radius);
+      background-color: transparent;
+      color: var(--color-accent);
+      font-weight: var(--font-weight-medium);
+      cursor: pointer;
+    }
+
+    .button.primary {
+      background-color: var(--color-accent);
+      color: var(--color-bg);
+    }
+
+    .button:disabled {
+      opacity: 0.6;
+      cursor: progress;
+    }
+
+    .form .button {
+      justify-self: start;
+    }
+
+    .stages {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2xs) var(--space-s);
+      font-size: var(--step--1);
+      color: var(--color-muted);
+    }
+
+    .stages li::before {
+      content: "○ ";
+    }
+
+    .stages li[data-state="done"]::before {
+      content: "● ";
+      color: var(--color-accent);
+    }
+
+    .stages li[aria-current="step"] {
+      color: var(--color-text);
+      font-weight: var(--font-weight-medium);
+    }
+
+    .stages li[aria-current="step"]::before {
+      content: "◐ ";
+      color: var(--color-accent);
+    }
+
+    .status:empty,
+    .error:empty {
+      display: none;
+    }
+
+    .error {
+      color: var(--color-highlight);
+      font-weight: var(--font-weight-medium);
+    }
+
+    .result {
+      display: grid;
+      gap: var(--space-s);
+    }
+
+    .result-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-2xs) var(--space-s);
+    }
+
+    .result-title {
+      font-weight: var(--font-weight-bold);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2xs);
+    }
+
+    .remaining {
+      flex-basis: 100%;
+    }
+
+    .why {
+      border-block-start: var(--border-width) solid var(--color-border);
+      padding-block-start: var(--space-xs);
+    }
+
+    .why summary {
+      font-weight: var(--font-weight-medium);
+      cursor: pointer;
+    }
+
+    .why-list {
+      display: grid;
+      gap: var(--space-xs);
+      margin-block-start: var(--space-xs);
+      padding-inline-start: 1.2em;
+      list-style: decimal;
+      font-size: var(--step--1);
+    }
+
+    .why-list :global(li > p:first-child) {
+      font-weight: var(--font-weight-medium);
+    }
+
+    .why-list :global(.why-ref) {
+      font-family: var(--font-mono);
+      font-size: var(--step--2);
+      color: var(--color-muted);
+    }
+
+    @media (min-width: 40rem) {
+      .options {
+        grid-template-columns: auto 1fr;
+        align-items: start;
+      }
+    }
+
+    @media print {
+      .generator {
+        display: block;
+        max-inline-size: none;
+      }
+    }
+  }
+</style>

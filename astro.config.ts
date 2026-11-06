@@ -8,6 +8,7 @@ import ogImages from "./src/integrations/og-images";
 import securityHeaders from "./src/integrations/security-headers";
 import { resolveAnalyticsToken } from "./src/lib/analytics";
 import { resolveBuildCommit } from "./src/lib/build-info";
+import { resolveGeneratorBuildConfig } from "./src/lib/cv-generator/build-config";
 import { canonicalPageUrl, sitemapLinks } from "./src/lib/sitemap";
 
 // Resolved here, in Node: pages are prerendered in workerd, which has no git.
@@ -22,6 +23,10 @@ const buildCommit = resolveBuildCommit({
 
 // Cloudflare Web Analytics site token from the build environment, or null.
 const analyticsToken = resolveAnalyticsToken(process.env);
+
+// CV generator form on /cv: shipped only with CV_GENERATOR_ENABLED=true and a
+// Turnstile site key in the build environment.
+const cvGenerator = resolveGeneratorBuildConfig(process.env);
 
 // Canonical URL of every page in the sitemap, collected by `filter`, which
 // sees every page before `serialize` runs.
@@ -93,6 +98,7 @@ export default defineConfig({
     define: {
       __BUILD_COMMIT__: JSON.stringify(buildCommit),
       __CF_WEB_ANALYTICS_TOKEN__: JSON.stringify(analyticsToken),
+      __CV_GENERATOR__: JSON.stringify(cvGenerator),
     },
     build: {
       // Same reason for scripts (Astro inlines those under this limit) and
