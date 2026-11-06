@@ -16,13 +16,13 @@ import SiteHeader from "../components/SiteHeader.astro";
 import ThemeScript from "../components/ThemeScript.astro";
 import { site } from "../data/site";
 import { type Lang, localeInfo, otherLangs } from "../i18n/locales";
-import { absoluteUrl, alternateLinks, alternates, type RouteTarget } from "../i18n/routes";
+import { absoluteUrl, alternateLinks, alternates, type PageRoute } from "../i18n/routes";
 import { useTranslations } from "../i18n/ui";
 import { themeColors } from "../lib/theme";
 import "../styles/tokens.css";
 import "../styles/base.css";
 
-type Props = RouteTarget & {
+type Props = PageRoute & {
   lang: Lang;
   /** Page title without the site name; the home page shows the name only. */
   title: string;
@@ -35,6 +35,7 @@ type Props = RouteTarget & {
   /**
    * Whether the page exists in every locale (default). Set to false for a
    * page that exists only in `lang`: no hreflang alternates, no language switch.
+   * A page without `routeKey` (e.g. 404) is never treated as translated.
    */
   translated?: boolean;
 };
@@ -51,8 +52,10 @@ const {
 
 const t = useTranslations(lang);
 const documentTitle = route.routeKey === "home" ? site.name : `${title} · ${site.name}`;
-const canonical = alternates(route.routeKey, route.params)[lang];
-const hreflangLinks = translated ? alternateLinks(route.routeKey, route.params) : [];
+const canonical = route.routeKey ? alternates(route.routeKey, route.params)[lang] : undefined;
+const hreflangLinks =
+  translated && route.routeKey ? alternateLinks(route.routeKey, route.params) : [];
+const hasAlternates = hreflangLinks.length > 0;
 const ogImageUrl = ogImage ? absoluteUrl(ogImage) : undefined;
 ---
 
@@ -76,7 +79,7 @@ const ogImageUrl = ogImage ? absoluteUrl(ogImage) : undefined;
     <title>{documentTitle}</title>
     <meta name="description" content={description} />
     {noindex && <meta name="robots" content="noindex" />}
-    <link rel="canonical" href={canonical} />
+    {canonical && <link rel="canonical" href={canonical} />}
     {hreflangLinks.map(({ hreflang, href }) => <link rel="alternate" hreflang={hreflang} href={href} />)}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
@@ -84,10 +87,10 @@ const ogImageUrl = ogImage ? absoluteUrl(ogImage) : undefined;
     <meta property="og:site_name" content={site.name} />
     <meta property="og:title" content={documentTitle} />
     <meta property="og:description" content={description} />
-    <meta property="og:url" content={canonical} />
+    {canonical && <meta property="og:url" content={canonical} />}
     <meta property="og:locale" content={localeInfo[lang].ogLocale} />
     {
-      translated &&
+      hasAlternates &&
         otherLangs(lang).map((other) => (
           <meta property="og:locale:alternate" content={localeInfo[other].ogLocale} />
         ))
@@ -100,7 +103,7 @@ const ogImageUrl = ogImage ? absoluteUrl(ogImage) : undefined;
   </head>
   <body>
     <a class="skip-link" href="#main">{t("skip.toContent")}</a>
-    <SiteHeader lang={lang} translated={translated} {...route} />
+    <SiteHeader lang={lang} translated={hasAlternates} {...route} />
     <main id="main" class="container">
       <slot />
     </main>

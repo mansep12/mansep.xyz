@@ -5,12 +5,12 @@
  */
 import { site } from "../data/site";
 import type { Lang } from "../i18n/locales";
-import { localizedPath, type RouteKey, type RouteTarget } from "../i18n/routes";
+import { localizedPath, type PageRoute, type RouteKey } from "../i18n/routes";
 import { type UiKey, useTranslations } from "../i18n/ui";
 import LanguageSwitch from "./LanguageSwitch.astro";
 import ThemeToggle from "./ThemeToggle.astro";
 
-type Props = RouteTarget & {
+type Props = PageRoute & {
   lang: Lang;
   /** Show the language switch (false when the page has no translation). */
   translated: boolean;
@@ -34,8 +34,10 @@ const navItems: readonly NavItem[] = [
 ];
 
 function current(item: NavItem): "page" | "true" | undefined {
-  if (item.key === route.routeKey) return "page";
-  return item.section?.includes(route.routeKey) ? "true" : undefined;
+  const { routeKey } = route;
+  if (!routeKey) return undefined;
+  if (item.key === routeKey) return "page";
+  return item.section?.includes(routeKey) ? "true" : undefined;
 }
 ---
 
@@ -60,7 +62,7 @@ function current(item: NavItem): "page" | "true" | undefined {
       </ul>
     </nav>
     <div class="tools">
-      {translated && <LanguageSwitch lang={lang} {...route} />}
+      {translated && route.routeKey && <LanguageSwitch lang={lang} {...route} />}
       <ThemeToggle lang={lang} />
     </div>
   </div>

@@ -7,7 +7,9 @@
   "compatibility_flags": ["nodejs_compat"],
   "assets": {
     "directory": "./dist",
-    "binding": "ASSETS"
+    "binding": "ASSETS",
+    // Unknown paths get the nearest 404.html (src/pages/404.astro) with a 404 status.
+    "not_found_handling": "404-page"
   },
   "observability": {
     "enabled": true

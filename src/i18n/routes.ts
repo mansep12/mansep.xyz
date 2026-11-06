@@ -59,6 +59,13 @@ export type RouteTarget = {
     : { routeKey: K; params: RouteParams<K> };
 }[RouteKey];
 
+/**
+ * The route of a rendered page: a route from the map, or none for a page
+ * outside it (such as the 404 page), which gets no canonical URL, no
+ * hreflang alternates and no language switch.
+ */
+export type PageRoute = RouteTarget | { routeKey?: undefined; params?: undefined };
+
 const PARAM_PATTERN = /\[([^\]]+)\]/g;
 
 /** Site-relative path of a route in a locale, e.g. `/en/projects/nodus`. */

@@ -1,0 +1,46 @@
+---
+/**
+ * Served by Cloudflare for any unknown path (`not_found_handling: "404-page"`
+ * in wrangler.jsonc), in both locales, so it carries both languages.
+ */
+import { localizedPath } from "../i18n/routes";
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  lang="es"
+  title="Página no encontrada · Page not found"
+  description="Esta página no existe. This page does not exist."
+  noindex
+>
+  <div class="measure not-found">
+    <p class="code mono muted" aria-hidden="true">404</p>
+    <section class="flow" lang="es">
+      <h1>Página no encontrada</h1>
+      <p>La dirección no existe o cambió.</p>
+      <p><a href={localizedPath("home", "es")}>Volver al inicio</a></p>
+    </section>
+    <section class="flow" lang="en">
+      <h2>Page not found</h2>
+      <p>This address does not exist or has moved.</p>
+      <p><a href={localizedPath("home", "en")}>Go to the English home page</a></p>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  @layer components {
+    .not-found {
+      display: grid;
+      gap: var(--space-l);
+    }
+
+    .code {
+      font-size: var(--step-1);
+    }
+
+    h2 {
+      font-size: var(--step-4);
+    }
+  }
+</style>
