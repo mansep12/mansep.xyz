@@ -11,6 +11,7 @@ dist/
 
 # Local secrets and environment
 .dev.vars*
+!.dev.vars.example
 .env*
 
 # Logs

@@ -59,7 +59,7 @@ bun run dev
 .
 ├── astro.config.ts           # Site URL, adapter, integrations, fonts, i18n, build values
 ├── wrangler.jsonc            # Cloudflare Worker config
-├── vitest.config.ts          # Unit tests (plain Node)
+├── vitest.config.ts          # Unit tests (plain Node) and *.astro.test.ts (Container API)
 ├── lighthouserc.json         # Lighthouse CI URLs and score budgets
 ├── .github/                  # CI workflow and Dependabot
 ├── docs/decisions/           # Architecture Decision Records (MADR)
@@ -83,7 +83,9 @@ bun run dev
     ├── components/           # Site chrome, plus one folder per page (home/, cv/, ...)
     ├── integrations/         # Build steps in Node: Open Graph images, security headers
     ├── layouts/BaseLayout.astro
-    ├── lib/                  # Content, SEO, structured data, headers, theme, email, analytics
+    ├── lib/                  # Content, SEO, structured data, headers, theme, email, analytics, cv-generator/
+    ├── worker.ts             # Worker entrypoint: adapter handler + Durable Objects
+    ├── durable-objects/      # CvBudget (CV generator daily limits)
     ├── scripts/              # Client-side TypeScript
     ├── pages/                # Spanish routes
     │   └── en/               # English routes
@@ -231,6 +233,96 @@ locally, export them before `bun run build`. They are read in Node when
 | --- | --- |
 | `PUBLIC_CF_WEB_ANALYTICS_TOKEN` | Site token from Cloudflare Web Analytics (32 hex characters). When set, every page loads the cookieless beacon from `static.cloudflareinsights.com`; when unset, no analytics script is added. A malformed value fails the build. Use either this variable (manual snippet setup) or the dashboard's automatic injection, not both, or the beacon loads twice. |
 | `WORKERS_CI_COMMIT_SHA` | Set by Workers Builds; the commit shown in the footer. |
+| `CV_GENERATOR_ENABLED` | `true` to ship the CV generator form on `/cv` and `/en/cv` (with `PUBLIC_TURNSTILE_SITE_KEY`). Otherwise the pages render nothing for it. The Worker reads its own runtime variable of the same name; see [CV generator](#cv-generator). |
+| `PUBLIC_TURNSTILE_SITE_KEY` | Site key of the Turnstile widget used by the CV generator form. |
+
+## CV generator
+
+`/cv` and `/en/cv` can tailor the CV to a pasted job posting: Claude picks
+and lightly rephrases verified highlights from `src/data/resume.{es,en}.json`
+by id, a validator rejects anything not in the source, and the visitor saves
+the result as PDF with the browser's print dialog. Design, models, controls
+and costs: [ADR 0009](./docs/decisions/0009-cv-generator.md).
+
+- `src/pages/api/cv.ts`: `POST /api/cv`, the only route that runs on
+  demand; the logic is in `src/lib/cv-generator/` (handler, prompts,
+  schemas, validator, SDK client, Turnstile, budget).
+- `src/worker.ts`: Worker entrypoint (the adapter's handler plus the
+  `CvBudget` Durable Object in `src/durable-objects/`).
+- `src/components/cv/CvGenerator.astro` and `src/scripts/cv-generator.ts`:
+  the form; `render-tailored.ts` renders `<CvDocument>` in the Worker.
+
+It is off unless enabled at build time (the form) and at runtime (the
+endpoint answers `503` otherwise).
+
+### Enabling it in production
+
+1. **Turnstile.** In the Cloudflare dashboard, Turnstile, add a widget for
+   the hostname `mansep.xyz` (managed mode). Keep the site key and the secret
+   key.
+2. **Anthropic.** In the Claude Console, create an API key for the site and
+   set a monthly spend limit (for example USD 15) in the organization's
+   limits.
+3. **Secrets** (runtime, encrypted):
+
+   ```sh
+   npx wrangler secret put ANTHROPIC_API_KEY
+   npx wrangler secret put TURNSTILE_SECRET_KEY
+   ```
+
+4. **Build variables** (Workers Builds, Settings, Build, Variables and
+   secrets): `CV_GENERATOR_ENABLED=true` and
+   `PUBLIC_TURNSTILE_SITE_KEY=<site key>`.
+5. **Runtime variable** (Worker, Settings, Variables and Secrets):
+   `CV_GENERATOR_ENABLED=true`. `wrangler.jsonc` sets `keep_vars`, so this
+   dashboard value survives deploys. The limits `CV_DAILY_LIMIT` (40),
+   `CV_PER_IP_DAILY_LIMIT` (3) and `TURNSTILE_HOSTNAMES` (`mansep.xyz`) live
+   in `wrangler.jsonc`; change them there.
+6. **Deploy** (push to `main`). The first deploy creates the Durable Object
+   (migration `v1`).
+7. **Optional, Cloudflare AI Gateway**: create a gateway with request and
+   response body logging turned off, then set the runtime variable
+   `ANTHROPIC_BASE_URL=https://gateway.ai.cloudflare.com/v1/<account id>/<gateway id>/anthropic`.
+
+**Kill switch:** set the runtime variable `CV_GENERATOR_ENABLED` to `false`
+in the dashboard. It takes effect at once; the form then shows a "paused"
+message. To remove the form too, drop the build variable and redeploy.
+
+### Running it locally
+
+The end-to-end path runs without a real key or cost: a fake Anthropic API
+and Cloudflare's [Turnstile testing keys](https://developers.cloudflare.com/turnstile/troubleshooting/testing/)
+(the always-pass site key `1x00000000000000000000AA` and secret
+`1x0000000000000000000000000000000AA`; test secrets report the hostname
+`example.com`).
+
+```sh
+# 1. Fake Anthropic API on http://127.0.0.1:8788
+bun tests/e2e/mock-anthropic.ts
+
+# 2. Build with the form enabled
+CV_GENERATOR_ENABLED=true PUBLIC_TURNSTILE_SITE_KEY=1x00000000000000000000AA bun run build
+
+# 3. Serve the build with the runtime variables (or copy .dev.vars.example to .dev.vars)
+npx wrangler dev --var CV_GENERATOR_ENABLED:true \
+  --var ANTHROPIC_API_KEY:local-placeholder \
+  --var ANTHROPIC_BASE_URL:http://127.0.0.1:8788 \
+  --var TURNSTILE_SECRET_KEY:1x0000000000000000000000000000000AA \
+  --var TURNSTILE_HOSTNAMES:example.com
+```
+
+Then open `http://localhost:8787/cv`. The fake API returns an unknown id and
+a rewrite with an invented metric on purpose: the tailored CV must show
+neither. Text containing `NOT_A_JOB` is screened out, and "ignore previous
+instructions" is flagged as an injection. Local Durable Object state lives
+in `.wrangler/state`; delete it to reset the daily counters.
+
+`bun tests/e2e/smoke.ts http://localhost:8787` runs the same flow from the
+command line (12 checks, including the 429 on the fourth request of the day,
+so start from fresh state).
+
+With a `.dev.vars` present, `wrangler types` (part of `bun run build`) adds
+its names to `worker-configuration.d.ts`; do not commit that change.
 
 ## Licensing
 

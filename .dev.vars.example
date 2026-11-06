@@ -1,0 +1,12 @@
+# Runtime variables for `bun run preview` (wrangler dev). Copy to .dev.vars
+# and fill in; .dev.vars is git-ignored and must never be committed.
+# For a local run without cost, use the fake API in tests/e2e/mock-anthropic.ts
+# and Cloudflare's Turnstile testing secret (see README, "CV generator").
+
+CV_GENERATOR_ENABLED=true
+ANTHROPIC_API_KEY=replace-with-a-key-or-any-text-for-the-fake-api
+# Optional: the fake API (http://127.0.0.1:8788) or a Cloudflare AI Gateway URL.
+ANTHROPIC_BASE_URL=
+TURNSTILE_SECRET_KEY=replace-with-the-turnstile-secret-or-the-testing-secret
+# Turnstile testing secrets always report example.com as the hostname.
+TURNSTILE_HOSTNAMES=example.com
