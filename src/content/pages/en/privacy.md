@@ -1,6 +1,6 @@
 ---
 title: "Privacy"
-description: "What data this site uses: no cookies, visits measured in aggregate with Cloudflare Web Analytics, and the theme preference stored only in your browser."
+description: "What data this site uses: no cookies, visits measured in aggregate with Cloudflare Web Analytics, the theme preference stored only in your browser, and what the CV generator sends to Anthropic."
 ---
 
 This site does not use cookies.
@@ -18,5 +18,14 @@ If you choose the light or dark theme, that preference is stored in your browser
 ## Videos
 
 If a page includes a YouTube video, the player loads only when you click on it. From that moment on, Google's privacy policy applies.
+
+## CV generator
+
+On the CV page you can paste a job posting or describe a role to get a tailored version of the CV. If you use it:
+
+- **What is sent to Anthropic.** The text you paste, the language and focus you pick, and the public data of my CV are sent to Anthropic's API, whose Claude models pick the most relevant achievements. Anthropic does not train its models on what it receives through the API and, under [its API retention policy](https://privacy.claude.com/en/articles/7996866-how-long-do-you-store-commercial-api-data), deletes inputs and outputs within 30 days, unless it needs to keep them to enforce its usage policy or to comply with the law. Do not paste personal data about other people.
+- **What this site keeps.** The text is not stored. Each use leaves a log entry with the date, the language, a SHA-256 fingerprint of the text (which cannot be read back), the ids of the chosen achievements and the API usage.
+- **Daily limit.** To limit uses per day, the site counts requests by a hash of your IP address combined with the date, which changes every day. The IP is not stored, and the counter is deleted when the day ends (UTC).
+- **Cloudflare Turnstile.** The form uses Turnstile to check that a person is sending it. It loads only when you start using the form, from `challenges.cloudflare.com`, and Cloudflare processes technical data such as the IP address and the browser only to detect bots, under its [Turnstile privacy policy](https://www.cloudflare.com/turnstile-privacy-policy/).
 
 ## Contact
