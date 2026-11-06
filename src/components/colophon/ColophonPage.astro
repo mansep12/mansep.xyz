@@ -1,0 +1,30 @@
+---
+/** Colophon for one locale: src/content/pages/<lang>/colophon.md plus the commit of this build. */
+import type { Lang } from "../../i18n/locales";
+import { useTranslations } from "../../i18n/ui";
+import { getBuildInfo } from "../../lib/build-info";
+import ProsePage from "../prose/ProsePage.astro";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const build = getBuildInfo();
+---
+
+<ProsePage lang={lang} routeKey="colophon" slug="colophon">
+  <p class="muted">
+    {t("colophon.thisBuild")}{" "}
+    {
+      build.commitUrl ? (
+        <a href={build.commitUrl}>
+          <code>{build.shortCommit}</code>
+        </a>
+      ) : (
+        <code>{build.shortCommit}</code>
+      )
+    }.
+  </p>
+</ProsePage>
