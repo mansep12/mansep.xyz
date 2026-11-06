@@ -20,7 +20,7 @@ stack:
   - Tailwind CSS
 links:
   repo: https://github.com/mansep12/pulso-fiscal
-license: Código MIT, datos CC-BY-4.0
+license: Código MIT, datos CC BY 4.0
 featured: true
 ---
 
@@ -47,7 +47,7 @@ La idea de fondo es explicar en lenguaje normal muchos datos del Estado que nadi
 
 ### Trazabilidad por dato, con el crudo fuera de Git
 
-Cada respuesta descargada se guarda tal cual, con su URL fuente, la fecha de captura en UTC y el SHA-256 del cuerpo, y cada fila del CSV normalizado arrastra esas columnas. Los archivos crudos y procesados van a Cloudflare R2, no al repositorio. El costo es depender de un almacenamiento externo para reproducir un run.
+Cada respuesta descargada se guarda con su URL fuente, la fecha de captura en UTC y el SHA-256 del cuerpo original, y cada fila del CSV normalizado arrastra esas columnas. Los archivos crudos y procesados van a Cloudflare R2, no al repositorio. El costo es depender de un almacenamiento externo para reproducir un run.
 
 ### Promedio mensual en vez de total
 
@@ -63,7 +63,7 @@ Las tablas base tienen RLS activado y ningún permiso para los roles públicos d
 
 ## Arquitectura
 
-El repositorio tiene tres partes. `etl/` es el pipeline en Python: un scraper que descarga la API y escribe un manifiesto de descarga, un normalizador que genera el CSV limpio, el ranking mensual, las categorías y el reporte de calidad, y un loader que carga Supabase. `supabase/migrations/` tiene cinco migraciones versionadas: el esquema base, el cierre del acceso público, las constraints de calidad, permisos por defecto para objetos futuros y la exigencia de manifiesto. `web/` es la aplicación Next.js, con el ranking, una ficha por senador y páginas de metodología y fuentes.
+El código tiene tres partes. `etl/` es el pipeline en Python: un scraper que descarga la API y escribe un manifiesto de descarga, un normalizador que genera el CSV limpio, el ranking mensual, las categorías y el reporte de calidad, y un loader que carga Supabase. `supabase/migrations/` tiene cinco migraciones versionadas: el esquema base, el cierre del acceso público, las constraints de calidad, permisos por defecto para objetos futuros y la exigencia de manifiesto. `web/` es la aplicación Next.js, con el ranking, una ficha por senador y páginas de metodología y fuentes.
 
 El diagrama de abajo muestra el recorrido de un run, del Senado a la web.
 
@@ -72,14 +72,14 @@ El diagrama de abajo muestra el recorrido de un run, del Senado a la web.
 **Cada fila publicada se puede rastrear hasta la respuesta exacta del Senado que la originó: URL, fecha de captura y SHA-256.** Y ningún run llega a la web sin pasar el quality gate y sin un manifiesto público que lo describa.
 
 - Datos del Senado desde enero de 2021 hasta la última carga.
-- 29 pruebas automáticas en el ETL, para el scraper, el normalizador y las validaciones del loader.
+- 30 pruebas automáticas en el ETL, para el scraper, el normalizador y las validaciones del loader.
 - Cinco migraciones versionadas, aplicables con la CLI de Supabase.
 - Metodología, fuentes, decisiones y runbook de publicación y rollback escritos en `docs/`.
-- Código bajo MIT y datos publicados bajo CC-BY-4.0.
+- Código bajo MIT y datos publicados bajo CC BY 4.0.
 
 ## Qué cambiaría
 
-- **Publicarlo.** El MVP no tiene una versión pública: el dominio y el hosting quedaron diferidos. Sin una URL, la trazabilidad solo la ve quien clona el repositorio. Es lo primero que haría al retomarlo.
+- **Publicarlo.** El MVP no tiene una versión pública: el dominio y el hosting quedaron diferidos. Es lo primero que haría al retomarlo.
 - **La carga es manual.** Hoy un run se publica corriendo dos comandos a mano. Lo programaría, con el mismo quality gate y el mismo requisito de manifiesto.
 - **Constraints sin validar.** Las de calidad se agregaron como `NOT VALID` para no bloquear datos ya cargados; Postgres las exige solo en filas nuevas o actualizadas. Después de recargar desde cero, las validaría.
 - **La web no tiene pruebas.** El ETL sí; la web solo tiene `typecheck`. Agregaría pruebas de las consultas y de los estados de error, que hoy reviso a mano.
@@ -87,7 +87,7 @@ El diagrama de abajo muestra el recorrido de un run, del Senado a la web.
 
 ## Cómo verificar esto
 
-- **Código:** [github.com/mansep12/pulso-fiscal](https://github.com/mansep12/pulso-fiscal), código MIT y datos CC-BY-4.0. El historial muestra las fechas de trabajo y la pausa.
+- **Código:** [github.com/mansep12/pulso-fiscal](https://github.com/mansep12/pulso-fiscal), código MIT y datos CC BY 4.0. El historial muestra las fechas de trabajo y la pausa.
 - **Trazabilidad:** el scraper (`etl/src/pulso_fiscal/scrapers/senado_gastos_operacionales.py`) guarda URL, fecha y SHA-256 por respuesta; el quality gate está en `enforce_quality_gate`, en el normalizador; el loader (`etl/src/pulso_fiscal/loaders/supabase.py`) valida el manifiesto público antes de conectarse.
 - **Base de datos:** `supabase/migrations/20260603000000_lockdown_public_access.sql` cierra las tablas y `20260605020000_require_public_manifest_for_ok_runs.sql` agrega la constraint del manifiesto.
 - **Correrlo:** desde `etl/`, `uv sync --group dev` instala el entorno y `uv run senado-gastos-operacionales --max-periods 1` descarga el primer periodo disponible desde la fuente oficial. Las pruebas están en `etl/tests` y corren con pytest.

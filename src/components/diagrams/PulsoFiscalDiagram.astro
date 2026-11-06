@@ -25,7 +25,7 @@ interface Step {
 const text = {
   es: {
     title: "Pipeline de Pulso Fiscal",
-    desc: "El scraper en Python descarga la API JSON de Transparencia Activa del Senado y guarda cada respuesta cruda con su URL fuente, su fecha de captura y su hash SHA-256, más un manifiesto de descarga. El normalizador genera el CSV limpio, el ranking mensual y un reporte de calidad; si el quality gate falla, el run no se publica ni se carga. Los archivos procesados y el manifiesto público se suben a Cloudflare R2. El loader exige que ese manifiesto público sea alcanzable y coincida con el run local antes de cargar Supabase, donde las tablas base están cerradas con RLS y solo hay vistas y funciones del último run correcto. La web en Next.js lee solo esas vistas y funciones.",
+    desc: "El scraper en Python descarga la API JSON de Transparencia Activa del Senado y guarda cada respuesta cruda con su URL fuente, su fecha de captura y su hash SHA-256, más un manifiesto de descarga. El normalizador genera el CSV limpio, el ranking mensual y un reporte de calidad; si el quality gate falla, el run no se publica ni se carga. Los archivos procesados y el manifiesto público se suben a Cloudflare R2. El loader exige que ese manifiesto público sea alcanzable y coincida con el run local antes de cargar Supabase, donde las tablas base están cerradas con RLS y solo son públicas las vistas y funciones del último run correcto. La web en Next.js lee solo esas vistas y funciones.",
     caption:
       "Del Senado a la web: cada paso conserva la trazabilidad y el loader no carga un run sin manifiesto público.",
     steps: [

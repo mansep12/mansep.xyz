@@ -20,7 +20,7 @@ stack:
   - Tailwind CSS
 links:
   repo: https://github.com/mansep12/pulso-fiscal
-license: Code MIT, data CC-BY-4.0
+license: Code MIT, data CC BY 4.0
 featured: true
 ---
 
@@ -47,7 +47,7 @@ The broader idea is to explain, in plain language, public data nobody uses. Open
 
 ### Provenance per datum, raw files outside Git
 
-Each downloaded response is stored as is, with its source URL, UTC capture date and the SHA-256 of the body, and every row of the normalized CSV carries those columns. Raw and processed files go to Cloudflare R2, not to the repository. The cost is depending on external storage to reproduce a run.
+Each downloaded response is stored with its source URL, UTC capture date and the SHA-256 of the original body, and every row of the normalized CSV carries those columns. Raw and processed files go to Cloudflare R2, not to the repository. The cost is depending on external storage to reproduce a run.
 
 ### Monthly average instead of totals
 
@@ -70,19 +70,19 @@ Base tables have RLS on and no grants for Supabase's public roles. The only publ
 **Every published row can be traced to the exact Senate response it came from: URL, capture date and SHA-256.** No run reaches the site without passing the quality gate and without a public manifest describing it.
 
 - Senate data from January 2021 to the latest load.
-- 29 automated tests in the ETL, for the scraper, the normalizer and the loader checks.
+- 30 automated tests in the ETL, for the scraper, the normalizer and the loader checks.
 - Methodology, sources, decisions and a publish and rollback runbook in `docs/`.
 
 ## What I would change
 
-- **Ship it.** The MVP has no public deployment; domain and hosting were deferred. Without a URL, only someone who clones the repository sees the provenance. That comes first when I pick it up.
+- **Ship it.** The MVP has no public deployment; domain and hosting were deferred. That comes first when I pick it up.
 - **Manual loads.** A run is published by running two commands by hand. I would schedule it, with the same gate and manifest requirement.
 - **Unvalidated constraints.** The quality constraints were added as `NOT VALID` so existing data would not block them; Postgres enforces them only on new or updated rows. After a full reload I would validate them.
 - **No tests for the site.** The ETL has them; the site only has `typecheck`.
 
 ## How to verify this
 
-- **Code:** [github.com/mansep12/pulso-fiscal](https://github.com/mansep12/pulso-fiscal), code MIT and data CC-BY-4.0. The history shows the working dates and the pause.
+- **Code:** [github.com/mansep12/pulso-fiscal](https://github.com/mansep12/pulso-fiscal), code MIT and data CC BY 4.0. The history shows the working dates and the pause.
 - **Provenance:** the scraper (`etl/src/pulso_fiscal/scrapers/senado_gastos_operacionales.py`) stores URL, date and SHA-256 per response; the quality gate is `enforce_quality_gate` in the normalizer; the loader (`etl/src/pulso_fiscal/loaders/supabase.py`) validates the public manifest before connecting.
 - **Database:** `supabase/migrations/20260603000000_lockdown_public_access.sql` locks the tables and `20260605020000_require_public_manifest_for_ok_runs.sql` adds the manifest constraint.
 - **Run it:** from `etl/`, `uv sync --group dev` sets up the environment and `uv run senado-gastos-operacionales --max-periods 1` downloads the first available period from the official source. Tests live in `etl/tests` and run with pytest.
