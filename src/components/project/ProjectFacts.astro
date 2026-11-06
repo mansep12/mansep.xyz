@@ -1,0 +1,137 @@
+---
+/**
+ * Facts box: team, hours and my part on the first line, then event, stack,
+ * license and links. Everything comes from the project's frontmatter.
+ */
+import type { Lang } from "../../i18n/locales";
+import type { ProjectData } from "../../lib/content/schemas";
+import { projectStrings } from "./strings";
+
+interface Props {
+  lang: Lang;
+  data: ProjectData;
+}
+
+const { lang, data } = Astro.props;
+const s = projectStrings[lang];
+const { team, event, links } = data;
+
+const isTeam = team !== undefined && team.size > 1;
+const teamLabel = isTeam ? `${s.team(team.size)}${team.note ? ` (${team.note})` : ""}` : s.solo;
+const leadParts = [teamLabel, ...(event?.hours ? [s.hours(event.hours)] : [])];
+
+const linkItems = [
+  links.repo && { label: s.repo, href: links.repo },
+  links.demo && { label: s.demo, href: links.demo },
+  links.video && { label: s.video, href: links.video },
+].filter((item): item is { label: string; href: string } => Boolean(item));
+---
+
+<aside class="facts" aria-label={s.factsLabel}>
+  <p class="lead">
+    {leadParts.join(" · ")} · <strong>{isTeam ? s.myPart : s.role}:</strong>{" "}{data.role}
+  </p>
+  <dl>
+    {
+      event && (
+        <div>
+          <dt>{s.event}</dt>
+          <dd>
+            {event.name}
+            {event.award && (
+              <>
+                <br />
+                <mark>{event.award}</mark>
+              </>
+            )}
+          </dd>
+        </div>
+      )
+    }
+    <div>
+      <dt>{s.stack}</dt>
+      <dd>
+        <ul role="list" class="stack">
+          {data.stack.map((item) => <li class="mono">{item}</li>)}
+        </ul>
+      </dd>
+    </div>
+    {
+      data.license && (
+        <div>
+          <dt>{s.license}</dt>
+          <dd>{data.license}</dd>
+        </div>
+      )
+    }
+    <div>
+      <dt>{s.links}</dt>
+      <dd>
+        <ul role="list" class="links">
+          {
+            linkItems.map((item) => (
+              <li>
+                <a href={item.href}>{item.label}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </dd>
+    </div>
+  </dl>
+</aside>
+
+<style>
+  @layer components {
+    .facts {
+      display: grid;
+      gap: var(--space-s);
+      padding: var(--space-s);
+      background-color: var(--color-surface);
+      border: var(--border-width) solid var(--color-border);
+      border-radius: var(--radius);
+      font-size: var(--step--1);
+    }
+
+    .lead {
+      font-size: var(--step-0);
+    }
+
+    dl {
+      display: grid;
+      gap: var(--space-2xs);
+    }
+
+    dl > div {
+      display: grid;
+      gap: var(--space-3xs);
+    }
+
+    dt {
+      color: var(--color-muted);
+      font-weight: var(--font-weight-medium);
+    }
+
+    dd {
+      margin: 0;
+    }
+
+    .stack,
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-3xs) var(--space-xs);
+    }
+
+    .stack li {
+      font-size: 0.95em;
+    }
+
+    @media (min-width: 40rem) {
+      dl > div {
+        grid-template-columns: 8rem 1fr;
+        gap: var(--space-xs);
+      }
+    }
+  }
+</style>

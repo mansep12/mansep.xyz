@@ -1,0 +1,42 @@
+---
+/**
+ * The case study's "How to verify this" section, set apart as a box: repo
+ * paths, commands, demo, on-chain evidence and video. The content is the
+ * section of the project's Markdown body with that heading.
+ */
+import type { BodySection } from "./sections";
+
+interface Props {
+  section: BodySection;
+}
+
+const { section } = Astro.props;
+---
+
+<section class="verify flow" aria-labelledby={section.id} set:html={section.html} />
+
+<style>
+  @layer components {
+    .verify {
+      --flow-space: var(--space-s);
+      padding: var(--space-s) var(--space-m);
+      background-color: var(--color-surface);
+      border: var(--border-width) solid var(--color-border);
+      border-inline-start: 3px solid var(--color-accent);
+      border-radius: var(--radius);
+    }
+
+    .verify :global(h2) {
+      font-size: var(--step-2);
+    }
+
+    .verify :global(ul),
+    .verify :global(ol) {
+      padding-inline-start: 1.25em;
+    }
+
+    .verify :global(li + li) {
+      margin-block-start: var(--space-2xs);
+    }
+  }
+</style>

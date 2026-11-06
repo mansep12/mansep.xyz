@@ -1,0 +1,23 @@
+---
+import ProjectPage from "../../../components/project/ProjectPage.astro";
+import { entrySlug, findCounterpart, getProjects, type ProjectEntry } from "../../../lib/content";
+
+export async function getStaticPaths() {
+  const projects = await getProjects("en");
+  return Promise.all(
+    projects.map(async (entry) => ({
+      params: { slug: entrySlug(entry) },
+      props: { entry, translated: Boolean(await findCounterpart("projects", entry, "es")) },
+    })),
+  );
+}
+
+interface Props {
+  entry: ProjectEntry;
+  translated: boolean;
+}
+
+const { entry, translated } = Astro.props;
+---
+
+<ProjectPage lang="en" entry={entry} translated={translated} />

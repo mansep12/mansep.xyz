@@ -1,0 +1,129 @@
+---
+import { Image } from "astro:assets";
+/**
+ * YouTube video behind a facade: a local poster and a play button. The
+ * iframe from youtube-nocookie.com is inserted only after a click (see
+ * video-facade.ts), so loading the page makes no third-party request.
+ * Without JavaScript the button stays hidden and the caption links to the
+ * video.
+ */
+import type { ImageMetadata } from "astro";
+import type { Lang } from "../../i18n/locales";
+import { projectStrings } from "./strings";
+
+interface Props {
+  lang: Lang;
+  /** Project title, for the button label and the iframe title. */
+  title: string;
+  youtubeId: string;
+  /** Link to the video on YouTube, for the caption. */
+  href: string;
+  poster: ImageMetadata;
+}
+
+const { lang, title, youtubeId, href, poster } = Astro.props;
+const s = projectStrings[lang];
+const label = s.playVideo(title);
+---
+
+<figure class="video">
+  <div
+    class="frame"
+    data-video-facade
+    data-video-id={youtubeId}
+    data-video-title={s.videoTitle(title)}
+  >
+    <Image
+      src={poster}
+      alt=""
+      widths={[480, 800, 1280]}
+      sizes="(min-width: 48rem) 42rem, 100vw"
+      class="poster"
+    />
+    <button type="button" class="play" aria-label={label} title={label}>
+      <svg viewBox="0 0 68 48" width="68" height="48" aria-hidden="true" focusable="false">
+        <rect width="68" height="48" rx="12" class="play-bg"></rect>
+        <path d="M27 14v20l18-10z" class="play-icon"></path>
+      </svg>
+    </button>
+  </div>
+  <figcaption>
+    {s.videoCaption} <a href={href}>{s.watchOnYouTube}</a>
+  </figcaption>
+</figure>
+
+<script>
+  import "./video-facade";
+</script>
+
+<style>
+  @layer components {
+    .video {
+      display: grid;
+      gap: var(--space-2xs);
+    }
+
+    .frame {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      background-color: var(--color-surface);
+      border: var(--border-width) solid var(--color-border);
+      border-radius: var(--radius);
+    }
+
+    .poster,
+    .frame :global(iframe) {
+      inline-size: 100%;
+      block-size: 100%;
+      border: 0;
+    }
+
+    .poster {
+      object-fit: cover;
+    }
+
+    .play {
+      display: none;
+      position: absolute;
+      inset: 0;
+      place-items: center;
+      inline-size: 100%;
+      padding: 0;
+      background: none;
+      border: 0;
+      cursor: pointer;
+      /* Same dark button with a light icon in both themes, whatever the poster. */
+      color-scheme: light;
+    }
+
+    .frame[data-ready] .play {
+      display: grid;
+    }
+
+    .play-bg {
+      fill: var(--color-text);
+      opacity: 0.85;
+      transition: fill var(--duration) var(--ease);
+    }
+
+    .play-icon {
+      fill: var(--color-bg);
+    }
+
+    .play:hover .play-bg,
+    .play:focus-visible .play-bg {
+      fill: var(--color-accent);
+      opacity: 1;
+    }
+
+    .play:focus-visible {
+      outline-offset: -4px;
+    }
+
+    figcaption {
+      color: var(--color-muted);
+      font-size: var(--step--1);
+    }
+  }
+</style>

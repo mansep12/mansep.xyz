@@ -1,0 +1,117 @@
+---
+/**
+ * Case study page, shared by /proyectos/[slug] and /en/projects/[slug].
+ *
+ * Order: header (with the body's intro line as lede), facts box, pitch video
+ * (when the project has a YouTube id and a local poster), then the Markdown
+ * body split at its `##` headings. The "How to verify this" section is
+ * rendered as a box; every case study must have it.
+ */
+import type { Lang } from "../../i18n/locales";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { entrySlug, type ProjectEntry } from "../../lib/content";
+import ProjectFacts from "./ProjectFacts.astro";
+import ProjectHeader from "./ProjectHeader.astro";
+import { posterFor } from "./posters";
+import { requireSection, splitBody } from "./sections";
+import { projectStrings } from "./strings";
+import VerifyBlock from "./VerifyBlock.astro";
+import VideoFacade from "./VideoFacade.astro";
+
+interface Props {
+  lang: Lang;
+  entry: ProjectEntry;
+  /** Whether the same project exists in the other locale. */
+  translated: boolean;
+}
+
+const { lang, entry, translated } = Astro.props;
+const { data } = entry;
+const slug = entrySlug(entry);
+const s = projectStrings[lang];
+
+const body = splitBody(entry.rendered?.html ?? "");
+const verify = requireSection(body, s.verifyHeading, `Project "${entry.id}"`);
+const poster = posterFor(slug);
+const video =
+  data.links.youtubeId && poster && data.links.video
+    ? { id: data.links.youtubeId, href: data.links.video, poster }
+    : undefined;
+---
+
+<BaseLayout
+  lang={lang}
+  routeKey="project"
+  params={{ slug }}
+  title={data.title}
+  description={data.summary}
+  translated={translated}
+>
+  <article class="project">
+    <ProjectHeader lang={lang} data={data} intro={body.intro} />
+    <ProjectFacts lang={lang} data={data} />
+    {
+      video && (
+        <VideoFacade
+          lang={lang}
+          title={data.title}
+          youtubeId={video.id}
+          href={video.href}
+          poster={video.poster}
+        />
+      )
+    }
+    <div class="body">
+      {
+        body.sections.map((section) =>
+          section === verify ? (
+            <VerifyBlock section={section} />
+          ) : (
+            <section class="flow" set:html={section.html} />
+          ),
+        )
+      }
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  @layer components {
+    .project {
+      display: grid;
+      gap: var(--space-l);
+      max-inline-size: var(--measure);
+    }
+
+    .body {
+      display: grid;
+      gap: var(--space-xl);
+    }
+
+    .body :global(section) {
+      --flow-space: var(--space-s);
+    }
+
+    .body :global(h2) {
+      font-size: var(--step-3);
+    }
+
+    .body :global(h3) {
+      --flow-space: var(--space-m);
+      font-size: var(--step-1);
+    }
+
+    .body :global(ul),
+    .body :global(ol) {
+      padding-inline-start: 1.25em;
+    }
+
+    .body :global(li + li) {
+      margin-block-start: var(--space-3xs);
+    }
+
+    .body :global(code) {
+      overflow-wrap: anywhere;
+    }
+  }
+</style>
