@@ -1,0 +1,23 @@
+{
+  "basics": {
+    "name": "Manuel Sepúlveda",
+    "label": "Software engineer · backend, applied cryptography and security",
+    "email": "manuelsepulveda.sepulveda@gmail.com",
+    "location": {
+      "city": "Santiago",
+      "countryCode": "CL"
+    },
+    "profiles": [
+      {
+        "network": "GitHub",
+        "username": "mansep12",
+        "url": "https://github.com/mansep12"
+      },
+      {
+        "network": "LinkedIn",
+        "username": "manuel-sepulveda-cabeza",
+        "url": "https://www.linkedin.com/in/manuel-sepulveda-cabeza"
+      }
+    ]
+  }
+}
