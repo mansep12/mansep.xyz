@@ -7,6 +7,8 @@
  *   "dimacofi.rpa.01"), so the CV generator can select highlights by id.
  * - Objects are strict and `basics` has no `phone`, and `location` has no
  *   `address` or `postalCode`: private details fail validation.
+ * - `education` and `certificates` accept an optional `summary`, for facts
+ *   that do not fit the other fields (a double degree, hours, selection).
  *
  * Both files are validated at build time through the `resume` collection in
  * src/content.config.ts.
@@ -88,6 +90,7 @@ const educationSchema = z.strictObject({
   startDate: date.optional(),
   endDate: date.optional(),
   score: text.optional(),
+  summary: text.optional(),
   courses: z.array(text).default([]),
 });
 
@@ -103,6 +106,7 @@ const certificateSchema = z.strictObject({
   date: date.optional(),
   issuer: text.optional(),
   url: z.url().optional(),
+  summary: text.optional(),
 });
 
 const publicationSchema = z.strictObject({

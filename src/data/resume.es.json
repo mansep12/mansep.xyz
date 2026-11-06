@@ -3,6 +3,8 @@
     "name": "Manuel Sepúlveda",
     "label": "Software engineer · backend, applied cryptography and security",
     "email": "manuelsepulveda.sepulveda@gmail.com",
+    "url": "https://mansep.xyz",
+    "summary": "Construyo backends y contratos inteligentes donde importan las firmas, la privacidad y el origen de los datos. Mi tesis de Magíster en Ciencias, mención Computación, en el CLCERT de la Universidad de Chile, diseña un mecanismo criptográfico para publicar estadísticas de una votación electrónica verificable sin comprometer el secreto del voto. Con Nodus gané el primer lugar del University Track de Find Your Way Hackathon (Tellus y Stellar, octubre de 2026).",
     "location": {
       "city": "Santiago",
       "countryCode": "CL"
@@ -19,5 +21,257 @@
         "url": "https://www.linkedin.com/in/manuel-sepulveda-cabeza"
       }
     ]
-  }
+  },
+  "work": [
+    {
+      "name": "CLCERT, Universidad de Chile",
+      "position": "Tesista de Magíster",
+      "url": "https://clcert.cl",
+      "location": "Santiago, Chile",
+      "startDate": "2025-03",
+      "summary": "Tesis de Magíster en Ciencias, mención Computación, sobre publicación segura de estadísticas agregadas en votación electrónica verificable. Profesores guía: Alejandro Hevia y Camilo Gómez. Entregada y en revisión; defensa prevista entre diciembre de 2026 y febrero de 2027.",
+      "highlights": [
+        {
+          "id": "clcert.thesis.01",
+          "text": "Mi tesis de magíster en el CLCERT de la Universidad de Chile diseña un mecanismo criptográfico para publicar estadísticas de una votación electrónica verificable sin comprometer el secreto del voto, en el contexto de UParticipa."
+        },
+        {
+          "id": "clcert.thesis.02",
+          "text": "La tesis busca que las estadísticas publicadas de una votación sean útiles sin romper el secreto del voto ni la verificabilidad de punta a punta."
+        }
+      ]
+    },
+    {
+      "name": "DIMACOFI S.A.",
+      "position": "Desarrollador de Software",
+      "startDate": "2024-07",
+      "endDate": "2026-04",
+      "summary": "Área de TI: soluciones internas, productos para clientes y exploración de tecnologías para automatización, atención al cliente, educación e integración cloud.",
+      "highlights": [
+        {
+          "id": "dimacofi.kiosk.01",
+          "text": "Desarrollé desde cero, frontend y backend, un tótem educacional: una plataforma interactiva multi-tenant para colegios en pantalla táctil, que quedó instalada en un establecimiento educacional. Stack: React, Electron, FastAPI, SQLModel, Cloud SQL, Cloud Storage, Cloud Run y Docker."
+        },
+        {
+          "id": "dimacofi.kiosk.02",
+          "text": "En el tótem educacional implementé autenticación JWT con roles (administrador, docente y alumno), login por QR para la pantalla táctil, carga de documentos docentes e impresión de documentos para alumnos."
+        },
+        {
+          "id": "dimacofi.kiosk.03",
+          "text": "Integré el tótem educacional con impresoras reales: PaperCut para controlar cuotas y costos de impresión, y SNMP para monitorear tóner, papel y errores."
+        },
+        {
+          "id": "dimacofi.kiosk.04",
+          "text": "Levanté con los equipos de marketing y comercial de DIMACOFI las necesidades de distintos colegios, y las resolví con un diseño multi-tenant que separa datos y configuración por establecimiento."
+        },
+        {
+          "id": "dimacofi.rpa.01",
+          "text": "Automaticé la actualización de más de 2.000 direcciones críticas para facturación en Oracle EBS; a mano, 100 registros tomaban unos 3 días. El flujo quedó reutilizable para nuevos registros."
+        },
+        {
+          "id": "dimacofi.rpa.02",
+          "text": "Diseñé en Python el flujo de la automatización de direcciones sobre Oracle EBS: normalización y deduplicación en SQLite, enriquecimiento por lotes contra Oracle, reportes de casos no encontrados o ambiguos para revisión manual y Selenium con logs."
+        },
+        {
+          "id": "dimacofi.assistant.01",
+          "text": "En mi primera práctica profesional en DIMACOFI (enero a marzo de 2024) construí una demo funcional de asistente virtual con IA para atención al cliente por WhatsApp, con generación de tickets mediante una API interna, recomendaciones de productos con imágenes y verificación de correo por PIN. Stack: Botpress, ChatGPT Assistants, Make y WhatsApp Business."
+        },
+        {
+          "id": "dimacofi.assistant.02",
+          "text": "En la demo del asistente virtual con IA condicioné las funciones críticas a una verificación previa controlada por el estado del flujo en Botpress, en vez de confiar solo en las instrucciones al modelo de lenguaje."
+        }
+      ]
+    }
+  ],
+  "education": [
+    {
+      "institution": "Universidad de Chile",
+      "url": "https://uchile.cl",
+      "studyType": "Magíster en Ciencias, mención Computación",
+      "startDate": "2025",
+      "summary": "Programa de doble titulación con Ingeniería Civil en Computación: una sola tesis completa ambos grados. Tesis en el CLCERT."
+    },
+    {
+      "institution": "Universidad de Chile",
+      "url": "https://uchile.cl",
+      "studyType": "Ingeniería Civil en Computación",
+      "startDate": "2020",
+      "summary": "Licenciatura en Ciencias de la Ingeniería, mención Computación, obtenida en 2024."
+    }
+  ],
+  "awards": [
+    {
+      "title": "Best University Project (primer lugar del University Track)",
+      "date": "2026-10",
+      "awarder": "Find Your Way Hackathon (Tellus y Stellar)",
+      "summary": "Con Nodus, una plataforma de compensación multilateral de deudas entre pymes sobre Stellar, en un equipo de dos."
+    }
+  ],
+  "certificates": [
+    {
+      "name": "Escuela de Ciberseguridad CiberLAC 2026",
+      "date": "2026-08",
+      "issuer": "BID y Red CiberLAC",
+      "summary": "65 horas, del 5 al 14 de agosto de 2026, en Florianópolis, Brasil. Fui uno de los tres estudiantes del CLCERT seleccionados para representar a la Universidad de Chile. Cursos: MITRE ATT&CK, adopción de criptografía poscuántica, fundamentos de blockchain y gestión de activos de información."
+    }
+  ],
+  "skills": [
+    {
+      "name": "Lenguajes",
+      "keywords": ["Python", "TypeScript", "JavaScript", "Rust", "SQL", "Java", "C/C++"]
+    },
+    {
+      "name": "Backend",
+      "keywords": [
+        "FastAPI",
+        "SQLModel",
+        "Pydantic",
+        "APIs REST",
+        "JWT",
+        "Spring Boot",
+        "Django",
+        "Flask"
+      ]
+    },
+    {
+      "name": "Frontend",
+      "keywords": ["React", "Next.js", "Electron", "Tailwind CSS", "MUI"]
+    },
+    {
+      "name": "Datos",
+      "keywords": [
+        "PostgreSQL",
+        "Supabase",
+        "SQLite",
+        "Oracle",
+        "Drizzle ORM",
+        "PostGIS",
+        "Pandas",
+        "NumPy"
+      ]
+    },
+    {
+      "name": "Cloud e infraestructura",
+      "keywords": [
+        "Google Cloud (Cloud Run, Cloud SQL, Cloud Storage)",
+        "Cloudflare Workers",
+        "Docker",
+        "Docker Compose",
+        "Vercel"
+      ]
+    },
+    {
+      "name": "Seguridad y criptografía",
+      "keywords": [
+        "Web Crypto API",
+        "AES",
+        "RSA-OAEP",
+        "PBKDF2",
+        "Passkeys (WebAuthn)",
+        "Stellar y Soroban"
+      ]
+    },
+    {
+      "name": "Automatización e integraciones",
+      "keywords": ["Selenium", "Botpress", "Make", "PaperCut", "SNMP"]
+    }
+  ],
+  "languages": [
+    {
+      "language": "Español",
+      "fluency": "Nativo"
+    },
+    {
+      "language": "Inglés",
+      "fluency": "B2, acreditado por examen universitario"
+    }
+  ],
+  "interests": [
+    { "name": "Cardistry" },
+    { "name": "Ciclismo de ruta" },
+    { "name": "Fútbol" },
+    { "name": "Running" }
+  ],
+  "projects": [
+    {
+      "name": "Nodus",
+      "description": "Compensación multilateral de deudas entre pymes sobre Stellar: detecta círculos de deuda y los liquida de forma atómica moviendo solo el saldo neto.",
+      "url": "https://github.com/mansep12/nodus",
+      "startDate": "2026-10",
+      "endDate": "2026-10",
+      "roles": ["Diseño y desarrollo, en un equipo de dos"],
+      "keywords": ["Rust", "Soroban", "TypeScript", "Next.js", "PostgreSQL", "Passkeys (WebAuthn)"],
+      "highlights": [
+        {
+          "id": "nodus.settlement.01",
+          "text": "Implementé en Rust los contratos Soroban de Nodus, que cancelan un círculo de deudas entre negocios en una sola transacción atómica moviendo solo el saldo neto; en testnet liquidé un círculo de 20 negocios con 20 firmas de passkey."
+        },
+        {
+          "id": "nodus.accounts.01",
+          "text": "En Nodus, cada negocio opera con una smart account controlada por passkey, sin frases semilla, y un relayer paga las comisiones para que ningún negocio necesite XLM. Construí la aplicación en un monorepo TypeScript con Next.js, PostgreSQL, un indexador de eventos y pruebas de punta a punta."
+        }
+      ]
+    },
+    {
+      "name": "Pulso Fiscal",
+      "description": "Plataforma abierta de transparencia sobre los gastos operacionales del Senado de Chile. MVP.",
+      "url": "https://github.com/mansep12/pulso-fiscal",
+      "startDate": "2026-05",
+      "keywords": ["Python", "Supabase", "PostgreSQL", "Next.js"],
+      "highlights": [
+        {
+          "id": "pulso-fiscal.provenance.01",
+          "text": "Diseñé el ETL en Python de Pulso Fiscal para que cada dato publicado conserve la URL de la fuente oficial, la fecha de captura y el hash SHA-256 del recurso descargado."
+        },
+        {
+          "id": "pulso-fiscal.mvp.01",
+          "text": "Construí el MVP de Pulso Fiscal, que convierte los gastos operacionales del Senado de Chile desde 2021 en rankings y tablas comparables, con migraciones versionadas en Supabase/PostgreSQL y un frontend en Next.js. Código bajo licencia MIT y datos bajo CC BY 4.0."
+        }
+      ]
+    },
+    {
+      "name": "Pulso Urbano",
+      "description": "Simulador de movilidad urbana para Santiago que estima el impacto de distintos escenarios en CO2, PM2.5 y ruido. Hecho en Indies Hack 2026.",
+      "url": "https://github.com/fjararibet/pulsourbano",
+      "startDate": "2026-05",
+      "endDate": "2026-05",
+      "roles": ["Desarrollo full-stack, en un equipo de 4"],
+      "keywords": [
+        "React",
+        "TanStack Start",
+        "MapLibre GL",
+        "Cloudflare Workers",
+        "Cloudflare D1",
+        "Drizzle ORM"
+      ],
+      "highlights": [
+        {
+          "id": "pulso-urbano.hackathon.01",
+          "text": "En Indies Hack (mayo de 2026), en 54 horas y en un equipo de 4, construimos Pulso Urbano, un simulador que muestra escenarios de movilidad en Santiago y estima su impacto en CO2, PM2.5 y ruido a partir de datos abiertos reales."
+        },
+        {
+          "id": "pulso-urbano.fullstack.01",
+          "text": "En Pulso Urbano contribuí al frontend, al mapa interactivo con MapLibre GL, a la integración de datos (Encuesta Origen Destino 2012 de SECTRA, GTFS de DTPM) y al backend en Cloudflare Workers con D1 y Drizzle ORM."
+        }
+      ]
+    },
+    {
+      "name": "Gestor de contraseñas",
+      "description": "Gestor de contraseñas con cifrado en el navegador, hecho para el curso Introducción a la Criptografía Moderna.",
+      "url": "https://github.com/mansep12/password-manager",
+      "startDate": "2024",
+      "endDate": "2024",
+      "keywords": ["React", "FastAPI", "SQLModel", "Web Crypto API"],
+      "highlights": [
+        {
+          "id": "password-manager.crypto.01",
+          "text": "En el gestor de contraseñas cifré todo en el navegador con la Web Crypto API: una clave AES derivada de la contraseña maestra con PBKDF2 protege las contraseñas guardadas y la clave privada RSA-OAEP de cada usuario, que sirve para compartir contraseñas entre usuarios."
+        },
+        {
+          "id": "password-manager.limits.01",
+          "text": "Documenté las limitaciones conocidas del gestor de contraseñas: AES-CBC no es autenticado (hoy elegiría AES-GCM), 100.000 iteraciones de PBKDF2 están bajo la guía actual de OWASP y la contraseña maestra también llega al servidor en el registro."
+        }
+      ]
+    }
+  ]
 }

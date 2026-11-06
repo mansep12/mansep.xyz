@@ -3,6 +3,8 @@
     "name": "Manuel Sepúlveda",
     "label": "Software engineer · backend, applied cryptography and security",
     "email": "manuelsepulveda.sepulveda@gmail.com",
+    "url": "https://mansep.xyz",
+    "summary": "I build backends and smart contracts where signatures, privacy and data provenance matter. My M.Sc. thesis in Computer Science at CLCERT, Universidad de Chile, designs a cryptographic mechanism to publish statistics of a verifiable electronic vote without compromising ballot secrecy. With Nodus I won Best University Project (1st place, University Track) at Find Your Way Hackathon (Tellus and Stellar, October 2026).",
     "location": {
       "city": "Santiago",
       "countryCode": "CL"
@@ -19,5 +21,257 @@
         "url": "https://www.linkedin.com/in/manuel-sepulveda-cabeza"
       }
     ]
-  }
+  },
+  "work": [
+    {
+      "name": "CLCERT, Universidad de Chile",
+      "position": "Master's thesis researcher",
+      "url": "https://clcert.cl",
+      "location": "Santiago, Chile",
+      "startDate": "2025-03",
+      "summary": "M.Sc. in Computer Science thesis on the secure publication of aggregate statistics in verifiable electronic voting. Advisors: Alejandro Hevia and Camilo Gómez. Submitted and under review; defense expected between December 2026 and February 2027.",
+      "highlights": [
+        {
+          "id": "clcert.thesis.01",
+          "text": "My master's thesis at CLCERT, Universidad de Chile, designs a cryptographic mechanism to publish statistics of a verifiable electronic vote without compromising ballot secrecy, in the context of UParticipa."
+        },
+        {
+          "id": "clcert.thesis.02",
+          "text": "The thesis aims for published voting statistics that are useful without breaking ballot secrecy or end-to-end verifiability."
+        }
+      ]
+    },
+    {
+      "name": "DIMACOFI S.A.",
+      "position": "Software Developer",
+      "startDate": "2024-07",
+      "endDate": "2026-04",
+      "summary": "IT department: internal systems, products for clients and technology exploration for automation, customer service, education and cloud integration.",
+      "highlights": [
+        {
+          "id": "dimacofi.kiosk.01",
+          "text": "Built an educational kiosk from scratch, frontend and backend: a multi-tenant interactive touchscreen platform for schools, installed in a school. Stack: React, Electron, FastAPI, SQLModel, Cloud SQL, Cloud Storage, Cloud Run and Docker."
+        },
+        {
+          "id": "dimacofi.kiosk.02",
+          "text": "In the educational kiosk, implemented JWT authentication with roles (administrator, teacher and student), QR login for the touchscreen, document uploads for teachers and document printing for students."
+        },
+        {
+          "id": "dimacofi.kiosk.03",
+          "text": "Connected the educational kiosk to real printers: PaperCut to control print quotas and costs, and SNMP to monitor toner, paper and errors."
+        },
+        {
+          "id": "dimacofi.kiosk.04",
+          "text": "Gathered the needs of different schools with DIMACOFI's marketing and sales teams, and met them with a multi-tenant design that separates data and configuration per school."
+        },
+        {
+          "id": "dimacofi.rpa.01",
+          "text": "Automated the update of more than 2,000 billing-critical addresses in Oracle EBS; by hand, 100 records took about 3 days. The workflow stayed reusable for new records."
+        },
+        {
+          "id": "dimacofi.rpa.02",
+          "text": "Designed the Python workflow behind the Oracle EBS address automation: normalization and deduplication in SQLite, batch enrichment against Oracle, reports of missing or ambiguous matches for manual review, and Selenium with logs."
+        },
+        {
+          "id": "dimacofi.assistant.01",
+          "text": "During my first internship at DIMACOFI (January to March 2024), built a working demo of an AI virtual assistant for customer service over WhatsApp, with ticket creation through an internal API, product recommendations with images and email verification by PIN. Stack: Botpress, ChatGPT Assistants, Make and WhatsApp Business."
+        },
+        {
+          "id": "dimacofi.assistant.02",
+          "text": "In the AI virtual assistant demo, gated critical functions behind a prior verification enforced by the flow state in Botpress, instead of relying only on instructions to the language model."
+        }
+      ]
+    }
+  ],
+  "education": [
+    {
+      "institution": "Universidad de Chile",
+      "url": "https://uchile.cl",
+      "studyType": "M.Sc. in Computer Science (Magíster en Ciencias, mención Computación)",
+      "startDate": "2025",
+      "summary": "Double degree program with Computer Engineering: one thesis completes both degrees. Thesis at CLCERT."
+    },
+    {
+      "institution": "Universidad de Chile",
+      "url": "https://uchile.cl",
+      "studyType": "Computer Engineering (Ingeniería Civil en Computación)",
+      "startDate": "2020",
+      "summary": "Bachelor's degree in Engineering Sciences, Computer Science major (Licenciatura en Ciencias de la Ingeniería, mención Computación), completed in 2024."
+    }
+  ],
+  "awards": [
+    {
+      "title": "Best University Project (1st place, University Track)",
+      "date": "2026-10",
+      "awarder": "Find Your Way Hackathon (Tellus and Stellar)",
+      "summary": "With Nodus, a multilateral debt netting platform for SMEs on Stellar, built in a team of two."
+    }
+  ],
+  "certificates": [
+    {
+      "name": "CiberLAC 2026 Cybersecurity School",
+      "date": "2026-08",
+      "issuer": "IDB and Red CiberLAC",
+      "summary": "65 hours, August 5 to 14, 2026, in Florianópolis, Brazil. I was one of three CLCERT students selected to represent Universidad de Chile. Courses: MITRE ATT&CK, post-quantum cryptography adoption, blockchain fundamentals and information asset management."
+    }
+  ],
+  "skills": [
+    {
+      "name": "Languages",
+      "keywords": ["Python", "TypeScript", "JavaScript", "Rust", "SQL", "Java", "C/C++"]
+    },
+    {
+      "name": "Backend",
+      "keywords": [
+        "FastAPI",
+        "SQLModel",
+        "Pydantic",
+        "REST APIs",
+        "JWT",
+        "Spring Boot",
+        "Django",
+        "Flask"
+      ]
+    },
+    {
+      "name": "Frontend",
+      "keywords": ["React", "Next.js", "Electron", "Tailwind CSS", "MUI"]
+    },
+    {
+      "name": "Data",
+      "keywords": [
+        "PostgreSQL",
+        "Supabase",
+        "SQLite",
+        "Oracle",
+        "Drizzle ORM",
+        "PostGIS",
+        "Pandas",
+        "NumPy"
+      ]
+    },
+    {
+      "name": "Cloud and infrastructure",
+      "keywords": [
+        "Google Cloud (Cloud Run, Cloud SQL, Cloud Storage)",
+        "Cloudflare Workers",
+        "Docker",
+        "Docker Compose",
+        "Vercel"
+      ]
+    },
+    {
+      "name": "Security and cryptography",
+      "keywords": [
+        "Web Crypto API",
+        "AES",
+        "RSA-OAEP",
+        "PBKDF2",
+        "Passkeys (WebAuthn)",
+        "Stellar and Soroban"
+      ]
+    },
+    {
+      "name": "Automation and integrations",
+      "keywords": ["Selenium", "Botpress", "Make", "PaperCut", "SNMP"]
+    }
+  ],
+  "languages": [
+    {
+      "language": "Spanish",
+      "fluency": "Native"
+    },
+    {
+      "language": "English",
+      "fluency": "B2, certified by a university exam"
+    }
+  ],
+  "interests": [
+    { "name": "Cardistry" },
+    { "name": "Road cycling" },
+    { "name": "Football" },
+    { "name": "Running" }
+  ],
+  "projects": [
+    {
+      "name": "Nodus",
+      "description": "Multilateral debt netting for SMEs on Stellar: it finds cycles of debt and settles them atomically, moving only the net balance.",
+      "url": "https://github.com/mansep12/nodus",
+      "startDate": "2026-10",
+      "endDate": "2026-10",
+      "roles": ["Design and development, in a team of two"],
+      "keywords": ["Rust", "Soroban", "TypeScript", "Next.js", "PostgreSQL", "Passkeys (WebAuthn)"],
+      "highlights": [
+        {
+          "id": "nodus.settlement.01",
+          "text": "Implemented Nodus's Soroban contracts in Rust, which cancel a cycle of debts between businesses in a single atomic transaction that moves only the net balance; on testnet, settled a cycle of 20 businesses with 20 passkey signatures."
+        },
+        {
+          "id": "nodus.accounts.01",
+          "text": "In Nodus, each business uses a passkey-controlled smart account with no seed phrase, and a relayer pays the fees so no business needs XLM. Built the app as a TypeScript monorepo with Next.js, PostgreSQL, an event indexer and end-to-end tests."
+        }
+      ]
+    },
+    {
+      "name": "Pulso Fiscal",
+      "description": "Open transparency platform for the operational expenses of the Chilean Senate. MVP.",
+      "url": "https://github.com/mansep12/pulso-fiscal",
+      "startDate": "2026-05",
+      "keywords": ["Python", "Supabase", "PostgreSQL", "Next.js"],
+      "highlights": [
+        {
+          "id": "pulso-fiscal.provenance.01",
+          "text": "Designed the Python ETL of Pulso Fiscal so every published datum keeps its official source URL, capture date and the SHA-256 hash of the downloaded resource."
+        },
+        {
+          "id": "pulso-fiscal.mvp.01",
+          "text": "Built the MVP of Pulso Fiscal, which turns the Chilean Senate's operational expenses since 2021 into comparable rankings and tables, with versioned Supabase/PostgreSQL migrations and a Next.js frontend. Code under the MIT License, data under CC BY 4.0."
+        }
+      ]
+    },
+    {
+      "name": "Pulso Urbano",
+      "description": "Urban mobility simulator for Santiago that estimates the impact of different scenarios on CO2, PM2.5 and noise. Built at Indies Hack 2026.",
+      "url": "https://github.com/fjararibet/pulsourbano",
+      "startDate": "2026-05",
+      "endDate": "2026-05",
+      "roles": ["Full-stack development, in a team of 4"],
+      "keywords": [
+        "React",
+        "TanStack Start",
+        "MapLibre GL",
+        "Cloudflare Workers",
+        "Cloudflare D1",
+        "Drizzle ORM"
+      ],
+      "highlights": [
+        {
+          "id": "pulso-urbano.hackathon.01",
+          "text": "At Indies Hack (May 2026), in 54 hours and a team of 4, built Pulso Urbano, a simulator that shows mobility scenarios in Santiago and estimates their impact on CO2, PM2.5 and noise from real open data."
+        },
+        {
+          "id": "pulso-urbano.fullstack.01",
+          "text": "In Pulso Urbano, contributed to the frontend, the interactive MapLibre GL map, data integration (SECTRA's 2012 Origin-Destination Survey, DTPM's GTFS) and the backend on Cloudflare Workers with D1 and Drizzle ORM."
+        }
+      ]
+    },
+    {
+      "name": "Password manager",
+      "description": "Password manager with in-browser encryption, built for the Introduction to Modern Cryptography course.",
+      "url": "https://github.com/mansep12/password-manager",
+      "startDate": "2024",
+      "endDate": "2024",
+      "keywords": ["React", "FastAPI", "SQLModel", "Web Crypto API"],
+      "highlights": [
+        {
+          "id": "password-manager.crypto.01",
+          "text": "In the password manager, encrypted everything in the browser with the Web Crypto API: an AES key derived from the master password with PBKDF2 protects saved passwords and each user's RSA-OAEP private key, which is used to share passwords between users."
+        },
+        {
+          "id": "password-manager.limits.01",
+          "text": "Documented the password manager's known limitations: AES-CBC is not authenticated (AES-GCM would be the choice today), 100,000 PBKDF2 iterations is below current OWASP guidance, and the master password also reaches the server at sign-up."
+        }
+      ]
+    }
+  ]
 }

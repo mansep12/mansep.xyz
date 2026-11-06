@@ -109,7 +109,16 @@ describe("resume data", () => {
   it("loads and validates both committed files", () => {
     const resumes = loadResumes();
     expect(resumes.es.basics.name).toBe(resumes.en.basics.name);
-    expect(resumes.es.work).toEqual([]);
+    expect(resumes.es.basics.label).toBe(resumes.en.basics.label);
+    expect(highlightIds(resumes.es)).toEqual(highlightIds(resumes.en));
+    expect(highlightIds(resumes.es).length).toBeGreaterThan(0);
+  });
+
+  it("keeps en and em dashes out of the committed files", () => {
+    const resumes = loadResumes();
+    for (const lang of ["es", "en"] as const) {
+      expect(JSON.stringify(resumes[lang])).not.toMatch(/[–—]/);
+    }
   });
 
   it("collects highlight ids", () => {
