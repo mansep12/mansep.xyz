@@ -1,0 +1,16 @@
+---
+/**
+ * Contact address, assembled in the browser so it is not plain text in the
+ * HTML. Without JavaScript it shows a spelled-out version.
+ */
+import { site } from "../data/site";
+import { encodeEmail, spellOutEmail } from "../lib/email";
+
+const encoded = encodeEmail(site.email);
+---
+
+<span class="email-link" data-email={encoded}><noscript>{spellOutEmail(site.email)}</noscript></span>
+
+<script>
+  import "../scripts/email-link";
+</script>

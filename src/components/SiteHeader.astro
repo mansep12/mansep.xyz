@@ -1,0 +1,133 @@
+---
+/**
+ * One-line header: name (home link), main navigation, language switch and
+ * theme toggle. Below 48rem the navigation wraps to its own row.
+ */
+import { site } from "../data/site";
+import type { Lang } from "../i18n/locales";
+import { localizedPath, type RouteKey, type RouteTarget } from "../i18n/routes";
+import { type UiKey, useTranslations } from "../i18n/ui";
+import LanguageSwitch from "./LanguageSwitch.astro";
+import ThemeToggle from "./ThemeToggle.astro";
+
+type Props = RouteTarget & {
+  lang: Lang;
+  /** Show the language switch (false when the page has no translation). */
+  translated: boolean;
+};
+
+const { lang, translated, ...route } = Astro.props;
+const t = useTranslations(lang);
+
+interface NavItem {
+  readonly key: Exclude<RouteKey, "project">;
+  readonly label: UiKey;
+  /** Other routes that belong to this section (marked as current too). */
+  readonly section?: readonly RouteKey[];
+}
+
+const navItems: readonly NavItem[] = [
+  { key: "projects", label: "nav.projects", section: ["project"] },
+  { key: "research", label: "nav.research" },
+  { key: "about", label: "nav.about" },
+  { key: "cv", label: "nav.cv" },
+];
+
+function current(item: NavItem): "page" | "true" | undefined {
+  if (item.key === route.routeKey) return "page";
+  return item.section?.includes(route.routeKey) ? "true" : undefined;
+}
+---
+
+<header class="site-header">
+  <div class="container inner">
+    <a
+      class="site-name"
+      href={localizedPath("home", lang)}
+      aria-current={route.routeKey === "home" ? "page" : undefined}>{site.name}</a
+    >
+    <nav class="site-nav" aria-label={t("nav.label")}>
+      <ul role="list">
+        {
+          navItems.map((item) => (
+            <li>
+              <a href={localizedPath(item.key, lang)} aria-current={current(item)}>
+                {t(item.label)}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+    <div class="tools">
+      {translated && <LanguageSwitch lang={lang} {...route} />}
+      <ThemeToggle lang={lang} />
+    </div>
+  </div>
+</header>
+
+<style>
+  @layer components {
+    .site-header {
+      border-block-end: var(--border-width) solid var(--color-border);
+    }
+
+    .inner {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      column-gap: var(--space-m);
+      row-gap: var(--space-2xs);
+      padding-block: var(--space-xs);
+    }
+
+    .site-name {
+      margin-inline-end: auto;
+      color: var(--color-text);
+      font-weight: var(--font-weight-bold);
+      text-decoration-line: none;
+    }
+
+    .tools {
+      display: flex;
+      align-items: center;
+      gap: var(--space-xs);
+    }
+
+    .site-nav {
+      order: 1;
+      flex-basis: 100%;
+    }
+
+    .site-nav ul {
+      display: flex;
+      flex-wrap: wrap;
+      column-gap: var(--space-s);
+      row-gap: var(--space-3xs);
+    }
+
+    .site-nav a {
+      color: var(--color-text);
+      text-decoration-line: none;
+    }
+
+    .site-name:hover,
+    .site-nav a:hover,
+    .site-nav a[aria-current] {
+      text-decoration-line: underline;
+      text-decoration-color: var(--color-accent);
+    }
+
+    @media (min-width: 48rem) {
+      .site-name {
+        margin-inline-end: 0;
+      }
+
+      .site-nav {
+        order: 0;
+        flex-basis: auto;
+        margin-inline-start: auto;
+      }
+    }
+  }
+</style>

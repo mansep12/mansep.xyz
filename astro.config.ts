@@ -1,7 +1,19 @@
+import { execFileSync } from "node:child_process";
 import cloudflare from "@astrojs/cloudflare";
 import { defineConfig, fontProviders } from "astro/config";
 import { site } from "./src/data/site";
 import { defaultLang, locales } from "./src/i18n/locales";
+import { resolveBuildCommit } from "./src/lib/build-info";
+
+// Resolved here, in Node: pages are prerendered in workerd, which has no git.
+const buildCommit = resolveBuildCommit({
+  env: process.env,
+  gitHead: () =>
+    execFileSync("git", ["rev-parse", "HEAD"], {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    }),
+});
 
 // https://docs.astro.build/en/reference/configuration-reference/
 export default defineConfig({
@@ -41,6 +53,11 @@ export default defineConfig({
       fallbacks: ["monospace"],
     },
   ],
+  vite: {
+    define: {
+      __BUILD_COMMIT__: JSON.stringify(buildCommit),
+    },
+  },
   i18n: {
     defaultLocale: defaultLang,
     locales: [...locales],

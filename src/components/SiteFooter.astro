@@ -1,0 +1,115 @@
+---
+/**
+ * Contact, location, site links, license line and the commit this build
+ * came from.
+ */
+import { site } from "../data/site";
+import type { Lang } from "../i18n/locales";
+import { localizedPath } from "../i18n/routes";
+import { useTranslations } from "../i18n/ui";
+import { getBuildInfo } from "../lib/build-info";
+import EmailLink from "./EmailLink.astro";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const build = getBuildInfo();
+const year = new Intl.DateTimeFormat("en", { year: "numeric", timeZone: site.timeZone }).format(
+  new Date(),
+);
+---
+
+<footer class="site-footer">
+  <div class="container inner">
+    <section class="contact" aria-label={t("footer.contact")}>
+      <ul role="list" class="links">
+        <li>
+          <span class="visually-hidden">{t("footer.email")}: </span><EmailLink />
+        </li>
+        <li><a href={site.links.github} rel="me">GitHub</a></li>
+        <li><a href={site.links.linkedin} rel="me">LinkedIn</a></li>
+      </ul>
+      <p>
+        <span class="visually-hidden">{t("footer.location")}: </span>{site.location}{" "}
+        <span aria-hidden="true">·</span>{" "}
+        <span class="visually-hidden">{t("footer.timeZone")}: </span>
+        <span class="mono">{site.timeZone}</span>
+      </p>
+    </section>
+
+    <nav aria-label={t("footer.siteLinks")}>
+      <ul role="list" class="links">
+        <li><a href={localizedPath("colophon", lang)}>{t("footer.colophon")}</a></li>
+        <li><a href={localizedPath("privacy", lang)}>{t("footer.privacy")}</a></li>
+      </ul>
+    </nav>
+
+    <div class="legal">
+      <p>© {year} {site.name}. {t("footer.license")}</p>
+      <p class="mono">
+        {t("footer.builtFrom")}{" "}
+        {
+          build.commitUrl ? (
+            <a href={build.commitUrl} title={build.commit}>
+              <code>{build.shortCommit}</code>
+            </a>
+          ) : (
+            <code>{build.shortCommit}</code>
+          )
+        }
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  @layer components {
+    .site-footer {
+      margin-block-start: var(--space-2xl);
+      border-block-start: var(--border-width) solid var(--color-border);
+      color: var(--color-muted);
+      font-size: var(--step--1);
+    }
+
+    .inner {
+      display: grid;
+      gap: var(--space-s);
+      padding-block: var(--space-l);
+    }
+
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      column-gap: var(--space-s);
+      row-gap: var(--space-3xs);
+    }
+
+    .contact {
+      display: grid;
+      gap: var(--space-3xs);
+    }
+
+    .legal {
+      display: grid;
+      gap: var(--space-3xs);
+    }
+
+    code {
+      font-size: 1em;
+    }
+
+    @media (min-width: 48rem) {
+      .inner {
+        grid-template-columns: 1fr auto;
+        align-items: start;
+      }
+
+      .legal {
+        grid-column: 1 / -1;
+      }
+    }
+  }
+</style>

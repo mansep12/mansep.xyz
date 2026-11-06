@@ -1,0 +1,42 @@
+---
+/**
+ * Links to the same page in the other locale(s), using the route map.
+ * Only render it when the page is translated.
+ */
+import { type Lang, localeInfo, otherLangs } from "../i18n/locales";
+import { localizedPath, type RouteTarget } from "../i18n/routes";
+import { useTranslations } from "../i18n/ui";
+
+type Props = RouteTarget & { lang: Lang };
+
+const { lang, routeKey, params } = Astro.props;
+const t = useTranslations(lang);
+const targets = otherLangs(lang).map((target) => ({
+  lang: target,
+  tag: localeInfo[target].tag,
+  href: localizedPath(routeKey, target, params),
+}));
+---
+
+{
+  targets.map((target) => (
+    <a class="lang-switch" href={target.href} hreflang={target.tag} title={t("lang.switchTitle")}>
+      <span lang={target.tag}>{t("lang.switch")}</span>
+    </a>
+  ))
+}
+
+<style>
+  @layer components {
+    .lang-switch {
+      color: var(--color-muted);
+      font-size: var(--step--1);
+      text-decoration-line: none;
+    }
+
+    .lang-switch:hover {
+      color: var(--color-text);
+      text-decoration-line: underline;
+    }
+  }
+</style>

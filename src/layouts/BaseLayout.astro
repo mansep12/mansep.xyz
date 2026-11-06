@@ -1,20 +1,59 @@
 ---
+/**
+ * Every page renders inside this layout. It owns the document head (title,
+ * description, canonical, hreflang, Open Graph), the theme bootstrap, fonts,
+ * header, <main id="main"> and footer.
+ *
+ * Usage:
+ *   <BaseLayout lang="es" routeKey="project" params={{ slug }} title={entry.data.title}
+ *     description={entry.data.summary}>
+ *     ...
+ *   </BaseLayout>
+ */
 import { Font } from "astro:assets";
+import SiteFooter from "../components/SiteFooter.astro";
+import SiteHeader from "../components/SiteHeader.astro";
 import ThemeScript from "../components/ThemeScript.astro";
-import ThemeToggle from "../components/ThemeToggle.astro";
-import { type Lang, localeInfo } from "../i18n/locales";
-import { alternateLinks, alternates, type RouteKey } from "../i18n/routes";
+import { site } from "../data/site";
+import { type Lang, localeInfo, otherLangs } from "../i18n/locales";
+import { absoluteUrl, alternateLinks, alternates, type RouteTarget } from "../i18n/routes";
+import { useTranslations } from "../i18n/ui";
+import { themeColors } from "../lib/theme";
 import "../styles/tokens.css";
 import "../styles/base.css";
 
-interface Props {
+type Props = RouteTarget & {
   lang: Lang;
+  /** Page title without the site name; the home page shows the name only. */
   title: string;
+  /** Meta and social description, one or two sentences. */
   description: string;
-  route: RouteKey;
-}
+  /** Social preview image: site-relative path or absolute URL (1200x630). */
+  ogImage?: string;
+  /** Keep the page out of search results. */
+  noindex?: boolean;
+  /**
+   * Whether the page exists in every locale (default). Set to false for a
+   * page that exists only in `lang`: no hreflang alternates, no language switch.
+   */
+  translated?: boolean;
+};
 
-const { lang, title, description, route } = Astro.props;
+const {
+  lang,
+  title,
+  description,
+  ogImage,
+  noindex = false,
+  translated = true,
+  ...route
+} = Astro.props;
+
+const t = useTranslations(lang);
+const documentTitle = route.routeKey === "home" ? site.name : `${title} · ${site.name}`;
+const canonical = alternates(route.routeKey, route.params)[lang];
+const hreflangLinks = translated ? alternateLinks(route.routeKey, route.params) : [];
+const ogImageUrl = ogImage ? absoluteUrl(ogImage) : undefined;
 ---
 
 <!doctype html>
@@ -22,21 +61,74 @@ const { lang, title, description, route } = Astro.props;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="color-scheme" content="light dark" />
+    {/* Layer order must precede every stylesheet, whatever order Vite bundles them in. */}
+    <style is:inline>
+      @layer reset, tokens, base, components, utilities;
+    </style>
     <ThemeScript />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content={themeColors.light} media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content={themeColors.dark} media="(prefers-color-scheme: dark)" />
     {/* Preload only the body text face: Plex Sans, latin, upright. */}
     <Font cssVariable="--font-plex-sans" preload={[{ subset: "latin", style: "normal" }]} />
     <Font cssVariable="--font-plex-mono" />
-    <title>{title}</title>
+
+    <title>{documentTitle}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={alternates(route)[lang]} />
-    {alternateLinks(route).map(({ hreflang, href }) => (
-      <link rel="alternate" hreflang={hreflang} href={href} />
-    ))}
+    {noindex && <meta name="robots" content="noindex" />}
+    <link rel="canonical" href={canonical} />
+    {hreflangLinks.map(({ hreflang, href }) => <link rel="alternate" hreflang={hreflang} href={href} />)}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={documentTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={localeInfo[lang].ogLocale} />
+    {
+      translated &&
+        otherLangs(lang).map((other) => (
+          <meta property="og:locale:alternate" content={localeInfo[other].ogLocale} />
+        ))
+    }
+    {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
+    <meta name="twitter:card" content={ogImageUrl ? "summary_large_image" : "summary"} />
+    <meta name="twitter:title" content={documentTitle} />
+    <meta name="twitter:description" content={description} />
+    {ogImageUrl && <meta name="twitter:image" content={ogImageUrl} />}
   </head>
   <body>
-    <ThemeToggle lang={lang} />
-    <slot />
+    <a class="skip-link" href="#main">{t("skip.toContent")}</a>
+    <SiteHeader lang={lang} translated={translated} {...route} />
+    <main id="main" class="container">
+      <slot />
+    </main>
+    <SiteFooter lang={lang} />
   </body>
 </html>
+
+<style>
+  @layer components {
+    .skip-link {
+      position: absolute;
+      inset-block-start: var(--space-2xs);
+      inset-inline-start: var(--space-2xs);
+      z-index: 1;
+      padding: var(--space-2xs) var(--space-xs);
+      background-color: var(--color-surface);
+      border: var(--border-width) solid var(--color-accent);
+      border-radius: var(--radius);
+      transform: translateY(-200%);
+    }
+
+    .skip-link:focus {
+      transform: none;
+    }
+
+    main {
+      flex: 1;
+      padding-block: var(--space-xl);
+    }
+  }
+</style>

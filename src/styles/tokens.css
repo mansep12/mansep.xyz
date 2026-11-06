@@ -10,7 +10,8 @@
  * --color-border is decorative (dividers); never rely on it alone to convey state.
  */
 
-@layer reset, tokens, base, components, utilities;
+/* Layer order (reset, tokens, base, components, utilities) is declared inline
+   at the top of <head> in BaseLayout.astro, ahead of any bundled stylesheet. */
 
 @layer tokens {
   :root {

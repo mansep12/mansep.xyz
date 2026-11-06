@@ -18,3 +18,9 @@ export function parseThemeChoice(value: unknown): ThemeChoice {
 export function nextThemeChoice(choice: ThemeChoice): ThemeChoice {
   return themeChoices[(themeChoices.indexOf(choice) + 1) % themeChoices.length] ?? "system";
 }
+
+/** Browser UI color per scheme (`<meta name="theme-color">`); matches --color-bg in tokens.css. */
+export const themeColors = {
+  light: "#f4f1e8",
+  dark: "#0f1a16",
+} as const;

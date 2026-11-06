@@ -1,6 +1,6 @@
 /*
  * Reset, element defaults and utilities. Layer order is declared in
- * tokens.css, which must be imported first. Component styles go in
+ * BaseLayout.astro. Component styles go in
  * `@layer components` so utilities can still override them, and their
  * transitions use var(--duration) so reduced motion disables them.
  */
