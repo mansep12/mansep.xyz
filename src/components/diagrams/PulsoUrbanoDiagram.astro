@@ -1,8 +1,8 @@
 ---
 /**
- * Pulso Urbano: data flow from open sources to the browser (from the repo's
- * README, wrangler.jsonc, scripts/ and src/). Accent borders mark the parts
- * I wrote, per the commit history.
+ * Pulso Urbano: data flow from open sources to the browser, as of the repo's
+ * final commit (README, wrangler.jsonc, scripts/ and src/). Accent borders
+ * mark the parts I wrote, per the commit history.
  */
 import type { Lang } from "../../i18n/locales";
 import DiagramArrow from "./DiagramArrow.astro";
@@ -19,10 +19,10 @@ const { lang } = Astro.props;
 const text = {
   es: {
     title: "Arquitectura de Pulso Urbano",
-    desc: "Las fuentes abiertas (GTFS del DTPM, ciclovías del OCUC, la Encuesta Origen-Destino 2012, los límites comunales de la Región Metropolitana y el ruido Lden) pasan por scripts de importación y de datos. Una parte queda en dos bases Cloudflare D1, EOD2012 y DTPMGEO, y otra en archivos GeoJSON y JSON estáticos. Una aplicación TanStack Start en Cloudflare Workers sirve esos archivos y expone funciones de servidor que leen D1. En el navegador, el mapa hecho con React y MapLibre GL dibuja las capas de metro, buses RED, ciclovías, comunas y ruido, y sobre él corre la simulación rápida de CO2 por el cierre o la apertura de una estación, con un radio de 800 metros. Aparte, el comparador ajusta el reparto modal con controles deslizantes. Mi parte, marcada con borde de color, fue el mapa con sus capas y la simulación rápida.",
+    desc: "Las fuentes abiertas (GTFS del DTPM, ciclovías del OCUC, la Encuesta Origen-Destino 2012, los límites comunales de la Región Metropolitana y el ruido Lden) pasan por scripts de importación y de datos. Una parte queda en dos bases Cloudflare D1, EOD2012 y DTPMGEO, y otra en archivos GeoJSON y JSON estáticos. Una aplicación TanStack Start en Cloudflare Workers sirve esos archivos y expone funciones de servidor que leen D1. En el navegador, el mapa hecho con React y MapLibre GL dibuja las capas de metro, buses RED, ciclovías, comunas y ruido, con un medidor de ruido por comuna, y junto a él el comparador reparte los viajes entre comunas por modo de transporte y estima CO2 y PM2.5. Mi parte, marcada con borde de color, fue el mapa con sus capas y el medidor de ruido.",
     caption:
       "De los datos abiertos al navegador: D1 y archivos estáticos detrás de Cloudflare Workers.",
-    legend: "Borde de color: lo que escribí yo.",
+    legend: "Borde de color: donde está mi trabajo.",
     sources: {
       title: "Fuentes abiertas",
       lines: ["GTFS DTPM · ciclovías OCUC · EOD 2012", "comunas RM · ruido Lden"],
@@ -35,20 +35,19 @@ const text = {
     },
     map: {
       title: "Mapa (MapLibre GL)",
-      lines: ["metro, buses RED,", "ciclovías, comunas", "y ruido"],
+      lines: ["metro, buses RED,", "ciclovías, comunas", "y ruido por comuna"],
     },
-    compare: { title: "Comparador", lines: ["reparto modal", "con controles", "deslizantes"] },
-    quick: {
-      title: "Simulación rápida",
-      lines: ["CO2 por cierre o", "apertura de estación", "radio de 800 m"],
+    compare: {
+      title: "Comparador",
+      lines: ["viajes entre comunas", "por modo de transporte", "CO2 y PM2.5"],
     },
     scripts: "scripts de importación y de datos",
   },
   en: {
     title: "Pulso Urbano architecture",
-    desc: "The open sources (DTPM GTFS, OCUC cycle lanes, the 2012 Origin-Destination Survey, the Metropolitan Region commune boundaries and Lden noise) go through import and data scripts. Part of them ends up in two Cloudflare D1 databases, EOD2012 and DTPMGEO, and part in static GeoJSON and JSON files. A TanStack Start app on Cloudflare Workers serves those files and exposes server functions that read D1. In the browser, the map built with React and MapLibre GL draws the metro, RED bus, cycle lane, commune and noise layers, and on top of it runs the quick CO2 simulation for closing or opening a station, with an 800 meter radius. Separately, the comparator adjusts the mode share with sliders. My part, marked with a colored border, was the map with its layers and the quick simulation.",
+    desc: "The open sources (DTPM GTFS, OCUC cycle lanes, the 2012 Origin-Destination Survey, the Metropolitan Region commune boundaries and Lden noise) go through import and data scripts. Part of them ends up in two Cloudflare D1 databases, EOD2012 and DTPMGEO, and part in static GeoJSON and JSON files. A TanStack Start app on Cloudflare Workers serves those files and exposes server functions that read D1. In the browser, the map built with React and MapLibre GL draws the metro, RED bus, cycle lane, commune and noise layers, with a noise gauge per commune, and next to it the comparator splits trips between communes by transport mode and estimates CO2 and PM2.5. My part, marked with a colored border, was the map with its layers and the noise gauge.",
     caption: "From open data to the browser: D1 and static files behind Cloudflare Workers.",
-    legend: "Colored border: code I wrote.",
+    legend: "Colored border: where my work is.",
     sources: {
       title: "Open data sources",
       lines: ["DTPM GTFS · OCUC cycle lanes · EOD 2012", "RM communes · Lden noise"],
@@ -61,12 +60,11 @@ const text = {
     },
     map: {
       title: "Map (MapLibre GL)",
-      lines: ["metro, RED buses,", "cycle lanes, communes", "and noise"],
+      lines: ["metro, RED buses,", "cycle lanes, communes", "and noise per commune"],
     },
-    compare: { title: "Comparator", lines: ["mode share", "with sliders"] },
-    quick: {
-      title: "Quick simulation",
-      lines: ["CO2 for closing or", "opening a station", "800 m radius"],
+    compare: {
+      title: "Comparator",
+      lines: ["trips between communes", "by transport mode", "CO2 and PM2.5"],
     },
     scripts: "import and data scripts",
   },
@@ -81,9 +79,7 @@ const workerY = storeY + storeH + GAP;
 const workerH = boxHeight(2);
 const appY = workerY + workerH + GAP;
 const appH = boxHeight(3);
-const simY = appY + appH + GAP;
-const simH = boxHeight(3);
-const height = simY + simH + 10;
+const height = appY + appH + 10;
 ---
 
 <DiagramFigure
@@ -99,8 +95,7 @@ const height = simY + simH + 10;
   <DiagramBox x={190} y={storeY} w={160} {...text.files} />
   <DiagramBox x={10} y={workerY} w={340} {...text.worker} />
   <DiagramBox x={10} y={appY} w={160} {...text.map} accent />
-  <DiagramBox x={190} y={appY} w={160} {...text.compare} h={appH} />
-  <DiagramBox x={10} y={simY} w={160} {...text.quick} accent />
+  <DiagramBox x={190} y={appY} w={160} {...text.compare} />
 
   <DiagramArrow
     id={id}
@@ -112,5 +107,4 @@ const height = simY + simH + 10;
   <DiagramArrow id={id} d={`M 270 ${storeY + storeH} V ${workerY}`} />
   <DiagramArrow id={id} d={`M 90 ${workerY + workerH} V ${appY}`} />
   <DiagramArrow id={id} d={`M 270 ${workerY + workerH} V ${appY}`} />
-  <DiagramArrow id={id} d={`M 90 ${appY + appH} V ${simY}`} variant="accent" />
 </DiagramFigure>
