@@ -36,7 +36,7 @@
     "@biomejs/biome": "^2.6.6",
     "@emnapi/runtime": "1.11.3",
     "@types/node": "^22",
-    "typescript": "^6.0.3",
+    "typescript": "^7.0.2",
     "vitest": "^4.1.12",
     "wrangler": "^4.158.0"
   }
