@@ -39,7 +39,7 @@ Nodus es una aplicación para pymes que se deben dinero en círculo: encuentra e
 
 En Chile la ley da 30 días para pagar una factura, pero el promedio real es de 44, y cuando una pyme le paga a otra llega a 53 (Ranking de Pagadores de la Bolsa de Productos; Radiografía Pyme 2025 de Xepelin). El atraso suele venir en cadena: quien te debe también está esperando que le paguen.
 
-Varias de esas deudas forman círculos. La panadería le debe 100 al molino, el molino le debe 80 al transportista y el transportista le debe 90 a la panadería. Los tres tienen plata por cobrar y ninguno tiene suficiente para pagar. Hay dos formas de deshacer el nudo:
+Muchas de esas deudas forman círculos. La panadería le debe 100 al molino, el molino le debe 80 al transportista y el transportista le debe 90 a la panadería. Los tres tienen dinero por cobrar y ninguno tiene suficiente para pagar. Hay dos formas de deshacer el nudo:
 
 - **Liquidar todo:** se cancelan los 270 moviendo 20. La panadería y el transportista pagan 10 cada uno y el molino recibe 20.
 - **Sin mover dinero:** se descuenta lo que las tres deudas tienen en común. Se cancelan 240 y quedan abiertas deudas por 20 y por 10.
@@ -50,8 +50,8 @@ En los dos casos nadie queda mejor ni peor que antes: lo que cada negocio deja d
 
 - **Tiempo.** Lo construí para Find Your Way Hackathon, organizada por Tellus sobre la red Stellar. El repositorio tiene 53 commits entre el 5 y el 10 de octubre de 2026, y la entrega exigía un video de tres minutos como máximo.
 - **Equipo.** Dos personas, con Felipe Jara Ribet. Yo diseñé y programé el producto: contratos, backend, aplicación web, pruebas, despliegue y documentación.
-- **Stack impuesto.** La hackatón era sobre Stellar, así que el núcleo tenía que ser un contrato Soroban en Rust.
-- **Dominio.** Es plata entre negocios: la liquidación pasa entera o no pasa, y nadie puede firmar algo distinto de lo que ve. La compensación en la cadena no tiene por sí sola efecto legal ni contable.
+- **Stack.** La hackatón pedía un uso significativo de Stellar, así que el núcleo es un contrato Soroban en Rust.
+- **Dominio.** Es dinero entre negocios: la liquidación pasa entera o no pasa, y nadie puede firmar algo distinto de lo que ve. La compensación en la cadena no tiene por sí sola efecto legal ni contable.
 
 ## Decisiones
 
@@ -102,7 +102,7 @@ Nada de esto está auditado. La lista completa de supuestos a revisar está en `
 ## Cómo verificar esto
 
 - **Código:** [github.com/mansep12/nodus](https://github.com/mansep12/nodus), licencia MIT. El contrato está en `contracts/nodus/src/lib.rs`, la revisión de lo que se firma en `apps/web/src/lib/actions.ts` y la verificación de passkeys en `packages/stellar/src/passkey.ts`.
-- **Transacciones en testnet:** el [círculo de 20 negocios](https://stellar.expert/explorer/testnet/tx/da968b3a8e5ec4a1008d67e5f6ef1bc9df330bf922fbb0e58862245558039b63) y el [círculo de 3 sin mover dinero](https://stellar.expert/explorer/testnet/tx/a2f068a9bf2dbdf736ddabf5860edcce487f0bf3230af49e246881f819558fdd). Testnet se reinicia de vez en cuando; si un enlace deja de resolver, `bun run e2e:settle 3 10` repite la medición.
+- **Transacciones en testnet:** el [círculo de 20 negocios](https://stellar.expert/explorer/testnet/tx/da968b3a8e5ec4a1008d67e5f6ef1bc9df330bf922fbb0e58862245558039b63) y el [círculo de 3 sin mover dinero](https://stellar.expert/explorer/testnet/tx/a2f068a9bf2dbdf736ddabf5860edcce487f0bf3230af49e246881f819558fdd). Testnet se reinicia de vez en cuando; si un enlace deja de resolver, `bun run e2e:settle 20` repite la medición del círculo de 20.
 - **Demo:** [nodus-stellar.vercel.app](https://nodus-stellar.vercel.app), en testnet y con un activo de prueba, no USDC real.
 - **Correrlo:** con Bun, Rust (target `wasm32v1-none`) y la Stellar CLI: `bun install`, `bun run contract:build`, `bun run contract:test` y `bun run test`. Con la llave del relayer en `packages/e2e/.env`, `bun run deploy:testnet` despliega token, contrato y policy.
 - **Video:** el [pitch en YouTube](https://www.youtube.com/watch?v=HY0Obkx1N60). En su demo los negocios son cuentas de prueba creadas por scripts y las firmas las responde el autenticador virtual del navegador; las transacciones son reales, en testnet.

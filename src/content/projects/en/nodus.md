@@ -39,20 +39,20 @@ Nodus is an app for small businesses that owe each other money in circles: it fi
 
 In Chile the law gives 30 days to pay an invoice, but the real average is 44, and between small businesses it reaches 53. Delays come in chains: whoever owes you is also waiting to be paid.
 
-Many of those debts form circles. The bakery owes the mill 100, the mill owes the carrier 80 and the carrier owes the bakery 90. Settling all of it cancels the 270 by moving 20: the bakery and the carrier pay 10 each and the mill receives 20. Without moving money, the 240 the debts have in common is cancelled and debts of 20 and 10 stay open. Either way no one ends up better or worse off.
+Many of those debts form circles. The bakery owes the mill 100, the mill owes the carrier 80 and the carrier owes the bakery 90. Settling all of it cancels the 270 by moving 20: the bakery and the carrier pay 10 each and the mill receives 20. Without moving money, what the three debts have in common is deducted: 240 is cancelled and debts of 20 and 10 stay open. Either way no one ends up better or worse off.
 
 ## Constraints
 
 - **Time.** I built it for Find Your Way Hackathon, run by Tellus on Stellar. The repository has 53 commits between October 5 and 10, 2026, and the submission required a video of three minutes at most.
 - **Team.** Two people, with Felipe Jara Ribet. I designed and wrote the product.
-- **Imposed stack.** The core had to be a Soroban contract in Rust.
+- **Stack.** The hackathon asked for significant use of Stellar, so the core is a Soroban contract in Rust.
 - **Domain.** Money between businesses: a settlement happens in full or not at all, and no one may sign something other than what they see.
 
 ## Decisions
 
 ### A contract instead of a clearing house
 
-Netting debts usually needs someone in the middle: a clearing house, or a factoring company that buys the invoice at 1% to 2.2% a month. I dropped that intermediary because on Stellar it can be an open source contract that keeps nothing. `settle` computes each party's net, calls `require_auth` for every party and moves the nets, all in one transaction: if a signature is missing or someone cannot cover their net, nothing changes.
+Netting debts is not new, but there is always someone in the middle: a clearing house, or a factoring company that buys the invoice at 1% to 2.2% a month. I dropped that intermediary because on Stellar it can be an open source contract that keeps nothing. `settle` computes each party's net, calls `require_auth` for every party and moves the nets, all in one transaction: if a signature is missing or someone cannot cover their net, nothing changes.
 
 ### The contract computes the nets; the solver is not trusted
 
@@ -95,7 +95,7 @@ Nothing is audited; the assumptions to review are in `docs/seguridad.md`.
 ## How to verify this
 
 - **Code:** [github.com/mansep12/nodus](https://github.com/mansep12/nodus), MIT. Contract in `contracts/nodus/src/lib.rs`, signing checks in `apps/web/src/lib/actions.ts`, passkey verification in `packages/stellar/src/passkey.ts`.
-- **Testnet transactions:** the [20-business cycle](https://stellar.expert/explorer/testnet/tx/da968b3a8e5ec4a1008d67e5f6ef1bc9df330bf922fbb0e58862245558039b63) and the [3-business circle with no money moved](https://stellar.expert/explorer/testnet/tx/a2f068a9bf2dbdf736ddabf5860edcce487f0bf3230af49e246881f819558fdd). Testnet is reset from time to time; `bun run e2e:settle 3 10` repeats the measurement.
+- **Testnet transactions:** the [20-business cycle](https://stellar.expert/explorer/testnet/tx/da968b3a8e5ec4a1008d67e5f6ef1bc9df330bf922fbb0e58862245558039b63) and the [3-business circle with no money moved](https://stellar.expert/explorer/testnet/tx/a2f068a9bf2dbdf736ddabf5860edcce487f0bf3230af49e246881f819558fdd). Testnet is reset from time to time; `bun run e2e:settle 20` repeats the 20-business measurement.
 - **Demo:** [nodus-stellar.vercel.app](https://nodus-stellar.vercel.app), on testnet with a test asset, not real USDC.
 - **Run it:** with Bun, Rust (`wasm32v1-none` target) and the Stellar CLI: `bun install`, `bun run contract:build`, `bun run contract:test`, `bun run test`. With the relayer key in `packages/e2e/.env`, `bun run deploy:testnet` deploys token, contract and policy.
 - **Video:** the [pitch on YouTube](https://www.youtube.com/watch?v=HY0Obkx1N60), in Spanish. In its demo the businesses are scripted test accounts and the browser's virtual authenticator answers the passkey prompts; the transactions are real.
