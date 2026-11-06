@@ -2,7 +2,9 @@
 /**
  * Home page body for one locale: who, what, the project ledger, the thesis,
  * contact and when the page was last built. Meant to be read in 30 seconds
- * on a phone.
+ * on a phone, in that order. From 64rem it is two blocks on the 12-column
+ * grid: name, line and contact on columns 1-5, projects and the thesis on
+ * 6-12.
  */
 import { site } from "../../data/site";
 import type { Lang } from "../../i18n/locales";
@@ -88,6 +90,12 @@ const updated = isoYearMonth(new Date(), site.timeZone);
       max-inline-size: var(--measure);
     }
 
+    .intro h1 {
+      font-size: clamp(2.5rem, 1.6rem + 3.6vw, 4.75rem);
+      line-height: 1;
+      letter-spacing: -0.035em;
+    }
+
     .tagline {
       margin-block-start: var(--space-xs);
       color: var(--color-muted);
@@ -122,6 +130,50 @@ const updated = isoYearMonth(new Date(), site.timeZone);
     .updated {
       color: var(--color-muted);
       font-size: var(--step--1);
+    }
+
+    /* Two blocks. Rows: intro | projects, contact | projects, then the
+       update line at the foot of the left block, level with the bottom of
+       the research card on the right. DOM order (the phone order) stays. */
+    @media (min-width: 64rem) {
+      .home {
+        grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
+        column-gap: var(--grid-gap);
+        row-gap: var(--space-xl);
+        align-items: start;
+      }
+
+      .intro,
+      .contact,
+      .updated {
+        grid-column: 1 / span 5;
+      }
+
+      .intro {
+        grid-row: 1;
+      }
+
+      .contact {
+        grid-row: 2;
+      }
+
+      .updated {
+        grid-row: 3;
+        align-self: end;
+      }
+
+      .projects,
+      .research {
+        grid-column: 6 / -1;
+      }
+
+      .projects {
+        grid-row: 1 / span 2;
+      }
+
+      .research {
+        grid-row: 3;
+      }
     }
   }
 </style>
