@@ -10,7 +10,8 @@
  * verify section is missing, or the architecture section when the project
  * has a diagram.
  *
- * Body sections are numbered ("01 / Problema").
+ * Body sections are numbered ("01 / Problema"). From 64rem the page uses the
+ * 12-column grid: text on columns 1-8, the facts box beside it on 9-12.
  */
 import type { Lang } from "../../i18n/locales";
 import BaseLayout from "../../layouts/BaseLayout.astro";
@@ -59,7 +60,7 @@ const video =
   description={data.summary}
   translated={translated}
 >
-  <article class="project">
+  <article class:list={["project", { "has-video": video }]}>
     <ProjectHeader lang={lang} data={data} intro={body.intro} position={position} />
     <ProjectFacts lang={lang} data={data} />
     {
@@ -140,6 +141,31 @@ const video =
 
     .body :global(code) {
       overflow-wrap: anywhere;
+    }
+
+    @media (min-width: 64rem) {
+      .project {
+        grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
+        column-gap: var(--grid-gap);
+        max-inline-size: none;
+      }
+
+      .project > :global(*) {
+        grid-column: 1 / span 8;
+      }
+
+      /* Beside the header and the body (and the video, when there is one). */
+      .project > :global(.facts) {
+        grid-column: 9 / -1;
+        grid-row: 1 / span 2;
+        align-self: start;
+        position: sticky;
+        inset-block-start: var(--space-m);
+      }
+
+      .has-video > :global(.facts) {
+        grid-row: 1 / span 3;
+      }
     }
   }
 </style>
