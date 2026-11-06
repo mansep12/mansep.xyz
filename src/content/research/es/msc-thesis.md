@@ -24,4 +24,4 @@ Una salida simple es que la autoridad electoral revise los datos en privado y de
 
 Un mecanismo criptográfico para publicar estadísticas de una votación electrónica verificable sin comprometer el secreto del voto, de modo que las estadísticas sigan siendo útiles y se puedan verificar igual que el resultado. El contexto es UParticipa, un sistema de votación electrónica verificable.
 
-Publicaré el texto y el código después de la defensa.
+Publicaré el texto después de la defensa.

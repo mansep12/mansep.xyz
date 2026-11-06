@@ -24,4 +24,4 @@ A simple way out is to let the election authority review the data in private and
 
 A cryptographic mechanism to publish statistics of a verifiable electronic vote without compromising ballot secrecy, so the statistics stay useful and can be verified just like the result. The context is UParticipa, a verifiable electronic voting system.
 
-I will publish the text and the code after the defense.
+I will publish the text after the defense.
