@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Lint, test, build and check links
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.x
+
+      - run: bun install --frozen-lockfile
+
+      - run: bun run lint
+
+      - run: bun run test
+
+      # Downloads the IBM Plex files from Fontsource, so it needs network access.
+      - run: bun run build
+
+      - run: bun run check:links
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: site
+          path: dist/client
+          retention-days: 7
+
+  lighthouse:
+    name: Lighthouse (mobile)
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: site
+          path: dist/client
+
+      # Pinned here rather than in package.json, so deploys do not install Lighthouse.
+      - run: npx --yes @lhci/cli@0.16.0 autorun

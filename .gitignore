@@ -7,6 +7,7 @@ dist/
 # Generated types and caches
 .astro/
 .wrangler/
+.lighthouseci/
 
 # Local secrets and environment
 .dev.vars*
