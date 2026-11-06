@@ -1,0 +1,18 @@
+---
+/** Privacy page for one locale: src/content/pages/<lang>/privacy.md plus the contact address. */
+import type { Lang } from "../../i18n/locales";
+import { useTranslations } from "../../i18n/ui";
+import EmailLink from "../EmailLink.astro";
+import ProsePage from "../prose/ProsePage.astro";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<ProsePage lang={lang} routeKey="privacy" slug="privacy">
+  <p>{t("privacy.contact")} <EmailLink />.</p>
+</ProsePage>

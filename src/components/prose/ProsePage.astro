@@ -1,0 +1,29 @@
+---
+/**
+ * A page whose content is one Markdown file in src/content/pages/<lang>/:
+ * the title as h1, the body as prose, then anything passed in the slot.
+ */
+import { render } from "astro:content";
+import type { Lang } from "../../i18n/locales";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getPage } from "../../lib/content";
+
+interface Props {
+  lang: Lang;
+  routeKey: "privacy" | "colophon";
+  /** File name in src/content/pages/<lang>/, without extension. */
+  slug: string;
+}
+
+const { lang, routeKey, slug } = Astro.props;
+const page = await getPage(lang, slug);
+const { Content } = await render(page);
+---
+
+<BaseLayout lang={lang} routeKey={routeKey} title={page.data.title} description={page.data.description}>
+  <article class="prose">
+    <h1>{page.data.title}</h1>
+    <Content />
+    <slot />
+  </article>
+</BaseLayout>
