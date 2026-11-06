@@ -5,6 +5,7 @@ import { defineConfig, fontProviders } from "astro/config";
 import { site } from "./src/data/site";
 import { defaultLang, locales } from "./src/i18n/locales";
 import ogImages from "./src/integrations/og-images";
+import securityHeaders from "./src/integrations/security-headers";
 import { resolveBuildCommit } from "./src/lib/build-info";
 import { canonicalPageUrl, sitemapLinks } from "./src/lib/sitemap";
 
@@ -49,6 +50,8 @@ export default defineConfig({
     }),
     // dist/client/og/<path>.png for every page, rendered in Node after the build.
     ogImages(),
+    // dist/client/_headers: CSP hashed from the built HTML, HSTS and friends.
+    securityHeaders(),
   ],
   // No sessions needed: keeps the adapter from auto-provisioning a KV namespace.
   session: false,
@@ -56,6 +59,9 @@ export default defineConfig({
   // `/about` with no redirect, matching the paths in src/i18n/routes.ts.
   build: {
     format: "preserve",
+    // Component CSS ships as files, not <style> blocks: each inline block
+    // would need its own hash in the Content-Security-Policy.
+    inlineStylesheets: "never",
   },
   // Self-hosted IBM Plex: downloaded from Fontsource at build time and served
   // from /_astro/fonts/. Only latin and latin-ext (Spanish diacritics).
@@ -82,6 +88,11 @@ export default defineConfig({
   vite: {
     define: {
       __BUILD_COMMIT__: JSON.stringify(buildCommit),
+    },
+    build: {
+      // Same reason for scripts (Astro inlines those under this limit) and
+      // no data: URIs for small assets.
+      assetsInlineLimit: 0,
     },
   },
   i18n: {
