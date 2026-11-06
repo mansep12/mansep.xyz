@@ -11,7 +11,7 @@ team:
   note: con Felipe Jara Ribet
 event:
   name: Find Your Way Hackathon (Tellus y Stellar), octubre de 2026
-  award: Best University Project (primer lugar, University Track)
+  award: Best University Project (primer lugar del University Track)
 stack:
   - Rust
   - Soroban SDK

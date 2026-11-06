@@ -79,7 +79,7 @@ It is a Bun monorepo. The contract (`contracts/nodus`) is the source of truth an
 **A cycle of 20 businesses settled on testnet in a single transaction, with 20 passkey signatures.** It used 33% of the compute and 44% of the size the network allows per transaction.
 
 - A circle of 3 was settled without moving money from the web app, with the fee paid by the relayer.
-- It won Best University Project, 1st place in the University Track.
+- It won Best University Project (1st place, University Track) at Find Your Way Hackathon.
 - The demo runs on testnet with example worlds of 11 real accounts each.
 - Contract, solver, indexer, signature and UI tests, plus end-to-end tests against testnet; CI runs lint, typecheck, unit tests and the build.
 
