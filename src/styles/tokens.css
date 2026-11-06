@@ -30,8 +30,9 @@
     --color-highlight: light-dark(#c8411a, #ff7a45);
     --color-focus: var(--color-accent);
     --color-selection: light-dark(#d3e3fd, #1f3a66);
-    /* The 12-column hint on wide screens: --color-text at 7% opacity. */
-    --color-grid: light-dark(#11131812, #e8eaed12);
+    /* The 12-column hint on wide screens: --color-text at 7% opacity in
+       light mode, 6% in dark mode (light lines on dark read stronger). */
+    --color-grid: light-dark(#11131812, #e8eaed0f);
 
     /* Typography */
     /* --font-inter and --font-plex-mono come from the Fonts API

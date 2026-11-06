@@ -187,15 +187,20 @@ const structuredData =
     }
 
     /* Behind everything (the body has no background of its own), so boxes
-       with a surface color cover the lines and text sits on top of them. */
+       with a surface color cover the lines and text sits on top of them.
+       Absolute in the body, so the lines run the full height of the page. */
     .grid-hint {
       display: none;
     }
 
     @media screen and (min-width: 64rem) {
+      :global(body) {
+        position: relative;
+      }
+
       .grid-hint {
         display: block;
-        position: fixed;
+        position: absolute;
         inset: 0;
         z-index: -1;
         pointer-events: none;
