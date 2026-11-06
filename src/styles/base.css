@@ -1,25 +1,229 @@
-:root {
-  color-scheme: light dark;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  line-height: 1.6;
+/*
+ * Reset, element defaults and utilities. Layer order is declared in
+ * tokens.css, which must be imported first. Component styles go in
+ * `@layer components` so utilities can still override them, and their
+ * transitions use var(--duration) so reduced motion disables them.
+ */
+
+@layer reset {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  * {
+    margin: 0;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  img,
+  picture,
+  svg,
+  video,
+  canvas {
+    display: block;
+    max-inline-size: 100%;
+    block-size: auto;
+  }
+
+  input,
+  button,
+  textarea,
+  select {
+    font: inherit;
+    color: inherit;
+  }
+
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    overflow-wrap: break-word;
+  }
+
+  ul[role="list"],
+  ol[role="list"] {
+    list-style: none;
+    padding: 0;
+  }
 }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
+@layer base {
+  html {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    font-size: 100%;
+    line-height: var(--leading-normal);
+    hanging-punctuation: first last;
+  }
+
+  body {
+    min-block-size: 100dvh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-size: var(--step-0);
+    transition:
+      background-color var(--duration) var(--ease),
+      color var(--duration) var(--ease);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-weight: var(--font-weight-bold);
+    line-height: var(--leading-tight);
+    text-wrap: balance;
+  }
+
+  h1 {
+    font-size: var(--step-4);
+    letter-spacing: -0.01em;
+  }
+
+  h2 {
+    font-size: var(--step-3);
+  }
+
+  h3 {
+    font-size: var(--step-2);
+  }
+
+  h4 {
+    font-size: var(--step-1);
+  }
+
+  p,
+  li,
+  figcaption {
+    text-wrap: pretty;
+  }
+
+  small {
+    font-size: var(--step--1);
+  }
+
+  a {
+    color: var(--color-accent);
+    text-decoration-line: underline;
+    text-decoration-thickness: 0.075em;
+    text-underline-offset: 0.2em;
+    transition:
+      color var(--duration) var(--ease),
+      text-decoration-color var(--duration) var(--ease);
+  }
+
+  a:hover {
+    color: var(--color-text);
+    text-decoration-thickness: 0.125em;
+  }
+
+  :focus-visible {
+    outline: var(--focus-ring);
+    outline-offset: var(--focus-offset);
+    border-radius: var(--radius);
+  }
+
+  :target {
+    scroll-margin-block-start: var(--space-l);
+  }
+
+  code,
+  kbd,
+  samp,
+  pre,
+  time,
+  data {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+  }
+
+  pre {
+    overflow-x: auto;
+    padding: var(--space-s);
+    background-color: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius);
+  }
+
+  hr {
+    border: 0;
+    border-block-start: var(--border-width) solid var(--color-border);
+  }
+
+  strong,
+  b {
+    font-weight: var(--font-weight-bold);
+  }
+
+  mark {
+    background: none;
+    color: var(--color-highlight);
+    font-weight: var(--font-weight-medium);
+  }
+
+  ::selection {
+    background-color: var(--color-selection);
+    color: var(--color-text);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html:focus-within {
+      scroll-behavior: smooth;
+    }
+  }
 }
 
-body {
-  margin: 0;
-}
+@layer utilities {
+  /* Page-width container shared by header, main and footer (one left edge). */
+  .container {
+    inline-size: 100%;
+    max-inline-size: calc(var(--container-wide) + 2 * var(--gutter));
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
 
-main {
-  max-width: 65ch;
-  margin-inline: auto;
-  padding: 3rem 1.25rem;
-}
+  /* Readable line length for running text. */
+  .measure {
+    max-inline-size: var(--measure);
+  }
 
-h1 {
-  line-height: 1.2;
+  /* Vertical rhythm between siblings. */
+  .flow > * + * {
+    margin-block-start: var(--flow-space, 1em);
+  }
+
+  .mono {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+  }
+
+  .muted {
+    color: var(--color-muted);
+  }
+
+  .lede {
+    font-size: var(--step-1);
+    line-height: var(--leading-snug);
+  }
+
+  .visually-hidden:not(:focus):not(:active) {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
 }

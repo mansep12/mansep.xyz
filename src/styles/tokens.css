@@ -1,0 +1,89 @@
+/*
+ * Design tokens, provisional direction "Ledger": ink on paper in light mode,
+ * deep green (never black) in dark mode, amber only for emphasis.
+ *
+ * Components use the semantic --color-* tokens only. Each one resolves per
+ * color scheme through light-dark(); the scheme follows the system unless
+ * <html data-theme="light|dark"> forces it (see the theme toggle).
+ *
+ * All text colors pass WCAG AA (4.5:1) on both --color-bg and --color-surface.
+ * --color-border is decorative (dividers); never rely on it alone to convey state.
+ */
+
+@layer reset, tokens, base, components, utilities;
+
+@layer tokens {
+  :root {
+    color-scheme: light dark;
+
+    /* Color */
+    --color-bg: light-dark(#f4f1e8, #0f1a16);
+    --color-surface: light-dark(#fbf9f3, #16241e);
+    --color-border: light-dark(#d9d3c4, #263730);
+    --color-text: light-dark(#16241e, #ece8dc);
+    --color-muted: light-dark(#4e5e55, #a9b8ae);
+    --color-accent: light-dark(#2f6b4a, #6fae86);
+    --color-highlight: light-dark(#8a5a0e, #e3a857);
+    --color-focus: var(--color-accent);
+    --color-selection: light-dark(#d5e4d9, #2a4a3a);
+
+    /* Typography */
+    --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+    --font-weight-regular: 400;
+    --font-weight-medium: 500;
+    --font-weight-bold: 600;
+    --leading-tight: 1.2;
+    --leading-snug: 1.4;
+    --leading-normal: 1.6;
+
+    /* Fluid type scale: 1.2 ratio at 360px, 1.25 at 1240px (Utopia method). */
+    --step--2: clamp(0.6944rem, 0.684rem + 0.0465vw, 0.72rem);
+    --step--1: clamp(0.8333rem, 0.8061rem + 0.1212vw, 0.9rem);
+    --step-0: clamp(1rem, 0.9489rem + 0.2273vw, 1.125rem);
+    --step-1: clamp(1.2rem, 1.1156rem + 0.375vw, 1.4062rem);
+    --step-2: clamp(1.44rem, 1.31rem + 0.5778vw, 1.7578rem);
+    --step-3: clamp(1.728rem, 1.536rem + 0.8532vw, 2.1973rem);
+    --step-4: clamp(2.0736rem, 1.7983rem + 1.2236vw, 2.7466rem);
+    --step-5: clamp(2.4883rem, 2.1018rem + 1.718vw, 3.4332rem);
+
+    /* Fluid space scale, same viewport range. */
+    --space-3xs: clamp(0.25rem, 0.2372rem + 0.0568vw, 0.2812rem);
+    --space-2xs: clamp(0.5rem, 0.4744rem + 0.1136vw, 0.5625rem);
+    --space-xs: clamp(0.75rem, 0.7116rem + 0.1705vw, 0.8438rem);
+    --space-s: clamp(1rem, 0.9489rem + 0.2273vw, 1.125rem);
+    --space-m: clamp(1.5rem, 1.4233rem + 0.3409vw, 1.688rem);
+    --space-l: clamp(2rem, 1.8977rem + 0.4545vw, 2.25rem);
+    --space-xl: clamp(3rem, 2.8466rem + 0.6818vw, 3.375rem);
+    --space-2xl: clamp(4rem, 3.7955rem + 0.9091vw, 4.5rem);
+    --space-3xl: clamp(6rem, 5.6932rem + 1.3636vw, 6.75rem);
+
+    /* Layout */
+    --measure: 68ch;
+    --container-wide: 72rem;
+    --gutter: var(--space-s);
+    --radius: 0.25rem;
+    --border-width: 1px;
+    --focus-ring: 2px solid var(--color-focus);
+    --focus-offset: 3px;
+
+    /* Motion: color changes only, never longer than this. Every transition
+       uses --duration, so reduced motion turns them all off here. */
+    --duration: 150ms;
+    --ease: ease-out;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :root {
+      --duration: 0s;
+    }
+  }
+
+  :root[data-theme="light"] {
+    color-scheme: light;
+  }
+
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+  }
+}
