@@ -64,7 +64,7 @@ bun run dev
 ├── .github/                  # CI workflow and Dependabot
 ├── docs/decisions/           # Architecture Decision Records (MADR)
 ├── public/                   # Static files served as-is (favicon, touch icon)
-├── scripts/                  # Link checker, touch icon generator
+├── scripts/                  # Link checker, touch icon and favicon.ico generators
 ├── tests/                    # Vitest unit tests
 └── src/
     ├── content.config.ts     # Collections: projects, research, pages, resume
@@ -180,8 +180,10 @@ Single-line frontmatter fields reject en and em dashes.
   there unless a page passes `ogImage`.
 - **Icons**: `public/favicon.svg` follows the color scheme;
   `public/apple-touch-icon.png` is generated with
-  `bun scripts/generate-touch-icon.ts` and committed. The `theme-color` meta
-  follows a forced theme too.
+  `bun scripts/generate-touch-icon.ts` and `public/favicon.ico` (16, 32 and
+  48 px, light scheme, for clients that request it by default) with
+  `bun scripts/generate-favicon-ico.ts`; both are committed. The
+  `theme-color` meta follows a forced theme too.
 
 ## Security headers
 
