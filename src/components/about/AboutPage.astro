@@ -26,7 +26,13 @@ const resume = await getResume(lang);
 const interests = resume.interests.map((interest) => interest.name);
 ---
 
-<BaseLayout lang={lang} routeKey="about" title={page.data.title} description={page.data.description}>
+<BaseLayout
+  lang={lang}
+  routeKey="about"
+  title={page.data.title}
+  description={page.data.description}
+  profile={resume}
+>
   <div class="about">
     <header class="flow">
       <h1>{page.data.title}</h1>

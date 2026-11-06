@@ -9,7 +9,7 @@ import type { Lang } from "../../i18n/locales";
 import { localizedPath } from "../../i18n/routes";
 import { useTranslations } from "../../i18n/ui";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { getProjects, getResearch } from "../../lib/content";
+import { getProjects, getResearch, getResume } from "../../lib/content";
 import { formatDate, isoYearMonth } from "../../lib/dates";
 import InProgressNote from "../ledger/InProgressNote.astro";
 import ProjectLedger from "../ledger/ProjectLedger.astro";
@@ -24,10 +24,17 @@ const { lang } = Astro.props;
 const t = useTranslations(lang);
 const projects = await getProjects(lang);
 const thesis = (await getResearch(lang)).find((entry) => entry.data.kind === "thesis");
+const resume = await getResume(lang);
 const updated = isoYearMonth(new Date(), site.timeZone);
 ---
 
-<BaseLayout lang={lang} routeKey="home" title={site.name} description={t("home.description")}>
+<BaseLayout
+  lang={lang}
+  routeKey="home"
+  title={site.name}
+  description={t("home.description")}
+  profile={resume}
+>
   <div class="home">
     <header class="intro">
       <h1>{site.name}</h1>

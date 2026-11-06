@@ -14,10 +14,12 @@ import { Font } from "astro:assets";
 import SiteFooter from "../components/SiteFooter.astro";
 import SiteHeader from "../components/SiteHeader.astro";
 import ThemeScript from "../components/ThemeScript.astro";
+import type { Resume } from "../data/resume.schema";
 import { site } from "../data/site";
 import { type Lang, localeInfo, otherLangs } from "../i18n/locales";
 import { absoluteUrl, alternateLinks, alternates, type PageRoute } from "../i18n/routes";
 import { useTranslations } from "../i18n/ui";
+import { profilePageJsonLd, serializeJsonLd } from "../lib/structured-data";
 import { themeColors } from "../lib/theme";
 import "../styles/tokens.css";
 import "../styles/base.css";
@@ -38,6 +40,11 @@ type Props = PageRoute & {
    * A page without `routeKey` (e.g. 404) is never treated as translated.
    */
   translated?: boolean;
+  /**
+   * CV data in `lang` for a page about the author (home, about): emits a
+   * schema.org ProfilePage with the Person as main entity.
+   */
+  profile?: Resume;
 };
 
 const {
@@ -47,6 +54,7 @@ const {
   ogImage,
   noindex = false,
   translated = true,
+  profile,
   ...route
 } = Astro.props;
 
@@ -57,6 +65,15 @@ const hreflangLinks =
   translated && route.routeKey ? alternateLinks(route.routeKey, route.params) : [];
 const hasAlternates = hreflangLinks.length > 0;
 const ogImageUrl = ogImage ? absoluteUrl(ogImage) : undefined;
+const structuredData =
+  profile && canonical
+    ? profilePageJsonLd({
+        url: canonical,
+        title: documentTitle,
+        inLanguage: localeInfo[lang].tag,
+        resume: profile,
+      })
+    : undefined;
 ---
 
 <!doctype html>
@@ -100,6 +117,11 @@ const ogImageUrl = ogImage ? absoluteUrl(ogImage) : undefined;
     <meta name="twitter:title" content={documentTitle} />
     <meta name="twitter:description" content={description} />
     {ogImageUrl && <meta name="twitter:image" content={ogImageUrl} />}
+    {
+      structuredData && (
+        <script is:inline type="application/ld+json" set:html={serializeJsonLd(structuredData)} />
+      )
+    }
   </head>
   <body>
     <a class="skip-link" href="#main">{t("skip.toContent")}</a>

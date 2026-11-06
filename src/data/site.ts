@@ -23,6 +23,12 @@ export interface SiteConfig {
   /** Public contact address. Change it here only. */
   readonly email: string;
   readonly links: SiteLinks;
+  /**
+   * Skills named in structured data (`knowsAbout`). Each one must be a
+   * keyword of the CV skills in every locale (checked by a test); the CV
+   * stays the source of the list itself.
+   */
+  readonly featuredSkills: readonly string[];
 }
 
 export const site = {
@@ -37,4 +43,14 @@ export const site = {
     linkedin: "https://www.linkedin.com/in/manuel-sepulveda-cabeza",
     repo: "https://github.com/mansep12/mansep.xyz",
   },
+  featuredSkills: [
+    "Python",
+    "TypeScript",
+    "Rust",
+    "FastAPI",
+    "PostgreSQL",
+    "Cloudflare Workers",
+    "Web Crypto API",
+    "Passkeys (WebAuthn)",
+  ],
 } as const satisfies SiteConfig;
