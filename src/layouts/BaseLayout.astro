@@ -1,5 +1,6 @@
 ---
-import { defaultLang, type Lang, pathFor, type RouteKey } from "../i18n/ui";
+import { type Lang, localeInfo } from "../i18n/locales";
+import { alternateLinks, alternates, type RouteKey } from "../i18n/routes";
 import "../styles/base.css";
 
 interface Props {
@@ -10,22 +11,20 @@ interface Props {
 }
 
 const { lang, title, description, route } = Astro.props;
-const site = Astro.site ?? new URL("https://mansep.xyz");
-const href = (l: Lang) => new URL(pathFor(route, l), site).href;
 ---
 
 <!doctype html>
-<html lang={lang}>
+<html lang={localeInfo[lang].tag}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light dark" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={href(lang)} />
-    <link rel="alternate" hreflang="es" href={href("es")} />
-    <link rel="alternate" hreflang="en" href={href("en")} />
-    <link rel="alternate" hreflang="x-default" href={href(defaultLang)} />
+    <link rel="canonical" href={alternates(route)[lang]} />
+    {alternateLinks(route).map(({ hreflang, href }) => (
+      <link rel="alternate" hreflang={hreflang} href={href} />
+    ))}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
   <body>
