@@ -1,0 +1,34 @@
+---
+import { defaultLang, type Lang, pathFor, type RouteKey } from "../i18n/ui";
+import "../styles/base.css";
+
+interface Props {
+  lang: Lang;
+  title: string;
+  description: string;
+  route: RouteKey;
+}
+
+const { lang, title, description, route } = Astro.props;
+const site = Astro.site ?? new URL("https://mansep.xyz");
+const href = (l: Lang) => new URL(pathFor(route, l), site).href;
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={href(lang)} />
+    <link rel="alternate" hreflang="es" href={href("es")} />
+    <link rel="alternate" hreflang="en" href={href("en")} />
+    <link rel="alternate" hreflang="x-default" href={href(defaultLang)} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

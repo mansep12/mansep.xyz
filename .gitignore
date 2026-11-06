@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Generated types and caches
+.astro/
+.wrangler/
+
+# Local secrets and environment
+.dev.vars*
+.env*
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS / editor
+.DS_Store
+.idea/
+
+# Private research and local agent settings (never tracked)
+docs/investigacion/
+.claude/settings.local.json

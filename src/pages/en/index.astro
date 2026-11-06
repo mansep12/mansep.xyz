@@ -1,0 +1,19 @@
+---
+import { t } from "../../i18n/ui";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const lang = "en";
+---
+
+<BaseLayout
+  lang={lang}
+  title="Manuel Sepúlveda"
+  description={t(lang, "site.tagline")}
+  route="home"
+>
+  <main>
+    <h1>Manuel Sepúlveda</h1>
+    <p>{t(lang, "site.tagline")}</p>
+    <p>{t(lang, "site.status")}</p>
+  </main>
+</BaseLayout>
