@@ -28,12 +28,12 @@ Un gestor de contraseñas web, hecho para el curso Introducción a la Criptograf
 
 ## Problema
 
-Un gestor de contraseñas tiene que guardar secretos en un servidor sin que el servidor pueda leerlos, y además permitir que un usuario le comparta una contraseña a otro. El curso pedía resolverlo aplicando mecanismos criptográficos en el cliente: el servidor guarda y entrega datos, pero no debería poder descifrarlos.
+Un gestor de contraseñas tiene que guardar secretos en un servidor sin que el servidor pueda leerlos, y además permitir que un usuario le comparta una contraseña a otro. El objetivo era resolverlo aplicando mecanismos criptográficos en el cliente: el servidor guarda y entrega datos, pero no debería poder descifrarlos.
 
 ## Restricciones
 
-- **Tiempo.** Un proyecto de curso. El historial del repositorio va del 7 al 10 de diciembre de 2024.
-- **Equipo.** Dos personas según el historial: Felipe Jara y yo. Mi parte fue la estructura del backend en FastAPI (modelos, esquemas, rutas y CRUD de usuarios, grupos, contraseñas y compartidas) y las vistas del frontend: inicio de sesión, registro, tabla de contraseñas, usuarios y compartir. Los módulos de cifrado, el generador de contraseñas y la autenticación con JWT los escribió Felipe.
+- **Tiempo.** Un proyecto de curso. Los commits del curso van del 7 al 10 de diciembre de 2024.
+- **Equipo.** Dos personas según el historial: Felipe Jara y yo. Mi parte fue la estructura del backend en FastAPI (modelos, esquemas, rutas y CRUD de usuarios, grupos, contraseñas y compartidas) y las vistas del frontend: inicio de sesión, registro, tabla de contraseñas, usuarios y compartir. Felipe escribió los módulos de cifrado y su uso dentro de las vistas de registro y de contraseñas, el generador de contraseñas y la autenticación con JWT.
 - **Stack.** React con Vite y MUI en el frontend; FastAPI, SQLModel y SQLite en el backend; para el cifrado, solo la Web Crypto API del navegador, sin bibliotecas externas.
 
 ## Decisiones
@@ -68,7 +68,7 @@ La sesión usa JWT y el servidor guarda un hash bcrypt de la contraseña. Pero e
 ## Qué cambiaría
 
 - **Separar entrar de cifrar.** Derivaría del secreto del usuario dos llaves distintas, una para autenticarse y otra para cifrar, de modo que el servidor nunca vea lo que permite descifrar.
-- **No guardar la contraseña maestra en el navegador.** Hoy queda en `localStorage` para derivar la llave en cada página. Guardaría solo una `CryptoKey` no exportable en memoria; la de ahora se crea exportable.
+- **No guardar la contraseña maestra en el navegador.** Hoy queda en `localStorage` para derivar la llave en cada operación. Guardaría solo una `CryptoKey` no exportable en memoria; la de ahora se crea exportable.
 - **AES-GCM y más iteraciones.** Cifrado autenticado en vez de AES-CBC, y las iteraciones de PBKDF2 que pide OWASP.
 - **Autorización en el backend.** Esta parte es mía: aparte del registro y el inicio de sesión, 13 de las 22 rutas no exigen sesión. Por ejemplo, modificar o borrar una contraseña (`PATCH` y `DELETE` en `/passwords/{id}`) no verifica quién llama ni si la contraseña es suya. Pondría sesión y dueño en cada ruta.
 - **Lo que queda en claro.** El nombre, la URL y el usuario de cada contraseña se guardan sin cifrar, y el secreto de los JWT está escrito en el código. Cifraría esos campos y movería el secreto a una variable de entorno.

@@ -28,12 +28,12 @@ A web password manager built for the Introduction to Modern Cryptography course 
 
 ## Problem
 
-A password manager has to keep secrets on a server the server cannot read, and also let one user share a password with another. The course asked us to solve it with cryptographic mechanisms on the client: the server stores and returns data but should not be able to decrypt it.
+A password manager has to keep secrets on a server the server cannot read, and also let one user share a password with another. The goal was to solve it with cryptographic mechanisms on the client: the server stores and returns data but should not be able to decrypt it.
 
 ## Constraints
 
-- **Time.** A course project. The repository history runs from December 7 to 10, 2024.
-- **Team.** Two people per the history: Felipe Jara and me. My part was the FastAPI backend structure (models, schemas, routes and CRUD for users, groups, passwords and shared passwords) and the frontend views: login, sign-up, password table, users and sharing. Felipe wrote the encryption modules, the password generator and JWT authentication.
+- **Time.** A course project. The course commits run from December 7 to 10, 2024.
+- **Team.** Two people per the history: Felipe Jara and me. My part was the FastAPI backend structure (models, schemas, routes and CRUD for users, groups, passwords and shared passwords) and the frontend views: login, sign-up, password table, users and sharing. Felipe wrote the encryption modules and their use inside the sign-up and password views, the password generator and JWT authentication.
 - **Stack.** React with Vite and MUI; FastAPI, SQLModel and SQLite; for cryptography, only the browser's Web Crypto API.
 
 ## Decisions
@@ -68,7 +68,7 @@ Sessions use JWT and the server stores a bcrypt hash of the password. But it is 
 ## What I would change
 
 - **Split logging in from encrypting.** Derive two keys from the user's secret, one to authenticate and one to encrypt, so the server never sees what decrypts.
-- **Keep the master password out of storage.** Today it sits in `localStorage` to derive the key on each page. I would keep only a non-extractable `CryptoKey` in memory; the current one is created extractable.
+- **Keep the master password out of storage.** Today it sits in `localStorage` to derive the key for every operation. I would keep only a non-extractable `CryptoKey` in memory; the current one is created extractable.
 - **AES-GCM and more iterations.** Authenticated encryption instead of AES-CBC, and the PBKDF2 iterations OWASP asks for.
 - **Backend authorization.** This part is mine: apart from sign-up and login, 13 of the 22 routes do not require a session. Updating or deleting a password (`PATCH` and `DELETE` on `/passwords/{id}`) checks neither the caller nor ownership.
 - **What stays in clear.** Each password's name, URL and username are stored unencrypted, and the JWT secret is hard-coded.
