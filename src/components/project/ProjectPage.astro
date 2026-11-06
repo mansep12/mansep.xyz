@@ -9,10 +9,12 @@
  * to verify this" section is rendered as a box. The build fails if the
  * verify section is missing, or the architecture section when the project
  * has a diagram.
+ *
+ * Body sections are numbered ("01 / Problema").
  */
 import type { Lang } from "../../i18n/locales";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { entrySlug, type ProjectEntry } from "../../lib/content";
+import { entrySlug, getProjects, type ProjectEntry } from "../../lib/content";
 import { diagramFor } from "../diagrams";
 import ProjectFacts from "./ProjectFacts.astro";
 import ProjectHeader from "./ProjectHeader.astro";
@@ -33,6 +35,8 @@ const { lang, entry, translated } = Astro.props;
 const { data } = entry;
 const slug = entrySlug(entry);
 const s = projectStrings[lang];
+// Position in the projects list, shown before the title like its row there.
+const position = (await getProjects(lang)).findIndex((project) => entrySlug(project) === slug) + 1;
 
 const body = splitBody(entry.rendered?.html ?? "");
 const verify = requireSection(body, s.verifyHeading, `Project "${entry.id}"`);
@@ -56,7 +60,7 @@ const video =
   translated={translated}
 >
   <article class="project">
-    <ProjectHeader lang={lang} data={data} intro={body.intro} />
+    <ProjectHeader lang={lang} data={data} intro={body.intro} position={position} />
     <ProjectFacts lang={lang} data={data} />
     {
       video && (
@@ -69,7 +73,7 @@ const video =
         />
       )
     }
-    <div class="body">
+    <div class="body numbered">
       {
         body.sections.map((section) =>
           section === verify ? (
@@ -107,6 +111,17 @@ const video =
 
     .body :global(h2) {
       font-size: var(--step-3);
+    }
+
+    /* Same look as the .index utility (base.css), for Markdown headings. */
+    .body > :global(section) > :global(h2)::before {
+      counter-increment: index;
+      content: counter(index, decimal-leading-zero) " /\00a0" / "";
+      color: var(--color-muted);
+      font-family: var(--font-mono);
+      font-size: var(--step--1);
+      font-weight: var(--font-weight-regular);
+      letter-spacing: 0;
     }
 
     .body :global(h3) {

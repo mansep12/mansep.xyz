@@ -1,7 +1,8 @@
 ---
 /**
  * Case study header: back link, year and status, title, the one-line
- * description (the body's intro paragraph) and the headline outcome.
+ * description (the body's intro paragraph) and the headline outcome. The
+ * title carries the project's number in the list ("01 / Nodus").
  */
 import type { Lang } from "../../i18n/locales";
 import { localizedPath } from "../../i18n/routes";
@@ -13,9 +14,11 @@ interface Props {
   data: ProjectData;
   /** HTML of the body's intro, rendered from the project's own Markdown. */
   intro: string;
+  /** 1-based position in the projects list. */
+  position: number;
 }
 
-const { lang, data, intro } = Astro.props;
+const { lang, data, intro, position } = Astro.props;
 const s = projectStrings[lang];
 ---
 
@@ -27,7 +30,7 @@ const s = projectStrings[lang];
     <span aria-hidden="true">·</span>
     <span class="status">{s.status[data.status]}</span>
   </p>
-  <h1>{data.title}</h1>
+  <h1 data-position={String(position).padStart(2, "0")}>{data.title}</h1>
   {intro && <div class="lede" set:html={intro} />}
   <p class="outcome">{data.outcome}</p>
 </header>
@@ -52,6 +55,17 @@ const s = projectStrings[lang];
       border: var(--border-width) solid var(--color-border);
       border-radius: var(--radius);
       color: var(--color-text);
+      font-family: var(--font-mono);
+    }
+
+    /* The number is generated, so it stays out of the heading's text. */
+    h1::before {
+      content: attr(data-position) " /\00a0" / "";
+      color: var(--color-muted);
+      font-family: var(--font-mono);
+      font-size: var(--step--1);
+      font-weight: var(--font-weight-regular);
+      letter-spacing: 0;
     }
 
     .lede :global(p) {
@@ -61,7 +75,7 @@ const s = projectStrings[lang];
 
     .outcome {
       padding-inline-start: var(--space-xs);
-      border-inline-start: 3px solid var(--color-accent);
+      border-inline-start: 2px solid var(--color-accent);
       font-weight: var(--font-weight-medium);
     }
   }

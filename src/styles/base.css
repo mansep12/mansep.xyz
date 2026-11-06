@@ -292,6 +292,23 @@
     line-height: var(--leading-snug);
   }
 
+  /* Technical numbering ("01 / Nodus"): every .index inside a .numbered
+     container gets the next number, in small mono. The empty alternative
+     text keeps it out of the accessible name; lists announce positions. */
+  .numbered {
+    counter-reset: index;
+  }
+
+  .index::before {
+    counter-increment: index;
+    content: counter(index, decimal-leading-zero) " /\00a0" / "";
+    color: var(--color-muted);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    font-weight: var(--font-weight-regular);
+    letter-spacing: 0;
+  }
+
   .visually-hidden:not(:focus):not(:active) {
     position: absolute;
     inline-size: 1px;

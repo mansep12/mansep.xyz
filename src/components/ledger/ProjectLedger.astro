@@ -1,9 +1,11 @@
 ---
 /**
- * Projects as the rows of a ledger: the title links to the project page,
- * one line below it, and year and status in mono on the right.
- * `detailed` adds the summary, role, stack and outbound links (projects
- * index). With no projects it renders a one-line empty state.
+ * Projects as the rows of a table: a mono number and the title (linking to
+ * the project page), one line below it, and year and status in mono on the
+ * right. `detailed` adds the summary, role, stack and outbound links
+ * (projects index); from 64rem those rows use the 12-column grid, with the
+ * facts in the right-hand columns. With no projects it renders a one-line
+ * empty state.
  */
 import { site } from "../../data/site";
 import { projectStatusLabels } from "../../i18n/labels";
@@ -33,13 +35,13 @@ const Heading = headingLevel === 2 ? "h2" : "h3";
       {t("projects.empty")} <a href={site.links.github}>{displayUrl(site.links.github)}</a>.
     </p>
   ) : (
-    <ol role="list" class:list={["ledger", { detailed }]}>
+    <ol role="list" class:list={["ledger", "numbered", { detailed }]}>
       {projects.map((project) => {
         const { title, summary, outcome, year, status, role, stack, links } = project.data;
         return (
           <li class="row">
             <div class="entry">
-              <Heading class="title">
+              <Heading class="title index">
                 <a href={localizedPath("project", lang, { slug: entrySlug(project) })}>{title}</a>
               </Heading>
               {detailed && <p class="summary">{summary}</p>}
@@ -98,8 +100,9 @@ const Heading = headingLevel === 2 ? "h2" : "h3";
 
 <style>
   @layer components {
+    /* A heavy rule on top, hairlines between rows: a table without a header. */
     .ledger {
-      border-block-start: var(--border-width) solid var(--color-border);
+      border-block-start: var(--border-width) solid var(--color-text);
     }
 
     .row {
@@ -109,9 +112,9 @@ const Heading = headingLevel === 2 ? "h2" : "h3";
       border-block-end: var(--border-width) solid var(--color-border);
     }
 
+    /* The entry's children are laid out by the row's grid. */
     .entry {
-      display: grid;
-      gap: var(--space-3xs);
+      display: contents;
     }
 
     .title {
@@ -120,11 +123,12 @@ const Heading = headingLevel === 2 ? "h2" : "h3";
 
     .title a {
       color: var(--color-text);
-      text-decoration-color: var(--color-accent);
+      text-decoration-line: none;
     }
 
     .title a:hover {
       color: var(--color-accent);
+      text-decoration-line: underline;
     }
 
     .outcome {
@@ -139,9 +143,7 @@ const Heading = headingLevel === 2 ? "h2" : "h3";
       color: var(--color-muted);
     }
 
-    /* Narrow screens: year and status above the title, like a ledger date. */
     .meta {
-      order: -1;
       color: var(--color-muted);
       font-size: var(--step--1);
       white-space: nowrap;
@@ -192,6 +194,8 @@ const Heading = headingLevel === 2 ? "h2" : "h3";
       font-size: var(--step--1);
     }
 
+    /* Title on the left and year and status on the right, on one line;
+       the rest of the row runs the full width below them. */
     @media (min-width: 40rem) {
       .row {
         grid-template-columns: minmax(0, 1fr) auto;
@@ -199,9 +203,59 @@ const Heading = headingLevel === 2 ? "h2" : "h3";
         align-items: baseline;
       }
 
+      .entry > * {
+        grid-column: 1 / -1;
+      }
+
+      .entry > .title {
+        grid-column: 1;
+      }
+
       .meta {
-        order: 0;
+        grid-column: 2;
+        grid-row: 1;
         text-align: end;
+      }
+    }
+
+    /* Projects index: the row is the page's 12-column grid, text on 1-7,
+       year, status and facts on 9-12. */
+    @media (min-width: 64rem) {
+      .detailed .row {
+        grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
+        column-gap: var(--grid-gap);
+        padding-block: var(--space-m);
+      }
+
+      .detailed .entry > *,
+      .detailed .entry > .title {
+        grid-column: 1 / span 7;
+      }
+
+      .detailed .title {
+        font-size: var(--step-2);
+      }
+
+      .detailed .meta {
+        grid-column: 9 / -1;
+        grid-row: 1;
+        text-align: start;
+      }
+
+      .detailed .entry > .facts {
+        grid-column: 9 / -1;
+        grid-row: 2 / span 3;
+        align-self: start;
+        margin-block-start: 0;
+      }
+
+      .detailed .facts div {
+        display: grid;
+        gap: 0;
+      }
+
+      .detailed .facts dt::after {
+        content: none;
       }
     }
   }

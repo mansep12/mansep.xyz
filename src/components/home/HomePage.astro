@@ -35,15 +35,15 @@ const updated = isoYearMonth(new Date(), site.timeZone);
   description={t("home.description")}
   profile={resume}
 >
-  <div class="home">
+  <div class="home numbered">
     <header class="intro">
       <h1>{site.name}</h1>
       <p class="tagline mono" lang="en">{site.tagline}</p>
       <p class="lede">{t("home.intro")}</p>
     </header>
 
-    <section aria-labelledby="home-projects">
-      <h2 id="home-projects">{t("home.projects")}</h2>
+    <section class="projects" aria-labelledby="home-projects">
+      <h2 id="home-projects" class="label index">{t("home.projects")}</h2>
       <ProjectLedger lang={lang} projects={projects} />
       <InProgressNote lang={lang} />
       {
@@ -57,15 +57,15 @@ const updated = isoYearMonth(new Date(), site.timeZone);
 
     {
       thesis && (
-        <section aria-labelledby="home-research">
-          <h2 id="home-research">{t("home.research")}</h2>
+        <section class="research" aria-labelledby="home-research">
+          <h2 id="home-research" class="label index">{t("home.research")}</h2>
           <ResearchCard lang={lang} entry={thesis} />
         </section>
       )
     }
 
-    <section aria-labelledby="home-contact">
-      <h2 id="home-contact">{t("home.contact")}</h2>
+    <section class="contact" aria-labelledby="home-contact">
+      <h2 id="home-contact" class="label index">{t("home.contact")}</h2>
       <ContactBlock lang={lang} />
     </section>
 
@@ -89,6 +89,7 @@ const updated = isoYearMonth(new Date(), site.timeZone);
     }
 
     .tagline {
+      margin-block-start: var(--space-xs);
       color: var(--color-muted);
       font-size: var(--step--1);
     }
@@ -102,8 +103,20 @@ const updated = isoYearMonth(new Date(), site.timeZone);
       gap: var(--space-s);
     }
 
-    h2 {
-      font-size: var(--step-2);
+    /* Section headings are mono labels ("01 / Proyectos"); the project
+       titles below them carry the size. */
+    .label {
+      font-family: var(--font-mono);
+      font-size: var(--step--1);
+      font-weight: var(--font-weight-medium);
+      letter-spacing: 0;
+    }
+
+    /* The ledger draws its own top rule; the other blocks get one here. */
+    .research > .label,
+    .contact > .label {
+      padding-block-end: var(--space-2xs);
+      border-block-end: var(--border-width) solid var(--color-text);
     }
 
     .updated {
