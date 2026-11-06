@@ -125,3 +125,45 @@ export function getLangFromUrl(url: URL | string): Lang {
   const [, segment] = pathname.split("/");
   return isLang(segment) ? segment : defaultLang;
 }
+
+export interface RouteMatch {
+  readonly route: RouteTarget;
+  readonly lang: Lang;
+}
+
+function patternToRegExp(pattern: string): RegExp {
+  const source = pattern
+    .split(PARAM_PATTERN)
+    .map((part, index) =>
+      // split() with a capture group alternates literal text and param names.
+      index % 2 === 1 ? `(?<${part}>[^/]+)` : part.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+    )
+    .join("");
+  return new RegExp(`^${source}$`);
+}
+
+const routeMatchers = (Object.keys(routes) as RouteKey[]).flatMap((key) =>
+  locales.map((lang) => ({ key, lang, regexp: patternToRegExp(routes[key][lang]) })),
+);
+
+/**
+ * The route and locale of a site-relative path, e.g. `/en/projects/nodus`
+ * gives `{ route: { routeKey: "project", params: { slug: "nodus" } }, lang: "en" }`.
+ * Returns `undefined` for a path outside the route map (such as /404).
+ * Inverse of `localizedPath`.
+ */
+export function matchRoute(pathname: string): RouteMatch | undefined {
+  for (const { key, lang, regexp } of routeMatchers) {
+    const match = regexp.exec(pathname);
+    if (!match) continue;
+    const groups = match.groups ?? {};
+    const params = Object.fromEntries(
+      Object.entries(groups).map(([name, value]) => [name, decodeURIComponent(value)]),
+    );
+    const route = (
+      Object.keys(params).length > 0 ? { routeKey: key, params } : { routeKey: key }
+    ) as RouteTarget;
+    return { route, lang };
+  }
+  return undefined;
+}

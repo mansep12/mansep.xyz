@@ -1,9 +1,11 @@
 import { execFileSync } from "node:child_process";
 import cloudflare from "@astrojs/cloudflare";
+import sitemap from "@astrojs/sitemap";
 import { defineConfig, fontProviders } from "astro/config";
 import { site } from "./src/data/site";
 import { defaultLang, locales } from "./src/i18n/locales";
 import { resolveBuildCommit } from "./src/lib/build-info";
+import { canonicalPageUrl, sitemapLinks } from "./src/lib/sitemap";
 
 // Resolved here, in Node: pages are prerendered in workerd, which has no git.
 const buildCommit = resolveBuildCommit({
@@ -15,6 +17,10 @@ const buildCommit = resolveBuildCommit({
     }),
 });
 
+// Canonical URL of every page in the sitemap, collected by `filter`, which
+// sees every page before `serialize` runs.
+const sitemapUrls = new Set<string>();
+
 // https://docs.astro.build/en/reference/configuration-reference/
 export default defineConfig({
   site: site.url,
@@ -24,6 +30,23 @@ export default defineConfig({
     // Optimize images at build time; avoids provisioning a Cloudflare Images binding.
     imageService: "compile",
   }),
+  integrations: [
+    // sitemap-index.xml with hreflang alternates from the route map (see
+    // src/lib/sitemap.ts for why not the integration's own i18n option).
+    // Only pages in the route map are listed: no 404, no robots.txt.
+    sitemap({
+      namespaces: { news: false, image: false, video: false },
+      filter: (url) => {
+        const canonical = canonicalPageUrl(url);
+        if (canonical) sitemapUrls.add(canonical);
+        return canonical !== undefined;
+      },
+      serialize: (item) => {
+        const url = canonicalPageUrl(item.url) ?? item.url;
+        return { ...item, url, links: sitemapLinks(url, sitemapUrls) };
+      },
+    }),
+  ],
   // No sessions needed: keeps the adapter from auto-provisioning a KV namespace.
   session: false,
   // Emit `about.html` for `about.astro`: Cloudflare static assets serve it at

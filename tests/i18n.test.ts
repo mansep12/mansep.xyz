@@ -5,6 +5,7 @@ import {
   alternates,
   getLangFromUrl,
   localizedPath,
+  matchRoute,
   type RouteKey,
   routes,
 } from "../src/i18n/routes";
@@ -68,6 +69,38 @@ describe("alternateLinks", () => {
       { hreflang: "en", href: "https://mansep.xyz/en/cv" },
       { hreflang: "x-default", href: "https://mansep.xyz/cv" },
     ]);
+  });
+});
+
+describe("matchRoute", () => {
+  it("finds the route and locale of a path", () => {
+    expect(matchRoute("/")).toEqual({ route: { routeKey: "home" }, lang: "es" });
+    expect(matchRoute("/en/")).toEqual({ route: { routeKey: "home" }, lang: "en" });
+    expect(matchRoute("/sobre-mi")).toEqual({ route: { routeKey: "about" }, lang: "es" });
+    expect(matchRoute("/en/projects/nodus")).toEqual({
+      route: { routeKey: "project", params: { slug: "nodus" } },
+      lang: "en",
+    });
+  });
+
+  it("is the inverse of localizedPath for every route", () => {
+    for (const key of Object.keys(routes) as RouteKey[]) {
+      for (const lang of ["es", "en"] as const) {
+        const params = key === "project" ? { slug: "a b" } : undefined;
+        const path = localizedPath(key, lang, params);
+        expect(matchRoute(path)).toEqual({
+          route: params ? { routeKey: key, params } : { routeKey: key },
+          lang,
+        });
+      }
+    }
+  });
+
+  it("returns undefined outside the route map", () => {
+    expect(matchRoute("/404")).toBeUndefined();
+    expect(matchRoute("/en")).toBeUndefined();
+    expect(matchRoute("/proyectos/a/b")).toBeUndefined();
+    expect(matchRoute("/sobre-mi.html")).toBeUndefined();
   });
 });
 
