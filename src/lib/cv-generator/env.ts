@@ -4,7 +4,7 @@
  * - CV_GENERATOR_ENABLED: "true" to enable; anything else disables it. Set in
  *   the dashboard (wrangler.jsonc has `keep_vars`), so it is a kill switch
  *   that takes effect without a deploy.
- * - CV_DAILY_LIMIT (default 40) and CV_PER_IP_DAILY_LIMIT (default 3).
+ * - CV_DAILY_LIMIT (default 15) and CV_PER_IP_DAILY_LIMIT (default 3).
  * - TURNSTILE_HOSTNAMES: comma-separated hostnames a Turnstile token may come
  *   from (default "mansep.xyz").
  * - ANTHROPIC_BASE_URL: optional, e.g. a Cloudflare AI Gateway endpoint.
@@ -12,7 +12,7 @@
  *   generator stays disabled whatever the flag says.
  */
 
-export const DEFAULT_DAILY_LIMIT = 40;
+export const DEFAULT_DAILY_LIMIT = 15;
 export const DEFAULT_PER_IP_DAILY_LIMIT = 3;
 export const DEFAULT_TURNSTILE_HOSTNAMES = ["mansep.xyz"];
 

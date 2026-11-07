@@ -9,7 +9,7 @@ import {
   utcDay,
 } from "../../src/lib/cv-generator/budget";
 import { LIMITS } from "../../src/lib/cv-generator/config";
-import { readGeneratorConfig } from "../../src/lib/cv-generator/env";
+import { DEFAULT_DAILY_LIMIT, readGeneratorConfig } from "../../src/lib/cv-generator/env";
 import {
   BodyTooLargeError,
   normalizeJobText,
@@ -194,7 +194,7 @@ describe("readGeneratorConfig", () => {
   it("uses defaults for missing or malformed limits", () => {
     const config = readGeneratorConfig({ CV_DAILY_LIMIT: "-5", CV_PER_IP_DAILY_LIMIT: "lots" });
     expect(config).toMatchObject({
-      dailyLimit: 40,
+      dailyLimit: DEFAULT_DAILY_LIMIT,
       perClientLimit: 3,
       turnstileHostnames: ["mansep.xyz"],
       anthropicBaseUrl: undefined,

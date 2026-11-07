@@ -275,7 +275,7 @@ endpoint answers `503` otherwise).
    `PUBLIC_TURNSTILE_SITE_KEY=<site key>`.
 5. **Runtime variable** (Worker, Settings, Variables and Secrets):
    `CV_GENERATOR_ENABLED=true`. `wrangler.jsonc` sets `keep_vars`, so this
-   dashboard value survives deploys. The limits `CV_DAILY_LIMIT` (40),
+   dashboard value survives deploys. The limits `CV_DAILY_LIMIT` (15),
    `CV_PER_IP_DAILY_LIMIT` (3) and `TURNSTILE_HOSTNAMES` (`mansep.xyz`) live
    in `wrangler.jsonc`; change them there.
 6. **Deploy** (push to `main`). The first deploy creates the Durable Object
