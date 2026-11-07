@@ -9,10 +9,13 @@
  * to verify this" section is rendered as a box. The build fails if the
  * verify section is missing, or the architecture section when the project
  * has a diagram.
+ *
+ * Body sections are numbered ("01 / Problema"). From 64rem the page uses the
+ * 12-column grid: text on columns 1-8, the facts box beside it on 9-12.
  */
 import type { Lang } from "../../i18n/locales";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { entrySlug, type ProjectEntry } from "../../lib/content";
+import { entrySlug, getProjects, type ProjectEntry } from "../../lib/content";
 import { diagramFor } from "../diagrams";
 import ProjectFacts from "./ProjectFacts.astro";
 import ProjectHeader from "./ProjectHeader.astro";
@@ -33,6 +36,8 @@ const { lang, entry, translated } = Astro.props;
 const { data } = entry;
 const slug = entrySlug(entry);
 const s = projectStrings[lang];
+// Position in the projects list, shown before the title like its row there.
+const position = (await getProjects(lang)).findIndex((project) => entrySlug(project) === slug) + 1;
 
 const body = splitBody(entry.rendered?.html ?? "");
 const verify = requireSection(body, s.verifyHeading, `Project "${entry.id}"`);
@@ -55,8 +60,8 @@ const video =
   description={data.summary}
   translated={translated}
 >
-  <article class="project">
-    <ProjectHeader lang={lang} data={data} intro={body.intro} />
+  <article class:list={["project", { "has-video": video }]}>
+    <ProjectHeader lang={lang} data={data} intro={body.intro} position={position} />
     <ProjectFacts lang={lang} data={data} />
     {
       video && (
@@ -69,7 +74,7 @@ const video =
         />
       )
     }
-    <div class="body">
+    <div class="body numbered">
       {
         body.sections.map((section) =>
           section === verify ? (
@@ -109,6 +114,17 @@ const video =
       font-size: var(--step-3);
     }
 
+    /* Same look as the .index utility (base.css), for Markdown headings. */
+    .body > :global(section) > :global(h2)::before {
+      counter-increment: index;
+      content: counter(index, decimal-leading-zero) " /\00a0" / "";
+      color: var(--color-muted);
+      font-family: var(--font-mono);
+      font-size: var(--step--1);
+      font-weight: var(--font-weight-regular);
+      letter-spacing: 0;
+    }
+
     .body :global(h3) {
       --flow-space: var(--space-m);
       font-size: var(--step-1);
@@ -125,6 +141,31 @@ const video =
 
     .body :global(code) {
       overflow-wrap: anywhere;
+    }
+
+    @media (min-width: 64rem) {
+      .project {
+        grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
+        column-gap: var(--grid-gap);
+        max-inline-size: none;
+      }
+
+      .project > :global(*) {
+        grid-column: 1 / span 8;
+      }
+
+      /* Beside the header and the body (and the video, when there is one). */
+      .project > :global(.facts) {
+        grid-column: 9 / -1;
+        grid-row: 1 / span 2;
+        align-self: start;
+        position: sticky;
+        inset-block-start: var(--space-m);
+      }
+
+      .has-video > :global(.facts) {
+        grid-row: 1 / span 3;
+      }
     }
   }
 </style>

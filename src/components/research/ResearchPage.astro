@@ -32,7 +32,7 @@ const entries = await Promise.all(
   title={t("research.title")}
   description={t("research.description")}
 >
-  <div class="research">
+  <div class="research numbered">
     <header class="flow measure">
       <h1>{t("research.title")}</h1>
       <p class="lede">{t("research.intro")}</p>
@@ -44,7 +44,7 @@ const entries = await Promise.all(
         return (
           <article class="entry" id={slug} aria-labelledby={`${slug}-title`}>
             <p class="kind mono">{t(researchKindLabels[kind])}</p>
-            <h2 id={`${slug}-title`}>{title}</h2>
+            <h2 id={`${slug}-title`} class="index">{title}</h2>
             <p class="summary">{summary}</p>
             <dl class="facts">
               <div>

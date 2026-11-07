@@ -2,7 +2,9 @@
 /**
  * Three-state theme button (system, light, dark). The visible state is
  * picked by CSS from <html data-theme>, so it is right before any script
- * runs; the script keeps aria-label in sync and handles clicks.
+ * runs; the script keeps aria-label in sync and handles clicks. On narrow
+ * phones only the icon shows (the aria-label still names the state), so the
+ * name and the tools fit on one row.
  */
 import type { Lang } from "../i18n/locales";
 import { useTranslations } from "../i18n/ui";
@@ -29,7 +31,7 @@ const t = useTranslations(Astro.props.lang);
       <circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.5"></circle>
       <path d="M8 2a6 6 0 0 1 0 12z" fill="currentColor"></path>
     </svg>
-    {t("theme.system")}
+    <span class="label">{t("theme.system")}</span>
   </span>
   <span class="state" data-state="light">
     <svg viewBox="0 0 16 16" aria-hidden="true">
@@ -40,7 +42,7 @@ const t = useTranslations(Astro.props.lang);
         stroke-width="1.5"
         stroke-linecap="round"></path>
     </svg>
-    {t("theme.light")}
+    <span class="label">{t("theme.light")}</span>
   </span>
   <span class="state" data-state="dark">
     <svg viewBox="0 0 16 16" aria-hidden="true">
@@ -51,7 +53,7 @@ const t = useTranslations(Astro.props.lang);
         stroke-width="1.5"
         stroke-linejoin="round"></path>
     </svg>
-    {t("theme.dark")}
+    <span class="label">{t("theme.dark")}</span>
   </span>
 </button>
 
@@ -93,6 +95,22 @@ const t = useTranslations(Astro.props.lang);
       inline-size: 1em;
       block-size: 1em;
       flex: none;
+    }
+
+    @media (max-width: 26rem) {
+      .theme-toggle {
+        min-inline-size: 2rem;
+        justify-content: center;
+      }
+
+      .label {
+        position: absolute;
+        inline-size: 1px;
+        block-size: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+      }
     }
 
     :global(:root:not([data-theme])) .state[data-state="system"],

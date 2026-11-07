@@ -21,8 +21,8 @@ export function nextThemeChoice(choice: ThemeChoice): ThemeChoice {
 
 /** Browser UI color per scheme (`<meta name="theme-color">`); matches --color-bg in tokens.css. */
 export const themeColors = {
-  light: "#f4f1e8",
-  dark: "#0f1a16",
+  light: "#ffffff",
+  dark: "#0d0f12",
 } as const;
 
 /**

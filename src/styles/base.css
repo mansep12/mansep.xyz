@@ -66,16 +66,15 @@
     hanging-punctuation: first last;
   }
 
+  /* No background of its own: the page color is the root's (the canvas), so
+     the column hint in BaseLayout.astro can sit behind the content. */
   body {
     min-block-size: 100dvh;
     display: flex;
     flex-direction: column;
-    background-color: var(--color-bg);
     color: var(--color-text);
     font-size: var(--step-0);
-    transition:
-      background-color var(--duration) var(--ease),
-      color var(--duration) var(--ease);
+    transition: color var(--duration) var(--ease);
   }
 
   h1,
@@ -84,12 +83,13 @@
   h4 {
     font-weight: var(--font-weight-bold);
     line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-heading);
     text-wrap: balance;
   }
 
   h1 {
-    font-size: var(--step-4);
-    letter-spacing: -0.01em;
+    font-size: var(--step-5);
+    letter-spacing: var(--tracking-display);
   }
 
   h2 {
@@ -117,8 +117,8 @@
   a {
     color: var(--color-accent);
     text-decoration-line: underline;
-    text-decoration-thickness: 0.075em;
-    text-underline-offset: 0.2em;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.22em;
     transition:
       color var(--duration) var(--ease),
       text-decoration-color var(--duration) var(--ease);
@@ -126,7 +126,7 @@
 
   a:hover {
     color: var(--color-text);
-    text-decoration-thickness: 0.125em;
+    text-decoration-thickness: 2px;
   }
 
   :focus-visible {
@@ -167,10 +167,11 @@
     font-weight: var(--font-weight-bold);
   }
 
+  /* Emphasis is weight, not color: the signal color stays for links. */
   mark {
     background: none;
-    color: var(--color-highlight);
-    font-weight: var(--font-weight-medium);
+    color: var(--color-text);
+    font-weight: var(--font-weight-bold);
   }
 
   ::selection {
@@ -289,6 +290,23 @@
   .lede {
     font-size: var(--step-1);
     line-height: var(--leading-snug);
+  }
+
+  /* Technical numbering ("01 / Nodus"): every .index inside a .numbered
+     container gets the next number, in small mono. The empty alternative
+     text keeps it out of the accessible name; lists announce positions. */
+  .numbered {
+    counter-reset: index;
+  }
+
+  .index::before {
+    counter-increment: index;
+    content: counter(index, decimal-leading-zero) " /\00a0" / "";
+    color: var(--color-muted);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    font-weight: var(--font-weight-regular);
+    letter-spacing: 0;
   }
 
   .visually-hidden:not(:focus):not(:active) {

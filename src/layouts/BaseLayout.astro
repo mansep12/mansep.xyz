@@ -105,8 +105,8 @@ const structuredData =
     <meta name="theme-color" content={themeColors.light} media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content={themeColors.dark} media="(prefers-color-scheme: dark)" />
     <ThemeScript />
-    {/* Preload only the body text face: Plex Sans, latin, upright. */}
-    <Font cssVariable="--font-plex-sans" preload={[{ subset: "latin", style: "normal" }]} />
+    {/* Preload only the body text face: Inter, latin, upright. */}
+    <Font cssVariable="--font-inter" preload={[{ subset: "latin", style: "normal" }]} />
     <Font cssVariable="--font-plex-mono" />
 
     <title>{documentTitle}</title>
@@ -150,6 +150,10 @@ const structuredData =
     }
   </head>
   <body>
+    {/* The 12 columns of the container, drawn as hairlines behind the page on wide screens. */}
+    <div class="grid-hint" aria-hidden="true">
+      <div class="container">{Array.from({ length: 12 }, () => <span />)}</div>
+    </div>
     <a class="skip-link" href="#main">{t("skip.toContent")}</a>
     <SiteHeader lang={lang} translated={hasAlternates} {...route} />
     <main id="main" class="container">
@@ -180,6 +184,42 @@ const structuredData =
 
     .skip-link:focus {
       transform: none;
+    }
+
+    /* Behind everything (the body has no background of its own), so boxes
+       with a surface color cover the lines and text sits on top of them.
+       Absolute in the body, so the lines run the full height of the page. */
+    .grid-hint {
+      display: none;
+    }
+
+    @media screen and (min-width: 64rem) {
+      :global(body) {
+        position: relative;
+      }
+
+      .grid-hint {
+        display: block;
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        pointer-events: none;
+      }
+
+      .grid-hint .container {
+        display: grid;
+        grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
+        column-gap: var(--grid-gap);
+        block-size: 100%;
+      }
+
+      .grid-hint span {
+        border-inline-start: var(--border-width) solid var(--color-grid);
+      }
+
+      .grid-hint span:last-child {
+        border-inline-end: var(--border-width) solid var(--color-grid);
+      }
     }
 
     main {

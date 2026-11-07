@@ -111,5 +111,22 @@ const year = new Intl.DateTimeFormat("en", { year: "numeric", timeZone: site.tim
         grid-column: 1 / -1;
       }
     }
+
+    /* On the 12-column grid: site links from column 6, under the header's
+       navigation. */
+    @media (min-width: 64rem) {
+      .inner {
+        grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
+        column-gap: var(--grid-gap);
+      }
+
+      .contact {
+        grid-column: 1 / span 5;
+      }
+
+      nav {
+        grid-column: 6 / -1;
+      }
+    }
   }
 </style>

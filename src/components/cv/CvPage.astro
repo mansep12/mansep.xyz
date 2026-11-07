@@ -89,5 +89,26 @@ const generator = getGeneratorBuildConfig();
     .full:focus {
       outline: none;
     }
+
+    /* The generator and the sheet span nine of the twelve columns. */
+    @media screen and (min-width: 64rem) {
+      .cv-page {
+        grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
+        column-gap: var(--grid-gap);
+      }
+
+      .cv-page > * {
+        grid-column: 1 / -1;
+      }
+
+      .cv-page > .full,
+      .cv-page > :global(.generator) {
+        grid-column: 1 / span 9;
+      }
+
+      .full > :global(.cv) {
+        max-inline-size: none;
+      }
+    }
   }
 </style>

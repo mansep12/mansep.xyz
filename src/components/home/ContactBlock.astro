@@ -73,5 +73,13 @@ const t = useTranslations(Astro.props.lang);
         align-items: baseline;
       }
     }
+
+    /* In the home page's five-column block: label above value, so the
+       address fits on one line. */
+    @media (min-width: 64rem) {
+      .channels div {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
   }
 </style>

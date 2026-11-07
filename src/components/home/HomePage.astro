@@ -2,7 +2,9 @@
 /**
  * Home page body for one locale: who, what, the project ledger, the thesis,
  * contact and when the page was last built. Meant to be read in 30 seconds
- * on a phone.
+ * on a phone, in that order. From 64rem it is two blocks on the 12-column
+ * grid: name, line and contact on columns 1-5, projects and the thesis on
+ * 6-12.
  */
 import { site } from "../../data/site";
 import type { Lang } from "../../i18n/locales";
@@ -35,15 +37,15 @@ const updated = isoYearMonth(new Date(), site.timeZone);
   description={t("home.description")}
   profile={resume}
 >
-  <div class="home">
+  <div class="home numbered">
     <header class="intro">
       <h1>{site.name}</h1>
       <p class="tagline mono" lang="en">{site.tagline}</p>
       <p class="lede">{t("home.intro")}</p>
     </header>
 
-    <section aria-labelledby="home-projects">
-      <h2 id="home-projects">{t("home.projects")}</h2>
+    <section class="projects" aria-labelledby="home-projects">
+      <h2 id="home-projects" class="label index">{t("home.projects")}</h2>
       <ProjectLedger lang={lang} projects={projects} />
       <InProgressNote lang={lang} />
       {
@@ -57,15 +59,15 @@ const updated = isoYearMonth(new Date(), site.timeZone);
 
     {
       thesis && (
-        <section aria-labelledby="home-research">
-          <h2 id="home-research">{t("home.research")}</h2>
+        <section class="research" aria-labelledby="home-research">
+          <h2 id="home-research" class="label index">{t("home.research")}</h2>
           <ResearchCard lang={lang} entry={thesis} />
         </section>
       )
     }
 
-    <section aria-labelledby="home-contact">
-      <h2 id="home-contact">{t("home.contact")}</h2>
+    <section class="contact" aria-labelledby="home-contact">
+      <h2 id="home-contact" class="label index">{t("home.contact")}</h2>
       <ContactBlock lang={lang} />
     </section>
 
@@ -88,7 +90,14 @@ const updated = isoYearMonth(new Date(), site.timeZone);
       max-inline-size: var(--measure);
     }
 
+    .intro h1 {
+      font-size: clamp(2.5rem, 1.6rem + 3.6vw, 4.75rem);
+      line-height: 1;
+      letter-spacing: -0.035em;
+    }
+
     .tagline {
+      margin-block-start: var(--space-xs);
       color: var(--color-muted);
       font-size: var(--step--1);
     }
@@ -102,13 +111,69 @@ const updated = isoYearMonth(new Date(), site.timeZone);
       gap: var(--space-s);
     }
 
-    h2 {
-      font-size: var(--step-2);
+    /* Section headings are mono labels ("01 / Proyectos"); the project
+       titles below them carry the size. */
+    .label {
+      font-family: var(--font-mono);
+      font-size: var(--step--1);
+      font-weight: var(--font-weight-medium);
+      letter-spacing: 0;
+    }
+
+    /* The ledger draws its own top rule; the other blocks get one here. */
+    .research > .label,
+    .contact > .label {
+      padding-block-end: var(--space-2xs);
+      border-block-end: var(--border-width) solid var(--color-text);
     }
 
     .updated {
       color: var(--color-muted);
       font-size: var(--step--1);
+    }
+
+    /* Two blocks. Rows: intro | projects, contact | projects, then the
+       update line at the foot of the left block, level with the bottom of
+       the research card on the right. DOM order (the phone order) stays. */
+    @media (min-width: 64rem) {
+      .home {
+        grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
+        column-gap: var(--grid-gap);
+        row-gap: var(--space-xl);
+        align-items: start;
+      }
+
+      .intro,
+      .contact,
+      .updated {
+        grid-column: 1 / span 5;
+      }
+
+      .intro {
+        grid-row: 1;
+      }
+
+      .contact {
+        grid-row: 2;
+      }
+
+      .updated {
+        grid-row: 3;
+        align-self: end;
+      }
+
+      .projects,
+      .research {
+        grid-column: 6 / -1;
+      }
+
+      .projects {
+        grid-row: 1 / span 2;
+      }
+
+      .research {
+        grid-row: 3;
+      }
     }
   }
 </style>

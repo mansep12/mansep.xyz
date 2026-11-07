@@ -33,7 +33,7 @@ const interests = resume.interests.map((interest) => interest.name);
   description={page.data.description}
   profile={resume}
 >
-  <div class="about">
+  <div class="about numbered">
     <header class="flow">
       <h1>{page.data.title}</h1>
     </header>
@@ -44,12 +44,12 @@ const interests = resume.interests.map((interest) => interest.name);
     </div>
 
     <section aria-labelledby="about-experience">
-      <h2 id="about-experience">{t("about.experience")}</h2>
+      <h2 id="about-experience" class="index">{t("about.experience")}</h2>
       <ExperienceList lang={lang} work={resume.work} />
     </section>
 
     <section aria-labelledby="about-education">
-      <h2 id="about-education">{t("about.education")}</h2>
+      <h2 id="about-education" class="index">{t("about.education")}</h2>
       <EducationList lang={lang} education={resume.education} />
     </section>
 
