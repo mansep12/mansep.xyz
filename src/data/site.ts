@@ -37,7 +37,7 @@ export const site = {
   tagline: "Software engineer · backend, applied cryptography and security",
   location: "Santiago, Chile",
   timeZone: "America/Santiago",
-  email: "manuelsepulveda.sepulveda@gmail.com",
+  email: "contact@mansep.xyz",
   links: {
     github: "https://github.com/mansep12",
     linkedin: "https://www.linkedin.com/in/manuel-sepulveda-cabeza",
