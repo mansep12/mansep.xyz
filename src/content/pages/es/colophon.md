@@ -12,7 +12,7 @@ Este sitio es estático: cada página se genera una vez, al compilar, y se sirve
 - **CSS propio con tokens**, sin framework. El sitio es chico y el CSS cabe en pocos archivos. Los colores se definen una vez por tema con `light-dark()`; el tema sigue al sistema salvo que elijas otro.
 - **IBM Plex Sans e IBM Plex Mono**, alojadas en el propio sitio en vez de pedirlas a un servicio de fuentes. Son una sola familia, y la mono marca lo que es dato: fechas, stack, estados.
 - **Dos idiomas con rutas propias**: español en la raíz e inglés bajo `/en/`, porque lo leen equipos en Chile y equipos que trabajan en inglés. Cada página enlaza a su versión en el otro idioma, sin redirección automática.
-- **El CV** sale de un archivo JSON con la forma de JSON Resume, el mismo que alimenta la experiencia de Sobre mí, así que hay una sola fuente para ambos.
+- **El CV** sale de un archivo JSON con la forma de JSON Resume, y es el único lugar del sitio con mi experiencia y formación completas.
 
 Las visitas se miden con Cloudflare Web Analytics, sin cookies. El detalle está en [Privacidad](/privacidad).
 

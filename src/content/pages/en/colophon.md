@@ -12,7 +12,7 @@ This site is static: each page is generated once, at build time, and served as a
 - **Plain CSS with tokens**, no framework. The site is small and its CSS fits in a few files. Colors are defined once per theme with `light-dark()`; the theme follows the system unless you choose another one.
 - **IBM Plex Sans and IBM Plex Mono**, hosted on the site itself instead of loaded from a font service. They are one family, and the mono face marks what is data: dates, stack, statuses.
 - **Two languages with their own routes**: Spanish at the root and English under `/en/`, because it is read by teams in Chile and by teams that work in English. Each page links to its version in the other language, with no automatic redirect.
-- **The CV** comes from a JSON file in the JSON Resume shape, the same one behind the experience on the About page, so there is one source for both.
+- **The CV** comes from a JSON file in the JSON Resume shape, and it is the only place on the site with my full experience and education.
 
 Visits are measured with Cloudflare Web Analytics, without cookies. The details are on the [Privacy](/en/privacy) page.
 

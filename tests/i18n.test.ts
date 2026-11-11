@@ -17,7 +17,7 @@ describe("localizedPath", () => {
     expect(localizedPath("home", "en")).toBe("/en/");
     expect(localizedPath("projects", "es")).toBe("/proyectos");
     expect(localizedPath("projects", "en")).toBe("/en/projects");
-    expect(localizedPath("about", "es")).toBe("/sobre-mi");
+    expect(localizedPath("research", "es")).toBe("/investigacion");
     expect(localizedPath("colophon", "en")).toBe("/en/colophon");
   });
 
@@ -76,7 +76,7 @@ describe("matchRoute", () => {
   it("finds the route and locale of a path", () => {
     expect(matchRoute("/")).toEqual({ route: { routeKey: "home" }, lang: "es" });
     expect(matchRoute("/en/")).toEqual({ route: { routeKey: "home" }, lang: "en" });
-    expect(matchRoute("/sobre-mi")).toEqual({ route: { routeKey: "about" }, lang: "es" });
+    expect(matchRoute("/investigacion")).toEqual({ route: { routeKey: "research" }, lang: "es" });
     expect(matchRoute("/en/projects/nodus")).toEqual({
       route: { routeKey: "project", params: { slug: "nodus" } },
       lang: "en",
@@ -100,7 +100,7 @@ describe("matchRoute", () => {
     expect(matchRoute("/404")).toBeUndefined();
     expect(matchRoute("/en")).toBeUndefined();
     expect(matchRoute("/proyectos/a/b")).toBeUndefined();
-    expect(matchRoute("/sobre-mi.html")).toBeUndefined();
+    expect(matchRoute("/investigacion.html")).toBeUndefined();
   });
 });
 
@@ -118,8 +118,8 @@ describe("getLangFromUrl", () => {
   });
 
   it("accepts site-relative paths", () => {
-    expect(getLangFromUrl("/en/about")).toBe("en");
-    expect(getLangFromUrl("/sobre-mi")).toBe("es");
+    expect(getLangFromUrl("/en/research")).toBe("en");
+    expect(getLangFromUrl("/investigacion")).toBe("es");
   });
 });
 

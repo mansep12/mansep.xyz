@@ -3,7 +3,7 @@
  *
  * @astrojs/sitemap has an `i18n` option, but it pairs URLs that share the
  * same path after the locale prefix (`/cv` and `/en/cv`). Most routes here
- * are translated (`/sobre-mi` and `/en/about`), so the pairs come from
+ * are translated (`/proyectos` and `/en/projects`), so the pairs come from
  * src/i18n/routes.ts instead, the same map the layout uses for its
  * `<link rel="alternate" hreflang>` tags.
  */

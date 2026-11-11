@@ -2,8 +2,9 @@
 /**
  * Projects as the rows of a ledger: the title links to the project page,
  * one line below it, and year and status in mono on the right.
- * `detailed` adds the summary, role, stack and outbound links (projects
- * index). With no projects it renders a one-line empty state.
+ * `detailed` adds the summary, role and outbound links (projects index);
+ * the stack is on each project page. With no projects it renders a one-line
+ * empty state.
  */
 import { site } from "../../data/site";
 import { projectStatusLabels } from "../../i18n/labels";
@@ -16,7 +17,7 @@ import { displayUrl } from "../../lib/urls";
 interface Props {
   lang: Lang;
   projects: readonly ProjectEntry[];
-  /** Add summary, role, stack and links to each row. */
+  /** Add summary, role and links to each row. */
   detailed?: boolean;
   /** Level of each project title, under the section heading. */
   headingLevel?: 2 | 3;
@@ -35,7 +36,7 @@ const Heading = headingLevel === 2 ? "h2" : "h3";
   ) : (
     <ol role="list" class:list={["ledger", { detailed }]}>
       {projects.map((project) => {
-        const { title, summary, outcome, year, status, role, stack, links } = project.data;
+        const { title, summary, outcome, year, status, role, links } = project.data;
         return (
           <li class="row">
             <div class="entry">
@@ -49,16 +50,6 @@ const Heading = headingLevel === 2 ? "h2" : "h3";
                   <div>
                     <dt>{t("projects.role")}</dt>
                     <dd>{role}</dd>
-                  </div>
-                  <div>
-                    <dt>{t("projects.stack")}</dt>
-                    <dd>
-                      <ul role="list" class="stack mono">
-                        {stack.map((item) => (
-                          <li>{item}</li>
-                        ))}
-                      </ul>
-                    </dd>
                   </div>
                 </dl>
               )}
@@ -170,18 +161,6 @@ const Heading = headingLevel === 2 ? "h2" : "h3";
 
     .facts dd {
       margin: 0;
-    }
-
-    .stack {
-      display: flex;
-      flex-wrap: wrap;
-      column-gap: var(--space-2xs);
-      font-size: 1em;
-    }
-
-    .stack li:not(:last-child)::after {
-      content: " ·";
-      color: var(--color-muted);
     }
 
     .links {

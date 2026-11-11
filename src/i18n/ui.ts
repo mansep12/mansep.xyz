@@ -11,7 +11,6 @@ const es = {
   "nav.label": "Principal",
   "nav.projects": "Proyectos",
   "nav.research": "Investigación",
-  "nav.about": "Sobre mí",
   "nav.cv": "CV",
   "lang.switch": "English",
   "lang.switchTitle": "Leer esta página en inglés",
@@ -30,10 +29,6 @@ const es = {
   "footer.privacy": "Privacidad",
   "footer.license": "Código bajo licencia MIT. Contenido con todos los derechos reservados.",
   "footer.builtFrom": "Compilado desde",
-  "home.description":
-    "Software engineer en Santiago: backend, criptografía aplicada y seguridad. Proyectos, investigación, CV y contacto.",
-  "home.intro":
-    "Construyo backends y contratos inteligentes donde importan las firmas, la privacidad y el origen de los datos.",
   "home.projects": "Proyectos",
   "home.allProjects": "Todos los proyectos",
   "home.research": "Investigación",
@@ -46,9 +41,8 @@ const es = {
     "Busco trabajo como backend, full-stack o security engineer en Santiago, remoto o híbrido, de preferencia en equipos que trabajen en inglés.",
   "projects.title": "Proyectos",
   "projects.description":
-    "Proyectos de Manuel Sepúlveda: resultado, rol, stack y enlaces al código o a la demo de cada uno.",
-  "projects.intro":
-    "Cada proyecto con su resultado, mi rol, el stack y un enlace al código o a la demo.",
+    "Proyectos de Manuel Sepúlveda: resultado, rol y enlaces al código o a la demo de cada uno.",
+  "projects.intro": "Cada proyecto con su resultado, mi rol y un enlace al código o a la demo.",
   "projects.inProgress":
     "En curso: Salud Hub, que junta datos de Garmin, Hevy, Zepp Life y un registro de comidas, con un coach de IA encima que los lee y me escribe primero. Corre en local; publico el repo cuando esté listo.",
   "projects.empty":
@@ -56,7 +50,6 @@ const es = {
   "projects.year": "Año",
   "projects.status": "Estado",
   "projects.role": "Rol",
-  "projects.stack": "Stack",
   "projects.repo": "Código",
   "projects.demo": "Demo",
   "projects.video": "Video",
@@ -76,13 +69,6 @@ const es = {
   "research.repo": "Código",
   "research.pdf": "PDF",
   "research.doi": "DOI",
-  "about.experience": "Experiencia",
-  "about.education": "Formación",
-  "about.stack": "Stack",
-  "about.stackList":
-    "Python, TypeScript, Rust, FastAPI, Next.js, PostgreSQL, Soroban, Docker, Google Cloud",
-  "about.offTheClock": "Al margen",
-  "about.cvLink": "CV completo",
   "cv.title": "CV",
   "cv.description":
     "CV de Manuel Sepúlveda: experiencia, proyectos, formación, premios y habilidades. Se puede guardar como PDF.",
@@ -111,7 +97,6 @@ const en = {
   "nav.label": "Main",
   "nav.projects": "Projects",
   "nav.research": "Research",
-  "nav.about": "About",
   "nav.cv": "CV",
   "lang.switch": "Español",
   "lang.switchTitle": "Read this page in Spanish",
@@ -130,10 +115,6 @@ const en = {
   "footer.privacy": "Privacy",
   "footer.license": "Code under the MIT License. Content all rights reserved.",
   "footer.builtFrom": "Built from",
-  "home.description":
-    "Software engineer in Santiago, Chile: backend, applied cryptography and security. Projects, research, CV and contact.",
-  "home.intro":
-    "I build backends and smart contracts where signatures, privacy and data provenance matter.",
   "home.projects": "Projects",
   "home.allProjects": "All projects",
   "home.research": "Research",
@@ -146,9 +127,8 @@ const en = {
     "I’m looking for work as a backend, full-stack or security engineer in Santiago, remote or hybrid, preferably on teams that work in English.",
   "projects.title": "Projects",
   "projects.description":
-    "Projects by Manuel Sepúlveda: the result, role, stack and a link to the code or demo of each one.",
-  "projects.intro":
-    "Each project with its result, my role, the stack and a link to the code or demo.",
+    "Projects by Manuel Sepúlveda: the result, role and a link to the code or demo of each one.",
+  "projects.intro": "Each project with its result, my role and a link to the code or demo.",
   "projects.inProgress":
     "In progress: Salud Hub brings together data from Garmin, Hevy, Zepp Life and food logs, with an AI coach on top that reads them and reaches out first. It runs locally; I’ll publish the repo when it’s ready.",
   "projects.empty":
@@ -156,7 +136,6 @@ const en = {
   "projects.year": "Year",
   "projects.status": "Status",
   "projects.role": "Role",
-  "projects.stack": "Stack",
   "projects.repo": "Code",
   "projects.demo": "Demo",
   "projects.video": "Video",
@@ -176,13 +155,6 @@ const en = {
   "research.repo": "Code",
   "research.pdf": "PDF",
   "research.doi": "DOI",
-  "about.experience": "Experience",
-  "about.education": "Education",
-  "about.stack": "Stack",
-  "about.stackList":
-    "Python, TypeScript, Rust, FastAPI, Next.js, PostgreSQL, Soroban, Docker, Google Cloud",
-  "about.offTheClock": "Off the clock",
-  "about.cvLink": "Full CV",
   "cv.title": "CV",
   "cv.description":
     "Manuel Sepúlveda’s CV: experience, projects, education, awards and skills. It can be saved as a PDF.",

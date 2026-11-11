@@ -100,7 +100,7 @@ redirect by browser language. Every page has a key in the route map
 
 ```ts
 localizedPath("project", "en", { slug: "nodus" }); // "/en/projects/nodus"
-alternates("about"); // { es: "https://mansep.xyz/sobre-mi", en: "https://mansep.xyz/en/about" }
+alternates("projects"); // { es: "https://mansep.xyz/proyectos", en: "https://mansep.xyz/en/projects" }
 getLangFromUrl(Astro.url); // "es" | "en"
 ```
 
@@ -215,7 +215,7 @@ Worker (for example `/api/*`) must set their own headers.
 1. `bun install --frozen-lockfile`, lint, tests, build and `check:links`
    (Node 22 and Bun 1.3).
 2. Lighthouse CI on the built `dist/client` (mobile): `/`, `/en/`,
-   `/proyectos`, a project page, `/cv` and `/sobre-mi`, three runs each. The
+   `/proyectos`, a project page, `/cv` and `/investigacion`, three runs each. The
    job fails below 0.9 performance or 0.95 accessibility, best practices or
    SEO. Reports go to temporary public storage; the links are in the job log.
 

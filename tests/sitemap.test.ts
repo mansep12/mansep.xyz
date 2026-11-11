@@ -5,7 +5,7 @@ describe("canonicalPageUrl", () => {
   it("keeps route map URLs and adds the trailing slash of the English home", () => {
     expect(canonicalPageUrl("https://mansep.xyz/")).toBe("https://mansep.xyz/");
     expect(canonicalPageUrl("https://mansep.xyz/en")).toBe("https://mansep.xyz/en/");
-    expect(canonicalPageUrl("https://mansep.xyz/sobre-mi")).toBe("https://mansep.xyz/sobre-mi");
+    expect(canonicalPageUrl("https://mansep.xyz/proyectos")).toBe("https://mansep.xyz/proyectos");
   });
 
   it("drops pages outside the route map", () => {
@@ -16,16 +16,16 @@ describe("canonicalPageUrl", () => {
 
 describe("sitemapLinks", () => {
   const pages = new Set([
-    "https://mansep.xyz/sobre-mi",
-    "https://mansep.xyz/en/about",
+    "https://mansep.xyz/proyectos",
+    "https://mansep.xyz/en/projects",
     "https://mansep.xyz/proyectos/solo",
   ]);
 
   it("lists every locale plus x-default, like the page's hreflang links", () => {
-    expect(sitemapLinks("https://mansep.xyz/en/about", pages)).toEqual([
-      { url: "https://mansep.xyz/sobre-mi", lang: "es" },
-      { url: "https://mansep.xyz/en/about", lang: "en" },
-      { url: "https://mansep.xyz/sobre-mi", lang: "x-default" },
+    expect(sitemapLinks("https://mansep.xyz/en/projects", pages)).toEqual([
+      { url: "https://mansep.xyz/proyectos", lang: "es" },
+      { url: "https://mansep.xyz/en/projects", lang: "en" },
+      { url: "https://mansep.xyz/proyectos", lang: "x-default" },
     ]);
   });
 

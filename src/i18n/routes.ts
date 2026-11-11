@@ -17,7 +17,6 @@ export const routes = {
   projects: { es: "/proyectos", en: "/en/projects" },
   project: { es: "/proyectos/[slug]", en: "/en/projects/[slug]" },
   research: { es: "/investigacion", en: "/en/research" },
-  about: { es: "/sobre-mi", en: "/en/about" },
   cv: { es: "/cv", en: "/en/cv" },
   privacy: { es: "/privacidad", en: "/en/privacy" },
   colophon: { es: "/colofon", en: "/en/colophon" },

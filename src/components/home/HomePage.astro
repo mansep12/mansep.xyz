@@ -1,17 +1,18 @@
 ---
 /**
- * Home page body for one locale: who, what, the project ledger, the thesis,
- * contact and when the page was last built. Meant to be read in 30 seconds
- * on a phone.
+ * Home page body for one locale: who (the bio from
+ * src/content/pages/<lang>/home.md), the featured projects, the thesis,
+ * contact and when the page was last built. It is also the about page: the
+ * work history lives only on /cv. Meant to be read in 30 seconds on a phone.
  */
+import { render } from "astro:content";
 import { site } from "../../data/site";
 import type { Lang } from "../../i18n/locales";
 import { localizedPath } from "../../i18n/routes";
 import { useTranslations } from "../../i18n/ui";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { getProjects, getResearch, getResume } from "../../lib/content";
+import { getPage, getProjects, getResearch, getResume } from "../../lib/content";
 import { formatDate, isoYearMonth } from "../../lib/dates";
-import InProgressNote from "../ledger/InProgressNote.astro";
 import ProjectLedger from "../ledger/ProjectLedger.astro";
 import ContactBlock from "./ContactBlock.astro";
 import ResearchCard from "./ResearchCard.astro";
@@ -22,7 +23,10 @@ interface Props {
 
 const { lang } = Astro.props;
 const t = useTranslations(lang);
+const page = await getPage(lang, "home");
+const { Content } = await render(page);
 const projects = await getProjects(lang);
+const featured = projects.filter((project) => project.data.featured);
 const thesis = (await getResearch(lang)).find((entry) => entry.data.kind === "thesis");
 const resume = await getResume(lang);
 const updated = isoYearMonth(new Date(), site.timeZone);
@@ -32,22 +36,23 @@ const updated = isoYearMonth(new Date(), site.timeZone);
   lang={lang}
   routeKey="home"
   title={site.name}
-  description={t("home.description")}
+  description={page.data.description}
   profile={resume}
 >
   <div class="home">
     <header class="intro">
       <h1>{site.name}</h1>
       <p class="tagline mono" lang="en">{site.tagline}</p>
-      <p class="lede">{t("home.intro")}</p>
+      <div class="bio prose">
+        <Content />
+      </div>
     </header>
 
     <section aria-labelledby="home-projects">
       <h2 id="home-projects">{t("home.projects")}</h2>
-      <ProjectLedger lang={lang} projects={projects} />
-      <InProgressNote lang={lang} />
+      <ProjectLedger lang={lang} projects={featured} />
       {
-        projects.length > 0 && (
+        projects.length > featured.length && (
           <p>
             <a href={localizedPath("projects", lang)}>{t("home.allProjects")}</a>
           </p>
@@ -93,7 +98,7 @@ const updated = isoYearMonth(new Date(), site.timeZone);
       font-size: var(--step--1);
     }
 
-    .lede {
+    .bio {
       margin-block-start: var(--space-2xs);
     }
 
